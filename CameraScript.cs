@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
+    public bool culling = true;
     public GameObject player;
     public WorldGen world;
 
-    private float scrollSpeed = 5;
+    private const float scrollSpeed = 5;
     private bool cameraLocked = true;
     private Vector3 prevPosition;
 
@@ -16,7 +17,7 @@ public class CameraScript : MonoBehaviour
         CameraLock();
         CameraPan();
         CameraScroll();
-        FrustumCulling();
+        if(culling) FrustumCulling();
     }
 
     private void PlaceBackground()
@@ -33,7 +34,6 @@ public class CameraScript : MonoBehaviour
 
     private void FrustumCulling()
     {
-        if (world == null) return;
         int height = Mathf.RoundToInt(2f * Camera.main.orthographicSize);
         int width = Mathf.RoundToInt(height * Camera.main.aspect);
         int x = Mathf.RoundToInt(transform.position.x);

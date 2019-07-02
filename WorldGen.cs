@@ -5,7 +5,12 @@ using UnityEngine;
 
 public class WorldGen : MonoBehaviour
 {
-    public GameObject block;
+    //Level
+    public bool level = false;
+    public Tilemap myLevel;
+
+    //Chunks
+    private Dictionary<(int, int), string> chunks;
     public Grid caveEntrance;
     public Grid full;
     public Grid[] topSoil;
@@ -14,40 +19,61 @@ public class WorldGen : MonoBehaviour
     public Grid[] leftrighttop;
     public Grid[] leftrightbottom;
     public Grid[] special;
+    private const int numChunks = 8;
+    private const int chunksize = 16;
 
+    //Backgrounds
+    private Dictionary<(int, int), GameObject> backgrounds;
     public Sprite sky;
     public GameObject backgroundParent;
     public Sprite stonebackground;
     public GameObject background;
 
+    //Blocks
+    public GameObject block;
     private Dictionary<(int, int), GameObject> blocks;
     private Dictionary<(int, int), GameObject> backBlocks;
-    private Dictionary<(int, int), string> chunks;
-    private Dictionary<(int, int), GameObject> backgrounds;
-    private int numChunks = 8;
-    private int chunksize = 16;
-
+    
+    //Start
     void Start()
     {
         blocks = new Dictionary<(int, int), GameObject>();
         backBlocks = new Dictionary<(int, int), GameObject>();
-        chunks = new Dictionary<(int, int), string>();
-        backgrounds = new Dictionary<(int, int), GameObject>();
-        ChunkGeneration();
-        CreateBackgrounds();
+
+        if(!level)
+        {
+            chunks = new Dictionary<(int, int), string>();
+            backgrounds = new Dictionary<(int, int), GameObject>();
+            ChunkGeneration();
+            CreateBackgrounds();
+        }
+
+        if(level)
+        {
+            CreateLevel();
+        }
     }
 
-    public void newScale(GameObject theGameObject, float newSize)
+    //Level methods
+    public void CreateLevel()
     {
-        float size = theGameObject.GetComponent<Renderer>().bounds.size.x;
-        Vector3 rescale = theGameObject.transform.localScale;
-        rescale.x = newSize * rescale.x / size;
-        theGameObject.transform.localScale = rescale;
+        BoundsInt bounds = myLevel.cellBounds;
+
+        for (int x = -bounds.size.x; x < bounds.size.x; x++)
+        {
+            for (int y = -bounds.size.y; y < bounds.size.y; y++)
+            {
+                Tile currTile = (Tile)myLevel.GetTile(new Vector3Int(x, y, 0));
+
+                if (currTile)
+                {
+                    Create(x, y, currTile.sprite);
+                }
+            }
+        }
     }
 
     //Block methods
-    //======================================================
-
     public void Enable(int x, int y)
     {
         if (blocks.ContainsKey((x, y)))
@@ -77,7 +103,7 @@ public class WorldGen : MonoBehaviour
         if (!blocks.ContainsKey((x, y)))
         {
             blocks[(x, y)] = block.GetComponent<Block>().Create(x, y, gameObject.transform, blockSprite);
-            blocks[(x, y)].SetActive(false);
+            if(!level) blocks[(x, y)].SetActive(false);
             return true;
         }
         else return false;
@@ -103,6 +129,7 @@ public class WorldGen : MonoBehaviour
         if (!blocks.ContainsKey((x, y)))
         {
             blocks[(x, y)] = b.GetComponent<Block>().Place(x, y);
+            blocks[(x, y)].SetActive(true);
             return true;
         }
         else return false;
@@ -261,7 +288,15 @@ public class WorldGen : MonoBehaviour
         return null;
     }
 
-    //Backgrounds
+    //Background Methods 
+
+    public void NewScale(GameObject theGameObject, float newSize)
+    {
+        float size = theGameObject.GetComponent<Renderer>().bounds.size.x;
+        Vector3 rescale = theGameObject.transform.localScale;
+        rescale.x = newSize * rescale.x / size;
+        theGameObject.transform.localScale = rescale;
+    }
 
     private void CreateBackgrounds()
     {
