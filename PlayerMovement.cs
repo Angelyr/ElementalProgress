@@ -75,8 +75,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 targetVelocity = new Vector2(move * 10f, myRigidbody2D.velocity.y);
         myRigidbody2D.velocity = Vector3.SmoothDamp(myRigidbody2D.velocity, targetVelocity, ref velocity, movementSmoothing);
 
-        if (move > 0 && !facingRight) Flip();
-        else if (move < 0 && facingRight) Flip();
+        //if (move > 0 && !facingRight) Flip();
+        //else if (move < 0 && facingRight) Flip();
 
         if (grounded && jump)
         {

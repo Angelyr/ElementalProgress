@@ -6,31 +6,41 @@ using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
-    public WorldGen world;
-
-    private List<GameObject>[] inventorySlots = new List<GameObject>[11];
+    public GameObject world;
+    public GameObject[] inventorySlots = new GameObject[11];
     private int selected = 0;
+    private Color selectedColor = new Color32(255, 237, 0, 100);
+    private Color slotColor = new Color32(255, 255, 255, 100);
 
     private void Start()
     {
-        for (int i = 0; i < inventorySlots.Length; i++) inventorySlots[i] = new List<GameObject>();
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if (inventorySlots[i] == null) continue;
+            inventorySlots[i] = Instantiate(inventorySlots[i]);
+            Sprite mySprite = inventorySlots[i].GetComponent<SpriteRenderer>().sprite;
+            transform.GetChild(i).Find("Item").GetComponent<UnityEngine.UI.Image>().enabled = true;
+            transform.GetChild(i).Find("Item").GetComponent<UnityEngine.UI.Image>().sprite = mySprite;
+        }
     }
 
     public void SelectSlot(int position)
     {
-        Color selectedColor = transform.GetChild(selected).GetComponent<UnityEngine.UI.Image>().color;
-        transform.GetChild(selected).GetComponent<UnityEngine.UI.Image>().color = transform.GetChild(position).GetComponent<UnityEngine.UI.Image>().color;
+        transform.GetChild(selected).GetComponent<UnityEngine.UI.Image>().color = slotColor;
         selected = position;
-        transform.GetChild(position).GetComponent<UnityEngine.UI.Image>().color = selectedColor;
+        transform.GetChild(selected).GetComponent<UnityEngine.UI.Image>().color = selectedColor;
     }
 
     public bool AddItem(GameObject pickUp)
     {
         for(int i=0; i<inventorySlots.Length; i++)
         {
-            if(inventorySlots[i].Count > 0 && inventorySlots[i][0].GetComponent<SpriteRenderer>().sprite == pickUp.GetComponent<SpriteRenderer>().sprite)
+            if (inventorySlots[i] == null) continue;
+            Sprite mySprite = inventorySlots[i].GetComponent<SpriteRenderer>().sprite;
+            Sprite newSprite = pickUp.GetComponent<SpriteRenderer>().sprite;
+            if (mySprite == newSprite)
             {
-                inventorySlots[i].Add(pickUp);
+                Destroy(pickUp);
                 int amount = Convert.ToInt32(transform.GetChild(i).Find("Amount").GetComponent<UnityEngine.UI.Text>().text);
                 amount += 1;
                 transform.GetChild(i).Find("Amount").GetComponent<UnityEngine.UI.Text>().text = amount.ToString();
@@ -39,9 +49,9 @@ public class Inventory : MonoBehaviour
         }
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            if (inventorySlots[i].Count == 0)
+            if (inventorySlots[i] == null)
             {
-                inventorySlots[i].Add(pickUp);
+                inventorySlots[i] = pickUp;
                 transform.GetChild(i).Find("Amount").GetComponent<UnityEngine.UI.Text>().text = "1";
                 transform.GetChild(i).Find("Item").GetComponent<UnityEngine.UI.Image>().enabled = true;
                 transform.GetChild(i).Find("Item").GetComponent<UnityEngine.UI.Image>().sprite = pickUp.GetComponent<SpriteRenderer>().sprite;
@@ -51,23 +61,43 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public GameObject GetItem()
+    public bool ItemSelected()
     {
-        if (inventorySlots[selected].Count > 0 && inventorySlots[selected].Count > 0) return inventorySlots[selected][0];
-        return null;
-    }
-
-    public bool RemoveItem()
-    {
-        if (inventorySlots[selected].Count > 0)
+        if (inventorySlots[selected] != null)
         {
-            inventorySlots[selected].RemoveAt(0);
-            int amount = Convert.ToInt32(transform.GetChild(selected).Find("Amount").GetComponent<UnityEngine.UI.Text>().text);
-            amount -= 1;
-            transform.GetChild(selected).Find("Amount").GetComponent<UnityEngine.UI.Text>().text = amount.ToString();
-            if (inventorySlots[selected].Count == 0) transform.GetChild(selected).Find("Item").GetComponent<UnityEngine.UI.Image>().enabled = false;
             return true;
         }
         return false;
+    }
+
+    public GameObject RemoveItem()
+    {
+        GameObject item;
+
+        if (inventorySlots[selected] != null)
+        {
+            int amount = Convert.ToInt32(transform.GetChild(selected).Find("Amount").GetComponent<UnityEngine.UI.Text>().text);
+            amount -= 1;
+            transform.GetChild(selected).Find("Amount").GetComponent<UnityEngine.UI.Text>().text = amount.ToString();
+            if (amount == 0)
+            {
+                item = inventorySlots[selected];
+                inventorySlots[selected] = null;
+                transform.GetChild(selected).Find("Item").GetComponent<UnityEngine.UI.Image>().enabled = false;
+                transform.GetChild(selected).Find("Amount").GetComponent<UnityEngine.UI.Text>().text = "";
+                return item;
+            }
+            return Instantiate(inventorySlots[selected], world.transform);
+        }
+        return null;
+    }
+
+
+    public void UseSelected()
+    {
+        if (inventorySlots[selected] != null)
+        {
+            inventorySlots[selected].GetComponent<Usable>().Use();
+        }
     }
 }

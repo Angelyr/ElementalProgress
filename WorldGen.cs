@@ -156,6 +156,15 @@ public class WorldGen : MonoBehaviour
         else return null;
     }
 
+    public bool Empty(int x, int y)
+    {
+        if (blocks.ContainsKey((x, y)))
+        {
+            return false;
+        }
+        else return true;
+    }
+
     //Chunk methods
     //================================================================
 

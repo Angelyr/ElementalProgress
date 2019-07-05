@@ -8,7 +8,7 @@ public class Attacks : MonoBehaviour
 
     private void FixedUpdate()
     {
-        IfClick();
+        //IfClick();
     }
 
     private void IfClick()
