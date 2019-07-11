@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Tilemaps;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using static WorldController;
 
 public class WorldGen : MonoBehaviour
 {
-    //Level
-    public bool level = false;
-    public Tilemap myLevel;
 
     //Chunks
     private Dictionary<(int, int), string> chunks;
@@ -22,6 +20,10 @@ public class WorldGen : MonoBehaviour
     private const int numChunks = 8;
     private const int chunksize = 16;
 
+    //Level
+    private bool level = true;
+    private Tilemap myLevel;
+
     //Backgrounds
     private Dictionary<(int, int), GameObject> backgrounds;
     public Sprite sky;
@@ -29,18 +31,15 @@ public class WorldGen : MonoBehaviour
     public Sprite stonebackground;
     public GameObject background;
 
-    //Blocks
-    public GameObject block;
-    private Dictionary<(int, int), GameObject> blocks;
-    private Dictionary<(int, int), GameObject> backBlocks;
-    
+    private void Awake()
+    {
+        myLevel = GameObject.Find("Level").GetComponent<Tilemap>();    
+    }
+
     //Start
     void Start()
     {
-        blocks = new Dictionary<(int, int), GameObject>();
-        backBlocks = new Dictionary<(int, int), GameObject>();
-
-        if(!level)
+        if (!level)
         {
             chunks = new Dictionary<(int, int), string>();
             backgrounds = new Dictionary<(int, int), GameObject>();
@@ -48,7 +47,7 @@ public class WorldGen : MonoBehaviour
             CreateBackgrounds();
         }
 
-        if(level)
+        if (level)
         {
             CreateLevel();
         }
@@ -57,112 +56,30 @@ public class WorldGen : MonoBehaviour
     //Level methods
     public void CreateLevel()
     {
+        myLevel.gameObject.SetActive(false);
         BoundsInt bounds = myLevel.cellBounds;
 
         for (int x = -bounds.size.x; x < bounds.size.x; x++)
         {
             for (int y = -bounds.size.y; y < bounds.size.y; y++)
             {
-                Tile currTile = (Tile)myLevel.GetTile(new Vector3Int(x, y, 0));
+                TileBase currTile = myLevel.GetTile(new Vector3Int(x, y, 0));
+                Sprite tileSprite = myLevel.GetSprite(new Vector3Int(x, y, 0));
+                Vector3 rotation = myLevel.GetTransformMatrix(new Vector3Int(x, y, 0)).rotation.eulerAngles;
 
                 if (currTile)
                 {
-                    Create(x, y, currTile.sprite);
+                    if (currTile.name == "Background")
+                    {
+                        CreateBackground(x, y, tileSprite);
+                    }
+                    else
+                    {
+                        Create(x, y, tileSprite, rotation);
+                    }
                 }
             }
         }
-    }
-
-    //Block methods
-    public void Enable(int x, int y)
-    {
-        if (blocks.ContainsKey((x, y)))
-        {
-            blocks[(x, y)].SetActive(true);
-        }
-        if (backBlocks.ContainsKey((x,y)))
-        {
-            backBlocks[(x, y)].SetActive(true);
-        }
-    }
-
-    public void Disable(int x, int y)
-    {
-        if (blocks.ContainsKey((x, y)))
-        {
-            blocks[(x, y)].SetActive(false);
-        }
-        if (backBlocks.ContainsKey((x, y)))
-        {
-            backBlocks[(x, y)].SetActive(false);
-        }
-    }
-
-    public bool Create(int x, int y, Sprite blockSprite)
-    {
-        if (!blocks.ContainsKey((x, y)))
-        {
-            blocks[(x, y)] = block.GetComponent<Block>().Create(x, y, gameObject.transform, blockSprite);
-            if(!level) blocks[(x, y)].SetActive(false);
-            return true;
-        }
-        else return false;
-    }
-
-    public bool CreateBackground(int x, int y, Sprite blockSprite)
-    {
-        if (!backBlocks.ContainsKey((x, y)))
-        {
-            backBlocks[(x, y)] = block.GetComponent<Block>().Create(x, y, gameObject.transform, blockSprite);
-            backBlocks[(x, y)].GetComponent<Block>().background = true;
-            backBlocks[(x, y)].GetComponent<BoxCollider2D>().enabled = false;
-            backBlocks[(x, y)].GetComponent<SpriteRenderer>().color = new Color32(120, 120, 120, 255);
-            backBlocks[(x, y)].GetComponent<SpriteRenderer>().sortingOrder = -1;
-            backBlocks[(x, y)].SetActive(false);
-            return true;
-        }
-        else return false;
-    }
-
-    public bool Place(int x, int y, GameObject b)
-    {
-        if (!blocks.ContainsKey((x, y)))
-        {
-            blocks[(x, y)] = b.GetComponent<Block>().Place(x, y);
-            blocks[(x, y)].SetActive(true);
-            return true;
-        }
-        else return false;
-    }
-
-    public GameObject PickUp(int x, int y)
-    {
-        if (blocks.ContainsKey((x, y)))
-        {
-            GameObject b = blocks[(x, y)];
-            blocks.Remove((x, y));
-            b.GetComponent<Block>().PickUp();
-            return b;
-        }
-        else return null;
-    }
-
-    public GameObject Get(int x, int y)
-    {
-        if (blocks.ContainsKey((x, y)))
-        {
-            return blocks[(x, y)];
-        }
-        else return null;
-    }
-
-    public bool Empty(int x, int y)
-    {
-        if (blocks.ContainsKey((x, y)))
-        {
-            return false;
-        }
-        else return true;
     }
 
     //Chunk methods
@@ -176,7 +93,7 @@ public class WorldGen : MonoBehaviour
             {
                 Grid chunkGrid = PickChunk(chunkX, chunkY);
                 PlaceChunk(chunkX, chunkY, chunkGrid);
-                if (chunkGrid.name == "CaveEntrance") PlaceChunkPath(chunkX, chunkY-1, "down");
+                if (chunkGrid.name == "CaveEntrance") PlaceChunkPath(chunkX, chunkY - 1, "down");
             }
         }
     }
@@ -248,7 +165,7 @@ public class WorldGen : MonoBehaviour
 
     private bool Contains(Grid[] rooms, Grid item)
     {
-        foreach(Grid room in rooms)
+        foreach (Grid room in rooms)
         {
             if (room == item) return true;
         }
@@ -297,6 +214,7 @@ public class WorldGen : MonoBehaviour
         return null;
     }
 
+
     //Background Methods 
 
     public void NewScale(GameObject theGameObject, float newSize)
@@ -309,9 +227,9 @@ public class WorldGen : MonoBehaviour
 
     private void CreateBackgrounds()
     {
-        for(int x = -numChunks * chunksize - chunksize/2; x < (numChunks-1) * chunksize; x++)
+        for (int x = -numChunks * chunksize - chunksize / 2; x < (numChunks - 1) * chunksize; x++)
         {
-            for(int y = numChunks * chunksize; y > -numChunks * chunksize; y--)
+            for (int y = numChunks * chunksize; y > -numChunks * chunksize; y--)
             {
                 if (!backgrounds.ContainsKey((x, y)))
                 {
@@ -337,6 +255,7 @@ public class WorldGen : MonoBehaviour
                 }
             }
         }
-        
+
     }
+
 }

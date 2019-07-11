@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static WorldController;
 
 public class CameraScript : MonoBehaviour
 {
     public bool culling = true;
-    public GameObject player;
-    public WorldGen world;
-
+    private GameObject player;
     private const float scrollSpeed = 5;
     private bool cameraLocked = true;
     private Vector3 prevPosition;
+
+    private void Awake()
+    {
+        player = GameObject.Find("Player");
+    }
 
     void Update()
     {
@@ -18,18 +22,6 @@ public class CameraScript : MonoBehaviour
         CameraPan();
         CameraScroll();
         if(culling) FrustumCulling();
-    }
-
-    private void PlaceBackground()
-    {
-        int height = Mathf.RoundToInt(2f * Camera.main.orthographicSize);
-        int width = Mathf.RoundToInt(height * Camera.main.aspect);
-        int x = Mathf.RoundToInt(transform.position.x);
-        int y = Mathf.RoundToInt(transform.position.y);
-
-        //keep edges of current backgrounds
-        //if edge of camera approaches edge of background create new one and delete old one
-        //decided which background to pick based on camera position
     }
 
     private void FrustumCulling()
@@ -43,9 +35,9 @@ public class CameraScript : MonoBehaviour
         {
             for(int j=y-height-5; j<y+height+5; j++)
             {
-                if (i < x-width || j < y-height) world.Disable(i, j);
-                else if (i < x + width && j < y + height) world.Enable(i, j);
-                else world.Disable(i, j);
+                if (i < x-width || j < y-height) Disable(i, j);
+                else if (i < x + width && j < y + height) Enable(i, j);
+                else Disable(i, j);
             }
         }
     }

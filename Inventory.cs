@@ -6,18 +6,30 @@ using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
 {
-    public GameObject world;
-    public GameObject[] inventorySlots = new GameObject[11];
+    private GameObject[] inventorySlots = new GameObject[11];
+    private GameObject world;
+    private GameObject player;
     private int selected = 0;
     private Color selectedColor = new Color32(255, 237, 0, 100);
     private Color slotColor = new Color32(255, 255, 255, 100);
 
+    private void Awake()
+    {
+        world = GameObject.Find("World");
+        player = GameObject.Find("Player");
+        inventorySlots[0] = (GameObject)Resources.Load("Prefab/Pickaxe", typeof(GameObject));
+        inventorySlots[1] = (GameObject)Resources.Load("Prefab/Laser", typeof(GameObject));
+    }
+
+
     private void Start()
     {
+
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             if (inventorySlots[i] == null) continue;
-            inventorySlots[i] = Instantiate(inventorySlots[i]);
+            inventorySlots[i] = Instantiate(inventorySlots[i], player.transform);
+            inventorySlots[i].SetActive(false);
             Sprite mySprite = inventorySlots[i].GetComponent<SpriteRenderer>().sprite;
             transform.GetChild(i).Find("Item").GetComponent<UnityEngine.UI.Image>().enabled = true;
             transform.GetChild(i).Find("Item").GetComponent<UnityEngine.UI.Image>().sprite = mySprite;

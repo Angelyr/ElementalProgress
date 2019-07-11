@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static WorldController;
 
 public class Block : MonoBehaviour
 {
@@ -56,7 +57,7 @@ public class Block : MonoBehaviour
     {
         x = x + Mathf.RoundToInt(transform.position.x);
         y = y + Mathf.RoundToInt(transform.position.y);
-        return GetComponentInParent<WorldGen>().Get(x, y);
+        return Get(x, y);
     }
 
 }

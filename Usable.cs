@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static WorldController;
 
 public class Usable : MonoBehaviour
 {
-    private WorldGen world;
     private Inventory inventory;
-    public GameObject laser;
-    public string type;
+    private GameObject player;
+    private GameObject laser;
 
     private void Awake()
     {
-        world = GameObject.Find("World").GetComponent<WorldGen>();
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+        laser = (GameObject)Resources.Load("Prefab/Laser", typeof(GameObject));
+        player = GameObject.Find("Player");
     }
 
     private void Pickaxe()
@@ -27,10 +28,10 @@ public class Usable : MonoBehaviour
             int playerY = Mathf.RoundToInt(transform.position.y);
             bool notPlayer = (x != playerX || (y != playerY && y != playerY + 1));
 
-            GameObject hit = world.Get(x, y);
+            GameObject hit = Get(x, y);
             if (hit)
             {
-                inventory.AddItem(world.PickUp(x, y));
+                inventory.AddItem(PickUp(x, y));
             }
         }
     }
@@ -46,10 +47,10 @@ public class Usable : MonoBehaviour
             int playerY = Mathf.RoundToInt(transform.position.y);
             bool notPlayer = (x != playerX || (y != playerY && y != playerY + 1));
 
-            GameObject hit = world.Get(x, y);
+            GameObject hit = Get(x, y);
             if (inventory.ItemSelected() && notPlayer)
             {
-                if (world.Empty(x, y)) world.Place(x, y, inventory.RemoveItem());
+                if (Empty(x, y)) Place(x, y, inventory.RemoveItem());
             }
         }
     }
@@ -58,26 +59,22 @@ public class Usable : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject attack = Instantiate(laser, transform);
+            GameObject attack = Instantiate(laser);
+            attack.SetActive(true);
+            attack.transform.SetPositionAndRotation(player.transform.position, Quaternion.identity);
             Vector3 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseLocation.x = mouseLocation.x - attack.transform.position.x;
             mouseLocation.y = mouseLocation.y - attack.transform.position.y;
             float angle = Mathf.Atan2(mouseLocation.y, mouseLocation.x) * Mathf.Rad2Deg;
             attack.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-            StartCoroutine(Delete(attack, .5f));
+            attack.GetComponent<Effects>().Animation();
         }
-    }
-
-    IEnumerator Delete(GameObject attack, float time)
-    {
-        yield return new WaitForSeconds(time);
-        Destroy(attack);
     }
 
     public void Use()
     {
-        if (type == "Pickaxe") Pickaxe();
-        if (type == "Block") Block();
-        if (type == "Laser") Laser();
+        if (gameObject.name.Contains("Pickaxe")) Pickaxe();
+        if (gameObject.name.Contains("Block")) Block();
+        if (gameObject.name.Contains("Laser")) Laser();
     }
 }
