@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
+using static TurnOrder;
 
 public class WorldController : MonoBehaviour
 {
@@ -10,56 +11,61 @@ public class WorldController : MonoBehaviour
     private static GameObject block;
     private static GameObject world;
     private static GameObject player;
+    private static GameObject slime;
     private static Dictionary<(int, int), GameObject> blocks;
     private static Dictionary<(int, int), GameObject> backBlocks;
-    private static List<GameObject> turnOrder;
     
     //Initialize
     private void Awake()
     {
         blocks = new Dictionary<(int, int), GameObject>();
         backBlocks = new Dictionary<(int, int), GameObject>();
-        turnOrder = new List<GameObject>();
 
         player = GameObject.Find("Player");
         world = GameObject.Find("World");
         block = (GameObject)Resources.Load("Prefab/Other/Block", typeof(GameObject));
+        slime = (GameObject)Resources.Load("Prefab/Slime");
     }
 
-    //Turn Methods
-    public static void AddTurn(GameObject newTurn)
+    //Enemies
+    private static int spawnTimer = 3;
+    private static int maxTimer = 3;
+    public static void SpawnEnemies()
     {
-        turnOrder.Add(newTurn);
-        if (turnOrder.Count == 1) turnOrder[0].GetComponent<Character>().StartTurn();
-    }
-
-    public static void EndTurn(GameObject currTurn)
-    {
-        if (turnOrder[0] != currTurn) return;
-        GameObject currentTurn = turnOrder[0];
-        turnOrder.RemoveAt(0);
-        turnOrder.Add(currentTurn);
-        turnOrder[0].GetComponent<Character>().StartTurn();
-    }
-
-    public static void RemoveFromTurn(GameObject curr)
-    {
-        if (turnOrder[0] == curr) EndTurn(curr);
-        turnOrder.Remove(curr);
-    }
-
-    public static bool InfinteTurn()
-    {
-        if (turnOrder.Count == 1) return true;
-        else return false;
-    }
-
-    public void EndTurnButton()
-    {
-        EndTurn(player);
+        spawnTimer -= 1;
+        if (spawnTimer < 1)
+        {
+            Instantiate(slime);
+            spawnTimer = maxTimer;
+        }
     }
 
     //Block methods
+    public static void Kill(GameObject curr)
+    {
+        RemoveFromTurn(curr);
+        blocks.Remove(((int)curr.transform.position.x, (int)curr.transform.position.y));
+        Destroy(curr);
+    }
+
+    public static void MoveWorldLocation(Transform curr, int xMove, int yMove)
+    {
+        int x = (int)curr.position.x;
+        int y = (int)curr.position.y;
+        if (!Empty(x + xMove, y + yMove)) return;
+        curr.position = new Vector2(x + xMove, y + yMove);
+        blocks[(x + xMove, y + yMove)] = curr.gameObject;
+        blocks.Remove((x, y));
+    }
+
+    public static void AddToWorld(GameObject curr, int x, int y)
+    {
+        if (!blocks.ContainsKey((x, y)))
+        {
+            blocks[(x, y)] = curr;
+        }
+    }
+
     public static void Enable(int x, int y)
     {
         if (blocks.ContainsKey((x, y)))
@@ -108,7 +114,7 @@ public class WorldController : MonoBehaviour
         {
             backBlocks[(x, y)] = block.GetComponent<Block>().Create(x, y, world.transform, blockSprite);
             backBlocks[(x, y)].GetComponent<Block>().background = true;
-            backBlocks[(x, y)].GetComponent<BoxCollider2D>().enabled = false;
+            backBlocks[(x, y)].GetComponent<BoxCollider2D>().isTrigger = true;
             backBlocks[(x, y)].GetComponent<SpriteRenderer>().color = new Color32(120, 120, 120, 255);
             backBlocks[(x, y)].GetComponent<SpriteRenderer>().sortingOrder = -1;
             //if (!level) backBlocks[(x, y)].SetActive(false);

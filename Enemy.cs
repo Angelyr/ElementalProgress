@@ -2,29 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static WorldController;
+using static TurnOrder;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Character
 {
-
-    private bool myTurn = false;
-    private int ap = 5;
-    private int maxAp = 5;
-    private int initiative = 0;
+    private void Awake()
+    {
+        base.Init();
+    }
 
     private void Start()
     {
-        InvokeRepeating("MoveRandomly", 2, 1);
+        InvokeRepeating("AI", 2, 1);
         AddTurn(gameObject);
+        AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
     }
 
-    private void Update()
+    private void AI()
     {
+        if (!MyTurn(gameObject)) return;
+        PathToPlayer();
+        Attack();
     }
 
-    public void StartTurn()
+    private void PathToPlayer()
     {
-        myTurn = true;
-        ap = maxAp;
+        int playerX = (int)player.transform.position.x;
+        int playerY = (int)player.transform.position.y;
+        int myX = (int)transform.position.x;
+        int myY = (int)transform.position.y;
+
+        if (playerX > myX) Move(1, 0);
+        else if (playerX < myX) Move(-1, 0);
+        else if (playerY > myY) Move(0, 1);
+        else if (playerY < myY) Move(0, -1);
+    }
+
+    private void Attack()
+    {
+        ConsumeAP();
+        if (PlayerWithInRange(1)) player.GetComponent<PlayerController>().Attacked();
     }
 
     private void MoveRandomly()
@@ -37,14 +54,17 @@ public class Enemy : MonoBehaviour
     //move character after input
     private void Move(int xMove, int yMove)
     {
+        ConsumeAP();
+        MoveWorldLocation(transform, xMove, yMove);
+    }
+
+    private void ConsumeAP()
+    {
         if (ap < 1)
         {
             EndTurn(gameObject);
             return;
         }
-        if (!myTurn) return;
-        if (!Empty((int)transform.position.x + xMove, (int)transform.position.y + yMove)) return;
-        transform.position = new Vector2(transform.position.x + xMove, transform.position.y + yMove);
         ap -= 1;
     }
 
@@ -52,8 +72,12 @@ public class Enemy : MonoBehaviour
     {
         if(collision.tag == "Attack")
         {
-            RemoveFromTurn(gameObject);
-            Destroy(gameObject);
+            Attacked();
         }
+    }
+
+    public override void Attacked()
+    {
+        Kill(gameObject);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static WorldController;
 
-public class Block : MonoBehaviour
+public class Block : Entity
 {
     public Sprite top;
     public Sprite bottom;
@@ -14,6 +14,7 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
+        base.Init();
         spriteComponent = gameObject.GetComponent<SpriteRenderer>();
     }
 

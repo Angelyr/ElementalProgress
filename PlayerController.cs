@@ -2,34 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static WorldController;
+using static TurnOrder;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Character
 {
     private Inventory inventory;
-    private int ap = 5;
-    private int maxAP = 5;
-    private bool myTurn = false;
-    private int initiative = 100;
+    private GameObject apUI;
+    private GameObject healthUI;
 
     private void Awake()
     {
+        Init(5,5);
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+        apUI = GameObject.Find("AP");
+        healthUI = GameObject.Find("Health");
+    }
+
+    public override void StartTurn()
+    {
+        ChangeAP(maxAP);
     }
 
     private void Start()
     {
         AddTurn(gameObject);
-    }
-
-    public void StartTurn()
-    {
-        myTurn = true;
-        ap = maxAP;
+        AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
     }
 
     //Every frame
     private void Update()
     {
+        if (!MyTurn(gameObject)) return;
+        if (ap < 1) return;
+
         if (Input.GetKeyDown("w")) Move(0, 1);
         if (Input.GetKeyDown("a")) Move(-1, 0);
         if (Input.GetKeyDown("s")) Move(0, -1);
@@ -37,14 +42,32 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(0)) inventory.UseSelected();
     }
 
+    public int GetRange()
+    {
+        return inventory.GetSelectedRange();
+    }
+
     //move character after input
     private void Move(int xMove, int yMove)
     {
-        if (ap < 1) return;
-        if (!myTurn) return;
-        if (!Empty((int)transform.position.x + xMove, (int)transform.position.y + yMove)) return;
+        MoveWorldLocation(transform, xMove, yMove);
+        if (!InfinteTurn()) ChangeAP(ap - 1);
+    }
 
-        transform.position = new Vector2(transform.position.x + xMove, transform.position.y + yMove);
-        if(!InfinteTurn()) ap -= 1;
+    private void ChangeAP(int newAP)
+    {
+        ap = newAP;
+        apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + newAP + "/" + maxAP;
+    }
+
+    private void ChangeHealth(int newHealth)
+    {
+        health = newHealth;
+        healthUI.GetComponent<UnityEngine.UI.Text>().text = "Health: " + newHealth + "/" + maxHealth;
+    }
+
+    public override void Attacked()
+    {
+        ChangeHealth(health - 1);
     }
 }

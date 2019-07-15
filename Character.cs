@@ -2,11 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public abstract class Character : Entity
 {
-    public void StartTurn()
+    protected int ap = 5;
+    protected int maxAP = 5;
+    protected int health = 5;
+    protected int maxHealth = 5;
+    public GameObject myTurnUI;
+
+    public void Init(int ap, int health)
     {
-        if (gameObject.name.Contains("Player")) gameObject.GetComponent<PlayerController>().StartTurn();
-        if (gameObject.tag == "Enemy") gameObject.GetComponent<Enemy>().StartTurn();
+        base.Init();
+        this.ap = ap;
+        this.maxAP = ap;
+        this.health = health;
+        this.maxHealth = health;
     }
+
+
+    public virtual void StartTurn()
+    {
+        ap = maxAP;
+    }
+
+    public abstract void Attacked();
+
+
 }

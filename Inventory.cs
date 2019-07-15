@@ -17,8 +17,9 @@ public class Inventory : MonoBehaviour
     {
         world = GameObject.Find("World");
         player = GameObject.Find("Player");
-        inventorySlots[0] = (GameObject)Resources.Load("Prefab/Pickaxe", typeof(GameObject));
-        inventorySlots[1] = (GameObject)Resources.Load("Prefab/Laser", typeof(GameObject));
+        inventorySlots[0] = (GameObject)Resources.Load("Prefab/Pickaxe");
+        inventorySlots[1] = (GameObject)Resources.Load("Prefab/Laser");
+        inventorySlots[2] = (GameObject)Resources.Load("Prefab/Punch");
     }
 
 
@@ -111,5 +112,15 @@ public class Inventory : MonoBehaviour
         {
             inventorySlots[selected].GetComponent<Usable>().Use();
         }
+    }
+
+    public int GetSelectedRange()
+    {
+        if (inventorySlots[selected] != null)
+        {
+            return inventorySlots[selected].GetComponent<Usable>().GetRange();
+        }
+
+        return 0;
     }
 }

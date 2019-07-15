@@ -17,6 +17,23 @@ public class Usable : MonoBehaviour
         player = GameObject.Find("Player");
     }
 
+    public void Use()
+    {
+        if (gameObject.name.Contains("Pickaxe")) Pickaxe();
+        if (gameObject.name.Contains("Block")) Block();
+        if (gameObject.name.Contains("Laser")) Laser();
+        if (gameObject.name.Contains("Punch")) Punch();
+    }
+
+    public int GetRange()
+    {
+        if (gameObject.name.Contains("Pickaxe")) return 5;
+        if (gameObject.name.Contains("Block")) return 5;
+        if (gameObject.name.Contains("Laser")) return 5;
+        if (gameObject.name.Contains("Punch")) return 1;
+        return 0;
+    }
+
     private void Pickaxe()
     {
         if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
@@ -71,10 +88,21 @@ public class Usable : MonoBehaviour
         }
     }
 
-    public void Use()
+    private bool WithInRange(int range, int targetX, int targetY)
     {
-        if (gameObject.name.Contains("Pickaxe")) Pickaxe();
-        if (gameObject.name.Contains("Block")) Block();
-        if (gameObject.name.Contains("Laser")) Laser();
+        if (Mathf.Abs(targetX - transform.position.x) <= range) return true;
+        if (Mathf.Abs(targetY - transform.position.y) <= range) return true;
+        return false;
+    }
+
+    private void Punch()
+    {
+        int range = 1;
+        int targetX = (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+        int targetY = (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+        if (!Input.GetMouseButtonDown(0)) return;
+        if (!WithInRange(range, targetX, targetY)) return;
+        GameObject target = Get(targetX, targetY);
+        if (target != null) target.GetComponent<Character>().Attacked();
     }
 }
