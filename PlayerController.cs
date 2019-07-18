@@ -47,6 +47,11 @@ public class PlayerController : Character
         return inventory.GetSelectedRange();
     }
 
+    public Direction GetDirection()
+    {
+        return null;
+    }
+
     //move character after input
     private void Move(int xMove, int yMove)
     {

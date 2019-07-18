@@ -27,17 +27,9 @@ public class WorldController : MonoBehaviour
         slime = (GameObject)Resources.Load("Prefab/Slime");
     }
 
-    //Enemies
-    private static int spawnTimer = 3;
-    private static int maxTimer = 3;
-    public static void SpawnEnemies()
+    public static void SpawnEnemy(int x, int y)
     {
-        spawnTimer -= 1;
-        if (spawnTimer < 1)
-        {
-            Instantiate(slime);
-            spawnTimer = maxTimer;
-        }
+        Instantiate(slime, new Vector2(x, y), Quaternion.identity);
     }
 
     //Block methods
@@ -121,6 +113,15 @@ public class WorldController : MonoBehaviour
             return true;
         }
         else return false;
+    }
+
+    public static GameObject GetGround(int x, int y)
+    {
+        if (backBlocks.ContainsKey((x, y)))
+        {
+            return backBlocks[(x, y)];
+        }
+        else return null;
     }
 
     public static bool Place(int x, int y, GameObject b)

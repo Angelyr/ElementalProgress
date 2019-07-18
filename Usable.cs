@@ -10,6 +10,9 @@ public class Usable : MonoBehaviour
     private GameObject player;
     private GameObject laser;
 
+    private int prevMouseX;
+    private int prevMouseY;
+
     private void Awake()
     {
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
@@ -98,8 +101,8 @@ public class Usable : MonoBehaviour
     private void Punch()
     {
         int range = 1;
-        int targetX = (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-        int targetY = (int)Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+        int targetX = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
+        int targetY = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
         if (!Input.GetMouseButtonDown(0)) return;
         if (!WithInRange(range, targetX, targetY)) return;
         GameObject target = Get(targetX, targetY);

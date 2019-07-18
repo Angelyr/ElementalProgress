@@ -39,7 +39,6 @@ public class TurnOrder : MonoBehaviour
 
         myUI.transform.GetChild(0).SetAsLastSibling();
 
-        SpawnEnemies();
     }
 
     public static void StartTurn()
