@@ -6,7 +6,7 @@ using static TurnOrder;
 
 public class PlayerController : Character
 {
-    private Inventory inventory;
+    public Inventory inventory;
     private GameObject apUI;
     private GameObject healthUI;
 

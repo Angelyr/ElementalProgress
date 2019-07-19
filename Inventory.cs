@@ -105,6 +105,10 @@ public class Inventory : MonoBehaviour
         return null;
     }
 
+    public GameObject GetSelected()
+    {
+        return inventorySlots[selected];
+    }
 
     public void UseSelected()
     {

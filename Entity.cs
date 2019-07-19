@@ -7,11 +7,13 @@ public class Entity : MonoBehaviour
 {
     private GameObject myHighlight;
     protected GameObject player;
+    private List<GameObject> highlightedObjects;
 
     public virtual void Init()
     {
         myHighlight = transform.Find("Highlight").gameObject;
         player = GameObject.Find("Player");
+        highlightedObjects = new List<GameObject>();
     }
 
     public void Highlight()
@@ -39,43 +41,27 @@ public class Entity : MonoBehaviour
         int range = player.GetComponent<PlayerController>().GetRange();
         if (!PlayerWithInRange(range)) return;
         Highlight();
-    }
 
-    public void PropogateHighlight(int up, int down, int left, int right, int range)
-    {
-        if (range == 0) return;
-        Highlight();
-        int x = (int)transform.position.x;
-        int y = (int)transform.position.y;
-        if(up > 0)
+        List<GameObject> area = player.GetComponent<PlayerController>().inventory.GetSelected().GetComponent<Usable>().GetArea();
+        if (area == null) return;
+        foreach(GameObject entity in area)
         {
-            if(Get(x, y + 1) != null) Get(x, y + 1).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-            if(GetGround(x, y + 1) != null) GetGround(x, y + 1).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-
-        }
-        if (down > 0)
-        {
-            if (Get(x, y-1) != null) Get(x, y - 1).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-            if (GetGround(x, y - 1) != null) GetGround(x, y - 1).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-
-        }
-        if (left > 0)
-        {
-            if (Get(x-1, y) != null) Get(x-1, y).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-            if (GetGround(x-1, y) != null) GetGround(x-1, y).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-
-        }
-        if (right > 0)
-        {
-            if (Get(x+1, y) != null) Get(x+1, y).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-            if (GetGround(x+1, y) != null) GetGround(x+1, y).GetComponent<Entity>().PropogateHighlight(up, down, left, right, range - 1);
-
+            if (entity == null) continue;
+            entity.GetComponent<Entity>().Highlight();
+            highlightedObjects.Add(entity);
         }
     }
 
     private void OnMouseExit()
     {
-        removeHighlight();   
+        removeHighlight();
+
+        foreach (GameObject entity in highlightedObjects)
+        {
+            if (entity == null) continue;
+            entity.GetComponent<Entity>().removeHighlight();
+        }
+        highlightedObjects.Clear();
     }
 
     public class Direction

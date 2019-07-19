@@ -37,6 +37,42 @@ public class Usable : MonoBehaviour
         return 0;
     }
 
+    public List<GameObject> GetArea()
+    {
+        if (gameObject.name.Contains("Laser")) return LaserArea();
+        return null;
+    }
+
+    private List<GameObject> LaserArea()
+    {
+        int range = GetRange();
+        int playerX = (int)transform.position.x;
+        int playerY = (int)transform.position.y;
+
+        Vector2 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        int mouseX = Mathf.RoundToInt(mouseLocation.x);
+        int mouseY = Mathf.RoundToInt(mouseLocation.y);
+
+        List<GameObject> area = new List<GameObject>();
+        while(range > 0)
+        {
+            int changeX = 0;
+            int changeY = 0;
+
+            if (mouseX > playerX) changeX = -range;
+            else if (mouseX < playerX) changeX = range;
+
+            if (mouseY > playerY) changeY = -range;
+            else if (mouseY < playerY) changeY = range;
+
+            area.Add(Get(mouseX + changeX, mouseY + changeY));
+            area.Add(GetGround(mouseX + changeX, mouseY + changeY));
+
+            range -= 1;
+        }
+        return area;
+    }
+
     private void Pickaxe()
     {
         if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
