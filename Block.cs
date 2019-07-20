@@ -26,7 +26,7 @@ public class Block : Entity
     private void SpawnEnemyOnThisBlock()
     {
         if (!background) return;
-        int spawnChance = 3;
+        int spawnChance = 1;
         if (Random.Range(0,100) < spawnChance)
         {
             SpawnEnemy((int)transform.position.x, (int)transform.position.y);

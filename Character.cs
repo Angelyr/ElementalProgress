@@ -10,6 +10,8 @@ public abstract class Character : Entity
     protected int maxHealth = 5;
     public GameObject myTurnUI;
 
+    protected int enterTurnDistance = 10;
+
     public void Init(int ap, int health)
     {
         base.Init();
@@ -27,5 +29,6 @@ public abstract class Character : Entity
 
     public abstract void Attacked();
 
+    public abstract void StartConcurrentTurn();
 
 }

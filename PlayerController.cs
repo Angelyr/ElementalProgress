@@ -52,11 +52,17 @@ public class PlayerController : Character
         return null;
     }
 
+    public override void StartConcurrentTurn()
+    {
+        StartTurn();
+    }
+
     //move character after input
     private void Move(int xMove, int yMove)
     {
         MoveWorldLocation(transform, xMove, yMove);
-        if (!InfinteTurn()) ChangeAP(ap - 1);
+        ChangeAP(ap - 1);
+        EndConcurrentTurn(gameObject);
     }
 
     private void ChangeAP(int newAP)

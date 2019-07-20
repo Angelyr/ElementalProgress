@@ -7,14 +7,16 @@ public class TurnOrder : MonoBehaviour
 {
     private static List<GameObject> turnOrder;
     private GameObject player;
-    private static GameObject turn;
+    private static GameObject turnUI;
     private static GameObject myUI;
+    private static List<GameObject> concurrentTurns;
 
     private void Awake()
     {
         turnOrder = new List<GameObject>();
+        concurrentTurns = new List<GameObject>();
         player = GameObject.Find("Player");
-        turn = (GameObject)Resources.Load("Prefab/Turn");
+        turnUI = (GameObject)Resources.Load("Prefab/Turn");
         myUI = GameObject.Find("TurnOrder");
     }
 
@@ -24,7 +26,7 @@ public class TurnOrder : MonoBehaviour
         turnOrder.Add(newTurn);
         if (turnOrder.Count == 1) turnOrder[0].GetComponent<Character>().StartTurn();
 
-        GameObject uiTurn = Instantiate(turn, myUI.transform);
+        GameObject uiTurn = Instantiate(turnUI, myUI.transform);
         uiTurn.GetComponent<UnityEngine.UI.Image>().sprite = newTurn.GetComponent<SpriteRenderer>().sprite;
         newTurn.GetComponent<Character>().myTurnUI = uiTurn;
     }
@@ -60,10 +62,26 @@ public class TurnOrder : MonoBehaviour
         if (index == 0) StartTurn();
     }
 
-    public static bool InfinteTurn()
+    public static bool ConcurrentTurns()
     {
         if (turnOrder.Count == 1) return true;
         else return false;
+    }
+
+    public static void AddConcurrentTurn(GameObject newTurn)
+    {
+        concurrentTurns.Add(newTurn);
+        if (concurrentTurns.Count == 1) concurrentTurns[0].GetComponent<Character>().StartConcurrentTurn();
+    }
+
+    public static void EndConcurrentTurn(GameObject currTurn)
+    {
+        if (concurrentTurns[0] != currTurn) return;
+        GameObject currentTurn = concurrentTurns[0];
+        concurrentTurns.RemoveAt(0);
+        concurrentTurns.Add(currentTurn);
+        concurrentTurns[0].GetComponent<Character>().StartConcurrentTurn();
+            
     }
 
     public void EndTurnButton()

@@ -26,6 +26,16 @@ public class Entity : MonoBehaviour
         myHighlight.SetActive(false);
     }
 
+    protected Vector2Int GetPlayerPosition()
+    {
+        return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
+    }
+
+    protected Vector2Int GetMyPosition()
+    {
+        return new Vector2Int((int)transform.position.x, (int)transform.position.y);
+    }
+
     protected bool PlayerWithInRange(int range)
     {
         int playerX = (int)player.transform.position.x;
@@ -39,10 +49,10 @@ public class Entity : MonoBehaviour
     private void OnMouseEnter()
     {
         int range = player.GetComponent<PlayerController>().GetRange();
-        if (!PlayerWithInRange(range)) return;
-        Highlight();
+        //if (!PlayerWithInRange(range)) return;
+        //Highlight();
 
-        List<GameObject> area = player.GetComponent<PlayerController>().inventory.GetSelected().GetComponent<Usable>().GetArea();
+        List<GameObject> area = player.GetComponent<PlayerController>().inventory.GetSelected().GetComponent<Ability>().GetArea();
         if (area == null) return;
         foreach(GameObject entity in area)
         {

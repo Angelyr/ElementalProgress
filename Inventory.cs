@@ -114,7 +114,7 @@ public class Inventory : MonoBehaviour
     {
         if (inventorySlots[selected] != null)
         {
-            inventorySlots[selected].GetComponent<Usable>().Use();
+            inventorySlots[selected].GetComponent<Ability>().Use();
         }
     }
 
@@ -122,7 +122,7 @@ public class Inventory : MonoBehaviour
     {
         if (inventorySlots[selected] != null)
         {
-            return inventorySlots[selected].GetComponent<Usable>().GetRange();
+            return inventorySlots[selected].GetComponent<Ability>().GetRange();
         }
 
         return 0;

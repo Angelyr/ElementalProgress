@@ -25,6 +25,25 @@ public class Enemy : Character
         Attack();
     }
 
+    private bool EnterTurnOrder()
+    {
+        if (!PlayerWithInRange(enterTurnDistance)) return false;
+        AddTurn(gameObject);
+        return true;
+    }
+
+    //return false if couldn't start concurrent turn
+    public override void StartConcurrentTurn()
+    {
+        if (PlayerWithInRange(enterTurnDistance))
+        {
+            AddTurn(gameObject);
+            return;
+        }
+        PathToPlayer();
+        EndConcurrentTurn(gameObject);
+    }
+
     private void PathToPlayer()
     {
         int playerX = (int)player.transform.position.x;
