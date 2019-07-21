@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.Tilemaps;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using static TurnOrder;
 
@@ -14,17 +12,80 @@ public class WorldController : MonoBehaviour
     private static GameObject slime;
     private static Dictionary<(int, int), GameObject> blocks;
     private static Dictionary<(int, int), GameObject> backBlocks;
+    private static Dictionary<Vector2Int, int> distanceFromPlayer;
+    private static Queue<Vector2Int> nextTile;
     
     //Initialize
     private void Awake()
     {
         blocks = new Dictionary<(int, int), GameObject>();
         backBlocks = new Dictionary<(int, int), GameObject>();
+        distanceFromPlayer = new Dictionary<Vector2Int, int>();
+        nextTile = new Queue<Vector2Int>();
 
         player = GameObject.Find("Player");
         world = GameObject.Find("World");
         block = (GameObject)Resources.Load("Prefab/Other/Block", typeof(GameObject));
         slime = (GameObject)Resources.Load("Prefab/Slime");
+    }
+
+    public static void DistanceFromPlayer()
+    {
+        nextTile.Clear();
+        distanceFromPlayer.Clear();
+        Vector2Int playerPosition = player.GetComponent<Entity>().GetPlayerPosition();
+        nextTile.Enqueue(playerPosition);
+        distanceFromPlayer.Add(playerPosition, 0);
+
+        while(nextTile.Count > 0)
+        {
+            Vector2Int currTile = nextTile.Dequeue();
+            int dist = distanceFromPlayer[currTile];
+            Vector2Int[] adjacent = GetAdjacent(currTile);
+            foreach(Vector2Int tile in adjacent)
+            {
+                if (distanceFromPlayer.ContainsKey(tile)) continue;
+                if (blocks.ContainsKey((tile.x, tile.y))) continue;
+                if (!backBlocks.ContainsKey((tile.x, tile.y))) continue;
+                distanceFromPlayer[tile] = dist + 1;
+                nextTile.Enqueue(tile);
+            }
+        }
+    }
+
+    public static Vector2Int GetClosestTileToPlayer(Vector2Int currTile)
+    {
+        Vector2Int[] adjacent = GetAdjacent(currTile);
+        Vector2Int closest = new Vector2Int(-1, -1);
+        int shortestDist = -1;
+        foreach(Vector2Int tile in adjacent)
+        {
+            if (!distanceFromPlayer.ContainsKey(tile)) continue;
+            if (blocks.ContainsKey((tile.x, tile.y))) continue;
+            if (!backBlocks.ContainsKey((tile.x, tile.y))) continue;
+            if (shortestDist == -1 || shortestDist > distanceFromPlayer[tile])
+            {
+                closest = tile;
+                shortestDist = distanceFromPlayer[tile];
+            }
+        }
+        return closest;
+    }
+
+    private static Vector2Int[] GetAdjacent(Vector2Int currTile)
+    {
+        Vector2Int[] adjacent = new Vector2Int[8];
+        adjacent[0] = new Vector2Int(currTile.x - 1, currTile.y + 1);
+        adjacent[1] = new Vector2Int(currTile.x + 0, currTile.y + 1);
+        adjacent[2] = new Vector2Int(currTile.x + 1, currTile.y + 1);
+
+        adjacent[3] = new Vector2Int(currTile.x - 1, currTile.y + 0);
+        adjacent[4] = new Vector2Int(currTile.x + 1, currTile.y + 0);
+
+        adjacent[5] = new Vector2Int(currTile.x - 1, currTile.y - 1);
+        adjacent[6] = new Vector2Int(currTile.x + 0, currTile.y - 1);
+        adjacent[7] = new Vector2Int(currTile.x + 1, currTile.y - 1);
+        return adjacent;
     }
 
     public static void SpawnEnemy(int x, int y)
@@ -48,6 +109,14 @@ public class WorldController : MonoBehaviour
         curr.position = new Vector2(x + xMove, y + yMove);
         blocks[(x + xMove, y + yMove)] = curr.gameObject;
         blocks.Remove((x, y));
+    }
+
+    public static void MoveToWorldPoint(Transform curr, Vector2Int newLocation)
+    {
+        if (!Empty(newLocation.x, newLocation.y)) return;
+        blocks.Remove(((int)curr.transform.position.x, (int)curr.transform.position.y));
+        curr.position = new Vector2(newLocation.x, newLocation.y);
+        blocks[(newLocation.x, newLocation.y)] = curr.gameObject;
     }
 
     public static void AddToWorld(GameObject curr, int x, int y)

@@ -24,6 +24,7 @@ public class TurnOrder : MonoBehaviour
     public static void AddTurn(GameObject newTurn)
     {
         turnOrder.Add(newTurn);
+        concurrentTurns.Remove(newTurn);
         if (turnOrder.Count == 1) turnOrder[0].GetComponent<Character>().StartTurn();
 
         GameObject uiTurn = Instantiate(turnUI, myUI.transform);
@@ -68,20 +69,19 @@ public class TurnOrder : MonoBehaviour
         else return false;
     }
 
+    public static void StartConcurrentTurns()
+    {
+        foreach(GameObject turn in concurrentTurns)
+        {
+            bool success = turn.GetComponent<Character>().StartConcurrentTurn();
+            if (!success) break;
+        }
+    }
+
     public static void AddConcurrentTurn(GameObject newTurn)
     {
         concurrentTurns.Add(newTurn);
         if (concurrentTurns.Count == 1) concurrentTurns[0].GetComponent<Character>().StartConcurrentTurn();
-    }
-
-    public static void EndConcurrentTurn(GameObject currTurn)
-    {
-        if (concurrentTurns[0] != currTurn) return;
-        GameObject currentTurn = concurrentTurns[0];
-        concurrentTurns.RemoveAt(0);
-        concurrentTurns.Add(currentTurn);
-        concurrentTurns[0].GetComponent<Character>().StartConcurrentTurn();
-            
     }
 
     public void EndTurnButton()
