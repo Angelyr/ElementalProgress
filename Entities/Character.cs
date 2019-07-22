@@ -10,8 +10,6 @@ public abstract class Character : Entity
     protected int maxHealth = 5;
     public GameObject myTurnUI;
 
-    protected int enterTurnDistance = 10;
-
     public virtual void StartTurn()
     {
         ap = maxAP;

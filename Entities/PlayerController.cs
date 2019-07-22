@@ -23,6 +23,7 @@ public class PlayerController : Character
 
     private void Start()
     {
+        WorldController.DistanceFromPlayer();
         TurnOrder.AddTurn(gameObject);
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
     }
@@ -56,8 +57,8 @@ public class PlayerController : Character
     {
         WorldController.MoveWorldLocation(transform, xMove, yMove);
         ChangeAP(ap - 1);
-        TurnOrder.StartConcurrentTurns();
         WorldController.DistanceFromPlayer();
+        TurnOrder.StartConcurrentTurns();
     }
 
     private void ChangeAP(int newAP)

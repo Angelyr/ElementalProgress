@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+    protected int enterTurnDistance = 7;
+
     private void Start()
     {
         InvokeRepeating("AI", 2, 1);

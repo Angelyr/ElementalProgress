@@ -20,6 +20,7 @@ public class Inventory : MonoBehaviour
         inventorySlots[0] = (GameObject)Resources.Load("Prefab/Pickaxe");
         inventorySlots[1] = (GameObject)Resources.Load("Prefab/Laser");
         inventorySlots[2] = (GameObject)Resources.Load("Prefab/Punch");
+        inventorySlots[3] = (GameObject)Resources.Load("Prefab/AOE");
     }
 
 

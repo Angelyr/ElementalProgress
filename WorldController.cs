@@ -10,9 +10,9 @@ public class WorldController : MonoBehaviour
     private static GameObject world;
     private static GameObject player;
     private static GameObject slime;
-    private static Dictionary<(int, int), GameObject> blocks;
-    private static Dictionary<(int, int), GameObject> backBlocks;
-    private static Dictionary<Vector2Int, int> distanceFromPlayer;
+    public static Dictionary<(int, int), GameObject> blocks;
+    public static Dictionary<(int, int), GameObject> backBlocks;
+    public static Dictionary<Vector2Int, int> distanceFromPlayer;
     private static Queue<Vector2Int> nextTile;
     
     //Initialize
@@ -72,7 +72,7 @@ public class WorldController : MonoBehaviour
         return closest;
     }
 
-    private static Vector2Int[] GetAdjacent(Vector2Int currTile)
+    public static Vector2Int[] GetAdjacent(Vector2Int currTile)
     {
         Vector2Int[] adjacent = new Vector2Int[8];
         adjacent[0] = new Vector2Int(currTile.x - 1, currTile.y + 1);
