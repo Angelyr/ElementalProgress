@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static WorldController;
 
-public class Punch : Ability
+public class Melee : Ability
 {
     public override int GetRange()
     {

@@ -24,7 +24,7 @@ public abstract class Ability : MonoBehaviour
 
     public virtual List<GameObject> GetArea()
     {
-        Vector2Int mouse = GetIntMouseInRange();
+        Vector2Int mouse = MousePositionInRange();
         List<GameObject> area = new List<GameObject>();
 
         area.Add(Get(mouse.x, mouse.y));
@@ -32,10 +32,10 @@ public abstract class Ability : MonoBehaviour
         return area;
     }
 
-    protected Vector2Int GetIntMouseInRange()
+    protected Vector2Int MousePositionInRange()
     {
-        Vector2Int mouse = GetIntMousePosition();
-        Vector2Int player = GetIntPlayerPosition();
+        Vector2Int mouse = MousePosition();
+        Vector2Int player = PlayerPosition();
 
         if (Mathf.Abs(mouse.x - player.x) > GetRange() && mouse.x > player.x) mouse.x = player.x + GetRange();
         if (Mathf.Abs(mouse.x - player.x) > GetRange() && mouse.x < player.x) mouse.x = player.x - GetRange();
@@ -52,7 +52,7 @@ public abstract class Ability : MonoBehaviour
         return false;
     }
 
-    protected Vector2Int GetIntMousePosition()
+    protected Vector2Int MousePosition()
     {
         Vector2 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int mouseX = Mathf.RoundToInt(mouseLocation.x);
@@ -60,7 +60,7 @@ public abstract class Ability : MonoBehaviour
         return new Vector2Int(mouseX, mouseY);
     }
 
-    protected Vector2Int GetIntPlayerPosition()
+    protected Vector2Int PlayerPosition()
     {
         return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
     }

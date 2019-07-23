@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using static WorldController;
 
 public class Entity : MonoBehaviour
 {
@@ -26,14 +24,21 @@ public class Entity : MonoBehaviour
         myHighlight.SetActive(false);
     }
 
-    public Vector2Int GetPlayerPosition()
+    public Vector2Int PlayerPosition()
     {
         return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
     }
 
-    public Vector2Int GetMyPosition()
+    public Vector2Int MyPosition()
     {
         return new Vector2Int((int)transform.position.x, (int)transform.position.y);
+    }
+
+    public Vector2Int MousePosition()
+    {
+        int mouseX = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
+        int mouseY = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+        return new Vector2Int(mouseX, mouseY);
     }
 
     protected bool PlayerWithInRange(int range)

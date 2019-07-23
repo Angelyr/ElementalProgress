@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AOE : Ability
+public class MeleeAOE : Ability
 {
     public override List<GameObject> GetArea()
     {
-        Vector2Int[] adjacent = WorldController.GetAdjacent(GetIntPlayerPosition());
+        Vector2Int[] adjacent = WorldController.GetAdjacent(PlayerPosition());
         List<GameObject> area = new List<GameObject>();
         area.Add(player);
-        area.Add(WorldController.backBlocks[((int)player.transform.position.x, (int)player.transform.position.y)]);
+        area.Add(WorldController.floorTiles[((int)player.transform.position.x, (int)player.transform.position.y)]);
         foreach(Vector2Int position in adjacent)
         {
-            if (WorldController.blocks.ContainsKey((position.x, position.y)))
+            if (WorldController.tiles.ContainsKey((position.x, position.y)))
             {
-                area.Add(WorldController.blocks[(position.x, position.y)]);
+                area.Add(WorldController.tiles[(position.x, position.y)]);
             }
-            if (WorldController.backBlocks.ContainsKey((position.x, position.y)))
+            if (WorldController.floorTiles.ContainsKey((position.x, position.y)))
             {
-                area.Add(WorldController.backBlocks[(position.x, position.y)]);
+                area.Add(WorldController.floorTiles[(position.x, position.y)]);
             }
         }
         return area;

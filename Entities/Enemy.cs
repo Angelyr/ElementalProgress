@@ -39,7 +39,7 @@ public class Enemy : Character
 
     private void PathToPlayer()
     {
-        Vector2Int closest = WorldController.GetClosestTileToPlayer(GetMyPosition());
+        Vector2Int closest = WorldController.GetClosestTileToPlayer(MyPosition());
         WorldController.MoveToWorldPoint(transform, closest);
     }
 
