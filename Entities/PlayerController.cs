@@ -38,7 +38,7 @@ public class PlayerController : Character
         if (Input.GetKeyDown("a")) Move(-1, 0);
         if (Input.GetKeyDown("s")) Move(0, -1);
         if (Input.GetKeyDown("d")) Move(1, 0);
-        if (Input.GetMouseButton(0)) inventory.UseSelected();
+        if (Input.GetMouseButtonDown(0)) inventory.UseSelected();
     }
 
     public int GetRange()

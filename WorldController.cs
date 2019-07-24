@@ -240,6 +240,12 @@ public class WorldController : MonoBehaviour
         return null;
     }
 
+    public static GameObject GetGround(Vector2Int position)
+    {
+        if (floorTiles.ContainsKey((position.x, position.y))) return floorTiles[(position.x, position.y)];
+        return null;
+    }
+
     public static List<GameObject> GetAll(Vector2Int position)
     {
         List<GameObject> result = new List<GameObject>();
