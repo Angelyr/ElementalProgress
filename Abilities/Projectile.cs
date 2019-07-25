@@ -40,6 +40,7 @@ public class Projectile : Ability
 
     public override void Use()
     {
+        if (GetArea() == null) return;
         foreach (GameObject tile in GetArea())
         {
             tile.GetComponent<Entity>().Attacked();

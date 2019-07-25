@@ -10,9 +10,9 @@ public class WorldController : MonoBehaviour
     private static GameObject world;
     private static GameObject player;
     private static GameObject slime;
-    public static Dictionary<(int, int), GameObject> tiles;
-    public static Dictionary<(int, int), GameObject> floorTiles;
-    public static Dictionary<Vector2Int, int> distanceFromPlayer;
+    private static Dictionary<(int, int), GameObject> tiles;
+    private static Dictionary<(int, int), GameObject> floorTiles;
+    private static Dictionary<Vector2Int, int> distanceFromPlayer;
     private static Queue<Vector2Int> nextTile;
     
     //Initialize
@@ -29,7 +29,7 @@ public class WorldController : MonoBehaviour
         slime = (GameObject)Resources.Load("Prefab/Slime");
     }
 
-    public static void DistanceFromPlayer()
+    public static void SetDistanceFromPlayer()
     {
         nextTile.Clear();
         distanceFromPlayer.Clear();
@@ -45,7 +45,7 @@ public class WorldController : MonoBehaviour
             foreach(Vector2Int tile in adjacent)
             {
                 if (distanceFromPlayer.ContainsKey(tile)) continue;
-                if (tiles.ContainsKey((tile.x, tile.y))) continue;
+                //if (tiles.ContainsKey((tile.x, tile.y))) continue;
                 if (!floorTiles.ContainsKey((tile.x, tile.y))) continue;
                 distanceFromPlayer[tile] = dist + 1;
                 nextTile.Enqueue(tile);
@@ -56,21 +56,31 @@ public class WorldController : MonoBehaviour
     public static Vector2Int GetClosestTileToPlayer(Vector2Int currTile)
     {
         Vector2Int[] adjacent = GetAdjacent(currTile);
-        Vector2Int closest = new Vector2Int(-1, -1);
-        int shortestDist = -1;
+        Vector2Int closest = currTile;
+        int closestDist = distanceFromPlayer[currTile];
         foreach(Vector2Int tile in adjacent)
         {
             if (!distanceFromPlayer.ContainsKey(tile)) continue;
             if (tiles.ContainsKey((tile.x, tile.y))) continue;
             if (!floorTiles.ContainsKey((tile.x, tile.y))) continue;
-            if (shortestDist == -1 || shortestDist > distanceFromPlayer[tile])
+            if (closestDist > distanceFromPlayer[tile])
             {
                 closest = tile;
-                shortestDist = distanceFromPlayer[tile];
+                closestDist = distanceFromPlayer[tile];
+            }
+            if (closestDist == distanceFromPlayer[tile] && closest != currTile)
+            {
+                if (PlayerPosition().x == tile.x || PlayerPosition().y == tile.y) closest = tile;
             }
         }
         return closest;
     }
+
+    protected static Vector2Int PlayerPosition()
+    {
+        return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
+    }
+
 
     public static Vector2Int[] GetAdjacent(Vector2Int currTile)
     {

@@ -23,7 +23,7 @@ public class PlayerController : Character
 
     private void Start()
     {
-        WorldController.DistanceFromPlayer();
+        WorldController.SetDistanceFromPlayer();
         TurnOrder.AddTurn(gameObject);
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
     }
@@ -57,12 +57,13 @@ public class PlayerController : Character
     {
         WorldController.MoveWorldLocation(transform, xMove, yMove);
         ChangeAP(ap - 1);
-        WorldController.DistanceFromPlayer();
+        WorldController.SetDistanceFromPlayer();
         TurnOrder.StartConcurrentTurns();
     }
 
     private void ChangeAP(int newAP)
     {
+        if (TurnOrder.ConcurrentTurns()) return;
         ap = newAP;
         apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + newAP + "/" + maxAP;
     }

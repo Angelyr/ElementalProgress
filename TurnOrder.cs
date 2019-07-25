@@ -59,6 +59,7 @@ public class TurnOrder : MonoBehaviour
     {
         int index = turnOrder.IndexOf(curr);
         turnOrder.Remove(curr);
+        concurrentTurns.Remove(curr);
         Destroy(curr.GetComponent<Character>().myTurnUI);
         if (index == 0) StartTurn();
     }
@@ -86,6 +87,7 @@ public class TurnOrder : MonoBehaviour
 
     public void EndTurnButton()
     {
+        WorldController.SetDistanceFromPlayer();
         EndTurn(player);
     }
 }
