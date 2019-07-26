@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Slime : Enemy
 {
-    protected int enterTurnDistance = 7;
+    protected int enterTurnDistance = 5;
 
     private void Start()
     {
@@ -22,7 +22,7 @@ public class Slime : Enemy
 
     private void EnterTurnOrder()
     {
-        if (PlayerWithInRange(enterTurnDistance)) TurnOrder.AddTurn(gameObject);
+        if (WorldController.GetDistanceFromPlayer(MyPosition()) < enterTurnDistance) TurnOrder.AddTurn(gameObject);
         else TurnOrder.AddConcurrentTurn(gameObject);
     }
 

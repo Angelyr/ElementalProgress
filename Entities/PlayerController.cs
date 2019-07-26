@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class PlayerController : Character
 {
@@ -19,6 +21,7 @@ public class PlayerController : Character
     public override void StartTurn()
     {
         ChangeAP(maxAP);
+        inventory.DecreaseCooldowns();
     }
 
     private void Start()
@@ -38,7 +41,7 @@ public class PlayerController : Character
         if (Input.GetKeyDown("a")) Move(-1, 0);
         if (Input.GetKeyDown("s")) Move(0, -1);
         if (Input.GetKeyDown("d")) Move(1, 0);
-        if (Input.GetMouseButtonDown(0)) inventory.UseSelected();
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) inventory.UseSelected();
     }
 
     public int GetRange()
@@ -72,6 +75,8 @@ public class PlayerController : Character
     {
         health = newHealth;
         healthUI.GetComponent<UnityEngine.UI.Text>().text = "Health: " + newHealth + "/" + maxHealth;
+
+        if(health == 0) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public override void Attacked()

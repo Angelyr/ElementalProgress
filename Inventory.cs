@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour
@@ -114,11 +115,29 @@ public class Inventory : MonoBehaviour
         return inventorySlots[selected];
     }
 
+    
+
     public void UseSelected()
     {
-        if (inventorySlots[selected] != null)
+        if (inventorySlots[selected] == null) return;
+        Text cooldownUI = transform.GetChild(selected).Find("Cooldown").GetComponent<Text>();
+        if (cooldownUI.text != "") return;
+        inventorySlots[selected].GetComponent<Ability>().Use();
+        cooldownUI.text = "" + inventorySlots[selected].GetComponent<Ability>().CoolDown();
+    }
+
+
+    public void DecreaseCooldowns()
+    {
+        for(int i=0; i<inventorySlots.Length; i++)
         {
-            inventorySlots[selected].GetComponent<Ability>().Use();
+            Text cooldownUI = transform.GetChild(i).Find("Cooldown").GetComponent<Text>();
+            if (cooldownUI.text != "")
+            {
+                int cooldown = Convert.ToInt32(cooldownUI.text);
+                cooldownUI.text = "" + (cooldown - 1);
+                if (cooldownUI.text == "0") cooldownUI.text = "";
+            }
         }
     }
 

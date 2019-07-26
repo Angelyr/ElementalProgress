@@ -53,6 +53,11 @@ public class WorldController : MonoBehaviour
         }
     }
 
+    public static int GetDistanceFromPlayer(Vector2Int currTile)
+    {
+        return distanceFromPlayer[currTile];
+    }
+
     public static Vector2Int GetClosestTileToPlayer(Vector2Int currTile)
     {
         Vector2Int[] adjacent = GetAdjacent(currTile);

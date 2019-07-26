@@ -64,5 +64,11 @@ public abstract class Ability : MonoBehaviour
     {
         return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
     }
+
+    public virtual int CoolDown()
+    {
+        return 5;
+    }
+
 }
 
