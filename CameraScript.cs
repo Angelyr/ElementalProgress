@@ -10,10 +10,12 @@ public class CameraScript : MonoBehaviour
     private const float scrollSpeed = 5;
     private bool cameraLocked = true;
     private Vector3 prevPosition;
+    private Transform camerafocus;
 
     private void Awake()
     {
         player = GameObject.Find("Player");
+        camerafocus = player.transform;
     }
 
     void Update()
@@ -22,6 +24,19 @@ public class CameraScript : MonoBehaviour
         CameraPan();
         CameraScroll();
         if(culling) FrustumCulling();
+    }
+
+    public void SetCameraFocus(Transform newFocus)
+    {
+        camerafocus = newFocus;
+    }
+
+    public IEnumerator PointCamera(Transform newFocus)
+    {
+        Transform currFocus = camerafocus;
+        SetCameraFocus(newFocus);
+        yield return new WaitForSeconds(1);
+        SetCameraFocus(currFocus);
     }
 
     private void FrustumCulling()
@@ -46,7 +61,7 @@ public class CameraScript : MonoBehaviour
     {
         if (cameraLocked)
         {
-            transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
+            transform.position = new Vector3(camerafocus.position.x, camerafocus.position.y, -10);
         }
         if (Input.GetKeyDown("left ctrl")) cameraLocked = true;
     }

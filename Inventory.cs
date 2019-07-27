@@ -127,6 +127,7 @@ public class Inventory : MonoBehaviour
     }
 
 
+
     public void DecreaseCooldowns()
     {
         for(int i=0; i<inventorySlots.Length; i++)

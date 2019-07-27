@@ -9,6 +9,7 @@ public class PlayerController : Character
     public Inventory inventory;
     private GameObject apUI;
     private GameObject healthUI;
+    public CameraScript myCamera;
 
     protected override void Awake()
     {
@@ -16,10 +17,13 @@ public class PlayerController : Character
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
         apUI = GameObject.Find("AP");
         healthUI = GameObject.Find("Health");
+        myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
     }
 
     public override void StartTurn()
     {
+        myCamera.SetCameraFocus(transform);
+        gameObject.GetComponent<PlayerUI>().SetMessage("Your Turn");
         ChangeAP(maxAP);
         inventory.DecreaseCooldowns();
     }
@@ -66,7 +70,11 @@ public class PlayerController : Character
 
     private void ChangeAP(int newAP)
     {
-        if (TurnOrder.ConcurrentTurns()) return;
+        if (TurnOrder.ConcurrentTurns())
+        {
+            newAP = maxAP;
+            inventory.DecreaseCooldowns();
+        }
         ap = newAP;
         apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + newAP + "/" + maxAP;
     }

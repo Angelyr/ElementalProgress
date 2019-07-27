@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static WorldController;
 
 public class TurnOrder : MonoBehaviour
 {
     private static List<GameObject> turnOrder;
-    private GameObject player;
+    private static GameObject player;
     private static GameObject turnUI;
     private static GameObject myUI;
     private static List<GameObject> concurrentTurns;
@@ -51,7 +50,7 @@ public class TurnOrder : MonoBehaviour
 
     public static bool MyTurn(GameObject character)
     {
-        if (turnOrder[0] == character) return true;
+        if (turnOrder.Count==0 || turnOrder[0] == character) return true;
         else return false;
     }
 
@@ -61,7 +60,7 @@ public class TurnOrder : MonoBehaviour
         turnOrder.Remove(curr);
         concurrentTurns.Remove(curr);
         Destroy(curr.GetComponent<Character>().myTurnUI);
-        if (index == 0) StartTurn();
+        if (index == 0 || turnOrder.Count == 1) StartTurn();
     }
 
     public static bool ConcurrentTurns()
@@ -83,11 +82,5 @@ public class TurnOrder : MonoBehaviour
     {
         concurrentTurns.Add(newTurn);
         if (concurrentTurns.Count == 1) concurrentTurns[0].GetComponent<Character>().StartConcurrentTurn();
-    }
-
-    public void EndTurnButton()
-    {
-        WorldController.SetDistanceFromPlayer();
-        EndTurn(player);
     }
 }

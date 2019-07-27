@@ -4,18 +4,17 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using static WorldController;
 
-public abstract class Ability : MonoBehaviour
+public abstract class Ability : Thing
 {
     protected Inventory inventory;
-    protected GameObject player;
 
     private int prevMouseX;
     private int prevMouseY;
     
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
-        player = GameObject.Find("Player");
     }
 
     public abstract void Use();
@@ -50,19 +49,6 @@ public abstract class Ability : MonoBehaviour
         if (Mathf.Abs(targetX - player.transform.position.x) <= range) return true;
         if (Mathf.Abs(targetY - player.transform.position.y) <= range) return true;
         return false;
-    }
-
-    protected Vector2Int MousePosition()
-    {
-        Vector2 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        int mouseX = Mathf.RoundToInt(mouseLocation.x);
-        int mouseY = Mathf.RoundToInt(mouseLocation.y);
-        return new Vector2Int(mouseX, mouseY);
-    }
-
-    protected Vector2Int PlayerPosition()
-    {
-        return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
     }
 
     public virtual int CoolDown()
