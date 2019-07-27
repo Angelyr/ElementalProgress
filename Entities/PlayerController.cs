@@ -50,7 +50,8 @@ public class PlayerController : Character
 
     public int GetRange()
     {
-        return inventory.GetSelectedRange();
+        if (inventory.GetSelected() == null) return 0;
+        return inventory.GetSelected().GetComponent<Ability>().GetRange();
     }
 
     public override bool StartConcurrentTurn()

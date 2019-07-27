@@ -56,7 +56,7 @@ public class Entity : MonoBehaviour
         int range = player.GetComponent<PlayerController>().GetRange();
         //if (!PlayerWithInRange(range)) return;
         //Highlight();
-
+        if (player.GetComponent<PlayerController>().inventory.GetSelected() == null) return;
         List<GameObject> area = player.GetComponent<PlayerController>().inventory.GetSelected().GetComponent<Ability>().GetArea();
         if (area == null) return;
         foreach(GameObject entity in area)

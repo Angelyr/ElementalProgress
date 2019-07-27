@@ -23,7 +23,7 @@ public class Placeable : Ability
             bool notPlayer = (x != playerX || (y != playerY && y != playerY + 1));
 
             GameObject hit = Get(x, y);
-            if (inventory.ItemSelected() && notPlayer)
+            if (inventory.GetSelected() != null && notPlayer)
             {
                 if (Empty(x, y)) Place(x, y, inventory.RemoveItem());
             }
