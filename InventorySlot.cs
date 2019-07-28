@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.EventSystems;
 
-public class InventorySlot : Thing
+public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
 {
     private GameObject item;
     private bool selected;
@@ -61,5 +62,19 @@ public class InventorySlot : Thing
         return item;
     }
 
+    public override string GetDescription()
+    {
+        if (item == null) return "";
+        return item.GetComponent<Thing>().GetDescription();
+    }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        CreateHover();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        DestroyHover();
+    }
 }

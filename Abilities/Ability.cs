@@ -7,6 +7,9 @@ using static WorldController;
 public abstract class Ability : Thing
 {
     protected Inventory inventory;
+    protected string description;
+    protected int range;
+    protected int cooldown;
 
     private int prevMouseX;
     private int prevMouseY;
@@ -17,9 +20,19 @@ public abstract class Ability : Thing
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
     }
 
+    public virtual void Init(string description, int range, int cooldown)
+    {
+
+    }
+
     public abstract void Use();
 
     public abstract int GetRange();
+
+    public override string GetDescription()
+    {
+        return name;
+    }
 
     public virtual List<GameObject> GetArea()
     {
@@ -55,6 +68,5 @@ public abstract class Ability : Thing
     {
         return 5;
     }
-
 }
 

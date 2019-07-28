@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class Dash : Ability
 {
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    public override string GetDescription()
+    {
+        return "Dash:\nMoves the character in a straight line to a different location\nRange: 3";
+    }
+
     public override List<GameObject> GetArea()
     {
         if (WorldController.GetTile(MousePositionInRange()) != null) return null;

@@ -3,37 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Thing : MonoBehaviour
+public abstract class Thing : MonoBehaviour
 {
-    protected string myName = "Test";
-    protected string description = "";
     private GameObject hoverUI;
     protected GameObject player;
     private GameObject currHover;
+    private GameObject UI;
 
     protected virtual void Awake()
     {
         hoverUI = Resources.Load<GameObject>("Prefab/HoverUI");
         player = GameObject.Find("Player");
-        SetDescription();
+        UI = GameObject.Find("UI");
     }
 
-    protected virtual void SetDescription()
+    public abstract string GetDescription();
+
+    public void CreateHover()
     {
-        description = myName + description;
+        if (GetDescription() == "") return;
+        currHover = Instantiate(hoverUI, UI.transform);
+        currHover.GetComponentInChildren<Text>().text = GetDescription();
+        currHover.transform.position = transform.position;
     }
 
-    private void SetHover()
-    {
-        currHover.GetComponent<Text>().text = description;
-    }
-
-    protected virtual void OnMouseEnter()
-    {
-        currHover = Instantiate(hoverUI, new Vector2(MousePosition().x, MousePosition().y), Quaternion.identity);
-    }
-
-    protected virtual void OnMouseExit()
+    public void DestroyHover()
     {
         Destroy(currHover);
     }
