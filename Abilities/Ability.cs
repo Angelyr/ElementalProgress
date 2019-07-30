@@ -18,20 +18,21 @@ public abstract class Ability : Thing
     {
         base.Awake();
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+        Init();
     }
 
-    public virtual void Init(string description, int range, int cooldown)
-    {
-
-    }
+    protected abstract void Init();
 
     public abstract void Use();
 
-    public abstract int GetRange();
+    public int GetRange()
+    {
+        return range;
+    }
 
     public override string GetDescription()
     {
-        return name;
+        return name + ":\n" + description + "\nRange: " + range + "\nCooldown: " +  cooldown;
     }
 
     public virtual List<GameObject> GetArea()
@@ -64,9 +65,9 @@ public abstract class Ability : Thing
         return false;
     }
 
-    public virtual int CoolDown()
+    public int CoolDown()
     {
-        return 5;
+        return cooldown;
     }
 }
 

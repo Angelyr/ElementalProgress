@@ -6,9 +6,12 @@ using static WorldController;
 
 public class Placeable : Ability
 {
-    public override int GetRange()
+    protected override void Init()
     {
-        return 5;
+        name = "Placeable";
+        range = 1;
+        cooldown = 1;
+        description = "This object can be placed in the world";
     }
 
     public override void Use()

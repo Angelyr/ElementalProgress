@@ -14,9 +14,12 @@ public class Laser : Ability
         laser = (GameObject)Resources.Load("Prefab/Laser", typeof(GameObject));
     }
 
-    public override int GetRange()
+    protected override void Init()
     {
-        return 5;
+        name = "Line";
+        range = 5;
+        cooldown = 5;
+        description = "Hits every enemy in a line";
     }
 
     public override void Use()

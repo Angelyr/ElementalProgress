@@ -9,9 +9,12 @@ public class RangedAoe : Ability
         return WorldController.GetAll(MousePosition());
     }
 
-    public override int GetRange()
+    protected override void Init()
     {
-        return 7;
+        name = "Single Target";
+        range = 7;
+        cooldown = 3;
+        description = "Deals damage to any target in range";
     }
 
     public override void Use()

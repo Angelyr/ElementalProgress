@@ -4,11 +4,19 @@ using UnityEngine;
 
 public abstract class Character : Entity
 {
-    protected int ap = 5;
-    protected int maxAP = 5;
-    protected int health = 5;
-    protected int maxHealth = 5;
+    protected int ap;
+    protected int maxAP;
+    protected int health;
+    protected int maxHealth;
     public GameObject myTurnUI;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        Init();
+        maxAP = ap;
+        maxHealth = health;
+    }
 
     public virtual void StartTurn()
     {
@@ -17,4 +25,5 @@ public abstract class Character : Entity
     }
     public abstract bool StartConcurrentTurn();
 
+    protected abstract void Init();
 }

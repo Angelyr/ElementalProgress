@@ -6,9 +6,12 @@ using static WorldController;
 
 public class Pickaxe : Ability
 {
-    public override int GetRange()
+    protected override void Init()
     {
-        return 5;
+        name = "Pickaxe";
+        range = 1;
+        cooldown = 1;
+        description = "Destroy and pickup and block within range";
     }
 
     public override void Use()

@@ -20,6 +20,12 @@ public class PlayerController : Character
         myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
     }
 
+    protected override void Init()
+    {
+        health = 5;
+        ap = 5;
+    }
+
     public override void StartTurn()
     {
         myCamera.SetCameraFocus(transform);

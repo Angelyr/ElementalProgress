@@ -5,9 +5,12 @@ using static WorldController;
 
 public class Melee : Ability
 {
-    public override int GetRange()
+    protected override void Init()
     {
-        return 1;
+        name = "Melee";
+        range = 1;
+        cooldown = 1;
+        description = "Deals damage to any target in range";
     }
 
     public override void Use()

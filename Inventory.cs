@@ -48,8 +48,7 @@ public class Inventory : MonoBehaviour
 
     public void UseSelected()
     {
-        if (selected.GetItem() == null) return;
-        selected.GetItem().GetComponent<Ability>().Use();
+        selected.Use();
     }
 
     public GameObject GetSelected()

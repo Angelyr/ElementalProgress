@@ -9,11 +9,6 @@ public class Dash : Ability
         base.Awake();
     }
 
-    public override string GetDescription()
-    {
-        return "Dash:\nMoves the character in a straight line to a different location\nRange: 3";
-    }
-
     public override List<GameObject> GetArea()
     {
         if (WorldController.GetTile(MousePositionInRange()) != null) return null;
@@ -23,9 +18,12 @@ public class Dash : Ability
         return area;
     }
 
-    public override int GetRange()
+    protected override void Init()
     {
-        return 3;
+        name = "Dash";
+        range = 3;
+        cooldown = 5;
+        description = "Move in a straight line to any tile in range";
     }
 
     public override void Use()

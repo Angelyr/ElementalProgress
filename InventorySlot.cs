@@ -32,6 +32,13 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
         if (cooldown.text == "0") cooldown.text = "";
     }
 
+    public void Use()
+    {
+        if (cooldown.text != "") return;
+        cooldown.text = "5";
+        item.GetComponent<Ability>().Use();
+    }
+
     public void AddItem(GameObject newItem)
     {
         item = Instantiate(newItem, player.transform);

@@ -33,9 +33,12 @@ public class Projectile : Ability
         return start;
     }
 
-    public override int GetRange()
+    protected override void Init()
     {
-        return 7;
+        name = "Projectile";
+        range = 10;
+        cooldown = 3;
+        description = "Fires in a line and deals damage agains the first enemy it hits";
     }
 
     public override void Use()

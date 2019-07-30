@@ -55,6 +55,7 @@ public class WorldController : MonoBehaviour
 
     public static int GetDistanceFromPlayer(Vector2Int currTile)
     {
+        if (distanceFromPlayer.ContainsKey(currTile) == false) return -1;
         return distanceFromPlayer[currTile];
     }
 

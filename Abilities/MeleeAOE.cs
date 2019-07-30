@@ -16,9 +16,12 @@ public class MeleeAOE : Ability
         return area;
     }
 
-    public override int GetRange()
+    protected override void Init()
     {
-        return 1;
+        name = "MeleeAOE";
+        range = 1;
+        cooldown = 5;
+        description = "Deals damage to every enemy around you";
     }
 
     public override void Use()
