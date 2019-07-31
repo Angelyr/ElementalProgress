@@ -9,6 +9,7 @@ public class Slime : Enemy
         InvokeRepeating("AI", 2, 1);
         EnterTurnOrder();
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
+        name = "Slime";
     }
 
     private void AI()

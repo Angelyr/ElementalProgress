@@ -35,7 +35,7 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
     public void Use()
     {
         if (cooldown.text != "") return;
-        cooldown.text = "5";
+        cooldown.text = "" + item.GetComponent<Ability>().CoolDown();
         item.GetComponent<Ability>().Use();
     }
 

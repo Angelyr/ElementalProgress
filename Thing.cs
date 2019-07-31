@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public abstract class Thing : MonoBehaviour
 {
-    private GameObject hoverUI;
+    protected GameObject hoverUI;
     protected GameObject player;
-    private GameObject currHover;
+    protected GameObject currHover;
     private GameObject UI;
 
     protected virtual void Awake()
@@ -17,10 +17,14 @@ public abstract class Thing : MonoBehaviour
         UI = GameObject.Find("UI");
     }
 
-    public abstract string GetDescription();
+    public virtual string GetDescription()
+    {
+        return name;
+    }
 
     public void CreateHover()
     {
+        Debug.Log(GetDescription());
         if (GetDescription() == "") return;
         currHover = Instantiate(hoverUI, UI.transform);
         currHover.GetComponentInChildren<Text>().text = GetDescription();
@@ -32,7 +36,7 @@ public abstract class Thing : MonoBehaviour
         Destroy(currHover);
     }
 
-    protected Vector2Int MousePosition()
+    public Vector2Int MousePosition()
     {
         Vector2 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int mouseX = Mathf.RoundToInt(mouseLocation.x);
@@ -40,7 +44,7 @@ public abstract class Thing : MonoBehaviour
         return new Vector2Int(mouseX, mouseY);
     }
 
-    protected Vector2Int PlayerPosition()
+    public Vector2Int PlayerPosition()
     {
         return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
     }

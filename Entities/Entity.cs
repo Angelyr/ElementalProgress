@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public class Entity : Thing
 {
     private GameObject myHighlight;
-    protected GameObject player;
     private List<GameObject> highlightedObjects;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         myHighlight = transform.Find("Highlight").gameObject;
         player = GameObject.Find("Player");
         highlightedObjects = new List<GameObject>();
+        hoverUI = Resources.Load<GameObject>("Prefab/CharacterHover");
     }
 
     public void Highlight()
@@ -24,21 +25,9 @@ public class Entity : MonoBehaviour
         myHighlight.SetActive(false);
     }
 
-    public Vector2Int PlayerPosition()
-    {
-        return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
-    }
-
     public Vector2Int MyPosition()
     {
         return new Vector2Int((int)transform.position.x, (int)transform.position.y);
-    }
-
-    public Vector2Int MousePosition()
-    {
-        int mouseX = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
-        int mouseY = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-        return new Vector2Int(mouseX, mouseY);
     }
 
     protected bool PlayerWithInRange(int range)
@@ -51,15 +40,13 @@ public class Entity : MonoBehaviour
         return true;
     }
 
-    private void OnMouseEnter()
+    private void HighlightArea()
     {
         int range = player.GetComponent<PlayerController>().GetRange();
-        //if (!PlayerWithInRange(range)) return;
-        //Highlight();
         if (player.GetComponent<PlayerController>().inventory.GetSelected() == null) return;
         List<GameObject> area = player.GetComponent<PlayerController>().inventory.GetSelected().GetComponent<Ability>().GetArea();
         if (area == null) return;
-        foreach(GameObject entity in area)
+        foreach (GameObject entity in area)
         {
             if (entity == null) continue;
             entity.GetComponent<Entity>().Highlight();
@@ -67,16 +54,27 @@ public class Entity : MonoBehaviour
         }
     }
 
-    private void OnMouseExit()
+    private void ClearHighlightedArea()
     {
         removeHighlight();
-
         foreach (GameObject entity in highlightedObjects)
         {
             if (entity == null) continue;
             entity.GetComponent<Entity>().removeHighlight();
         }
         highlightedObjects.Clear();
+    }
+
+    private void OnMouseEnter()
+    {
+        HighlightArea();
+        CreateHover();
+    }
+
+    private void OnMouseExit()
+    {
+        ClearHighlightedArea();
+        DestroyHover();
     }
 
     public virtual void Attacked()
