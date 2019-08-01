@@ -22,16 +22,18 @@ public abstract class Thing : MonoBehaviour
         return name;
     }
 
-    public void CreateHover()
+    public virtual void CreateHover()
     {
-        Debug.Log(GetDescription());
         if (GetDescription() == "") return;
         currHover = Instantiate(hoverUI, UI.transform);
         currHover.GetComponentInChildren<Text>().text = GetDescription();
-        currHover.transform.position = transform.position;
+
+        Vector3 newPosition = transform.position;
+        newPosition.y += 100;
+        currHover.transform.position = newPosition;
     }
 
-    public void DestroyHover()
+    public virtual void DestroyHover()
     {
         Destroy(currHover);
     }

@@ -32,8 +32,6 @@ public class Block : Entity
         {
             SpawnEnemy((int)transform.position.x, (int)transform.position.y);
         }
-
-
     }
 
     public GameObject Create(int x, int y, Transform parent, Sprite newSprite)
@@ -65,6 +63,14 @@ public class Block : Entity
 
         if (up && spriteComponent.sprite != bottom) spriteComponent.sprite = bottom;
         if (!up && spriteComponent.sprite != top)   spriteComponent.sprite = top;
+    }
+
+    public override void CreateHover()
+    {
+    }
+
+    public override void DestroyHover()
+    {
     }
 
     private GameObject GetDirection(int x, int y)

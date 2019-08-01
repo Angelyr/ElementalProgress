@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Entity : Thing
 {
@@ -63,6 +64,16 @@ public class Entity : Thing
             entity.GetComponent<Entity>().removeHighlight();
         }
         highlightedObjects.Clear();
+    }
+
+    public override void CreateHover()
+    {
+        if (GetDescription() == "") return;
+        currHover = Instantiate(hoverUI, transform);
+        currHover.GetComponentInChildren<Text>().text = GetDescription();
+        Vector3 newPosition = transform.position;
+        newPosition.y += 1;
+        currHover.transform.position = newPosition;
     }
 
     private void OnMouseEnter()
