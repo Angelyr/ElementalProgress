@@ -36,6 +36,7 @@ public abstract class Thing : MonoBehaviour
     public virtual void DestroyHover()
     {
         Destroy(currHover);
+        currHover = null;
     }
 
     public Vector2Int MousePosition()

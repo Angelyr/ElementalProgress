@@ -59,6 +59,29 @@ public class WorldController : MonoBehaviour
         return distanceFromPlayer[currTile];
     }
 
+    public static Vector2Int FarthestTileFromPlayer(Vector2Int currTile)
+    {
+        Vector2Int[] adjacent = GetAdjacent(currTile);
+        Vector2Int farthest = currTile;
+        int farthestDist = distanceFromPlayer[currTile];
+        foreach (Vector2Int tile in adjacent)
+        {
+            if (!distanceFromPlayer.ContainsKey(tile)) continue;
+            if (tiles.ContainsKey((tile.x, tile.y))) continue;
+            if (!floorTiles.ContainsKey((tile.x, tile.y))) continue;
+            if (farthestDist < distanceFromPlayer[tile])
+            {
+                farthest = tile;
+                farthestDist = distanceFromPlayer[tile];
+            }
+            if (farthestDist == distanceFromPlayer[tile] && farthest != currTile)
+            {
+                if (PlayerPosition().x == tile.x || PlayerPosition().y == tile.y) farthest = tile;
+            }
+        }
+        return farthest;
+    }
+
     public static Vector2Int GetClosestTileToPlayer(Vector2Int currTile)
     {
         Vector2Int[] adjacent = GetAdjacent(currTile);

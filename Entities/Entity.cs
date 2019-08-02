@@ -70,14 +70,25 @@ public class Entity : Thing
     {
         if (GetDescription() == "") return;
         currHover = Instantiate(hoverUI, transform);
-        currHover.GetComponentInChildren<Text>().text = GetDescription();
+        currHover.transform.Find("Description").GetComponent<Text>().text = GetDescription();
         Vector3 newPosition = transform.position;
         newPosition.y += 1;
         currHover.transform.position = newPosition;
+
+        SetHealthUI();
+    }
+
+    protected void SetHealthUI()
+    {
+        if (currHover == null) return;
+        int health = GetComponent<Character>().Health();
+        int maxHealth = GetComponent<Character>().MaxHealth();
+        currHover.transform.Find("HealthBarBG").Find("HealthText").GetComponent<Text>().text = health + "/" + maxHealth;
     }
 
     private void OnMouseEnter()
     {
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
         HighlightArea();
         CreateHover();
     }

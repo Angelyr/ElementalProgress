@@ -28,16 +28,20 @@ public abstract class Enemy : Character
         return true;
     }
 
-    protected void PathToPlayer()
+    protected bool PathToPlayer()
     {
         Vector2Int closest = WorldController.GetClosestTileToPlayer(MyPosition());
+        if (closest == MyPosition()) return false;
         WorldController.MoveToWorldPoint(transform, closest);
+        return true;
     }
 
-    protected void Attack()
+    protected bool Attack()
     {
+        if (PlayerWithInRange(1) == false) return false;
         ConsumeAP();
         if (PlayerWithInRange(1)) player.GetComponent<PlayerController>().Attacked();
+        return true;
     }
 
     protected void MoveRandomly()
@@ -63,9 +67,31 @@ public abstract class Enemy : Character
         ap -= 1;
     }
 
+    protected bool PathToDistance(int distance)
+    {
+        if (WorldController.GetDistanceFromPlayer(MyPosition()) > distance) PathToPlayer();
+        else return false;
+
+        return true;
+    }
+
+    protected bool LineUp()
+    {
+        return false;
+    }
+
+    protected bool RunAway()
+    {
+        Vector2Int farthest = WorldController.FarthestTileFromPlayer(MyPosition());
+        if (farthest == MyPosition()) return false;
+        WorldController.MoveToWorldPoint(transform, farthest);
+        return true;
+    }
+
     public override void Attacked()
     {
         health -= 1;
+        SetHealthUI();
         if(health == 0) WorldController.Kill(gameObject);
     }
 

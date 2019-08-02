@@ -18,6 +18,16 @@ public abstract class Character : Entity
         maxHealth = health;
     }
 
+    public int Health()
+    {
+        return health;
+    }
+
+    public int MaxHealth()
+    {
+        return maxHealth;
+    }
+
     public virtual void StartTurn()
     {
         player.GetComponent<PlayerController>().myCamera.SetCameraFocus(transform);
