@@ -32,7 +32,7 @@ public abstract class Enemy : Character
     {
         Vector2Int closest = WorldController.GetClosestTileToPlayer(MyPosition());
         if (closest == MyPosition()) return false;
-        WorldController.MoveToWorldPoint(transform, closest);
+        MoveTo(closest);
         return true;
     }
 
@@ -55,6 +55,12 @@ public abstract class Enemy : Character
     {
         ConsumeAP();
         WorldController.MoveWorldLocation(transform, xMove, yMove);
+    }
+
+    protected void MoveTo(Vector2Int target)
+    {
+        ConsumeAP();
+        WorldController.MoveToWorldPoint(transform, target);
     }
 
     protected void ConsumeAP()
@@ -84,7 +90,7 @@ public abstract class Enemy : Character
     {
         Vector2Int farthest = WorldController.FarthestTileFromPlayer(MyPosition());
         if (farthest == MyPosition()) return false;
-        WorldController.MoveToWorldPoint(transform, farthest);
+        MoveTo(farthest);
         return true;
     }
 

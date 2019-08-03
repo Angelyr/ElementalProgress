@@ -15,8 +15,10 @@ public class Slime : Enemy
     private void AI()
     {
         if (!TurnOrder.MyTurn(gameObject)) return;
-        PathToPlayer();
-        Attack();
+
+        if (Attack()) return;
+        else if (PathToPlayer()) return;
+        else if (RunAway()) return;
     }
 
     protected override void Init()
