@@ -36,7 +36,7 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
     {
         if (cooldown.text != "") return;
         cooldown.text = "" + item.GetComponent<Ability>().CoolDown();
-        item.GetComponent<Ability>().Use();
+        item.GetComponent<Ability>().Use(MousePosition());
     }
 
     public void AddItem(GameObject newItem)

@@ -14,7 +14,7 @@ public class Pickaxe : Ability
         description = "Destroy and pickup and block within range";
     }
 
-    public override void Use()
+    public void Use2()
     {
         if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
         {

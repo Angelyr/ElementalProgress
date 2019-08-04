@@ -22,7 +22,7 @@ public class Laser : Ability
         description = "Hits every enemy in a line";
     }
 
-    public override void Use()
+    public void Use2()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -41,7 +41,7 @@ public class Laser : Ability
             attack.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
             attack.GetComponent<Effects>().Animation();
 
-            List<GameObject> area = GetArea();
+            List<GameObject> area = GetArea2();
             foreach(GameObject entity in area)
             {
                 entity.GetComponent<Entity>().Attacked();
@@ -49,7 +49,7 @@ public class Laser : Ability
         }
     }
 
-    public override List<GameObject> GetArea()
+    public List<GameObject> GetArea2()
     {
         int range = GetRange();
         int playerX = (int)transform.position.x;

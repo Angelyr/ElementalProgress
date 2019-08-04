@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class MeleeAOE : Ability
 {
-    public override List<GameObject> GetArea()
+    public override List<GameObject> GetArea(Vector2Int target)
     {
-        Vector2Int[] adjacent = WorldController.GetAdjacent(PlayerPosition());
+        Vector2Int[] adjacent = WorldController.GetAdjacent(MyPosition());
         List<GameObject> area = new List<GameObject>();
-        area.AddRange(WorldController.GetAll(PlayerPosition()));
+        area.AddRange(WorldController.GetAll(MyPosition()));
         foreach(Vector2Int position in adjacent)
         {
             area.AddRange(WorldController.GetAll(position));
@@ -22,13 +22,5 @@ public class MeleeAOE : Ability
         range = 1;
         cooldown = 5;
         description = "Deals damage to every enemy around you";
-    }
-
-    public override void Use()
-    {
-        foreach(GameObject tile in GetArea())
-        {
-            tile.GetComponent<Entity>().Attacked();
-        }
     }
 }

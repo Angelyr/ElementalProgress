@@ -9,12 +9,13 @@ public class Dash : Ability
         base.Awake();
     }
 
-    public override List<GameObject> GetArea()
+    public override List<GameObject> GetArea(Vector2Int target)
     {
-        if (WorldController.GetTile(MousePositionInRange()) != null) return null;
+
+        if (WorldController.GetTile(ClosestPositionInRange(target)) != null) return null;
 
         List<GameObject> area = new List<GameObject>();
-        area.Add(WorldController.GetGround(MousePositionInRange()));
+        area.Add(WorldController.GetGround(ClosestPositionInRange(target)));
         return area;
     }
 
@@ -26,8 +27,8 @@ public class Dash : Ability
         description = "Move in a straight line to any tile in range";
     }
 
-    public override void Use()
+    public override void Use(Vector2Int target)
     {
-        WorldController.MoveToWorldPoint(player.transform, MousePositionInRange());
+        WorldController.MoveToWorldPoint(WorldController.GetTile(MyPosition()).transform, ClosestPositionInRange(target));
     }
 }

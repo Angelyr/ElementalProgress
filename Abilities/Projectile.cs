@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class Projectile : Ability
 {
-    public override List<GameObject> GetArea()
+    public override List<GameObject> GetArea(Vector2Int target)
     {
-        Vector2Int mouse = MousePositionInRange();
-        Vector2Int projectile = PlayerPosition();
-        if (projectile.x != mouse.x && projectile.y != mouse.y) return null;
+        Vector2Int closestTarget = ClosestPositionInRange(target);
+        Vector2Int projectile = MyPosition();
+        if (projectile.x != closestTarget.x && projectile.y != closestTarget.y) return null;
 
-        projectile = MoveToward(projectile, mouse);
-        while(projectile.x != mouse.x || projectile.y != mouse.y)
+        projectile = MoveToward(projectile, closestTarget);
+        while(projectile.x != closestTarget.x || projectile.y != closestTarget.y)
         {
             if (WorldController.GetTile(projectile) != null)
             {
                 return WorldController.GetAll(projectile);
             }
 
-            projectile = MoveToward(projectile, mouse);
+            projectile = MoveToward(projectile, closestTarget);
         }
 
-        return WorldController.GetAll(mouse);
+        return WorldController.GetAll(closestTarget);
     }
 
     private Vector2Int MoveToward(Vector2Int start, Vector2Int end)
@@ -41,12 +41,4 @@ public class Projectile : Ability
         description = "Fires in a line and deals damage agains the first enemy it hits";
     }
 
-    public override void Use()
-    {
-        if (GetArea() == null) return;
-        foreach (GameObject tile in GetArea())
-        {
-            tile.GetComponent<Entity>().Attacked();
-        }
-    }
 }

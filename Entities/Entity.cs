@@ -26,11 +26,6 @@ public class Entity : Thing
         myHighlight.SetActive(false);
     }
 
-    public Vector2Int MyPosition()
-    {
-        return new Vector2Int((int)transform.position.x, (int)transform.position.y);
-    }
-
     protected bool PlayerWithInRange(int range)
     {
         int playerX = (int)player.transform.position.x;
@@ -45,7 +40,7 @@ public class Entity : Thing
     {
         int range = player.GetComponent<PlayerController>().GetRange();
         if (player.GetComponent<PlayerController>().inventory.GetSelected() == null) return;
-        List<GameObject> area = player.GetComponent<PlayerController>().inventory.GetSelected().GetComponent<Ability>().GetArea();
+        List<GameObject> area = player.GetComponent<PlayerController>().inventory.GetSelected().GetComponent<Ability>().GetArea(MousePosition());
         if (area == null) return;
         foreach (GameObject entity in area)
         {

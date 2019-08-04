@@ -18,7 +18,7 @@ public class Slime : Enemy
 
         if (Attack()) return;
         else if (PathToPlayer()) return;
-        else if (RunAway()) return;
+        //else if (RunAway()) return;
     }
 
     protected override void Init()

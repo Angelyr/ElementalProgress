@@ -14,7 +14,7 @@ public class Placeable : Ability
         description = "This object can be placed in the world";
     }
 
-    public override void Use()
+    public void Use2()
     {
         if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
         {

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class RangedAoe : Ability
 {
-    public override List<GameObject> GetArea()
+    public override List<GameObject> GetArea(Vector2Int target)
     {
-        return WorldController.GetAll(MousePosition());
+        return WorldController.GetAll(ClosestPositionInRange(target));
     }
 
     protected override void Init()
@@ -15,13 +15,5 @@ public class RangedAoe : Ability
         range = 7;
         cooldown = 3;
         description = "Deals damage to any target in range";
-    }
-
-    public override void Use()
-    {
-        foreach (GameObject tile in GetArea())
-        {
-            tile.GetComponent<Entity>().Attacked();
-        }
     }
 }

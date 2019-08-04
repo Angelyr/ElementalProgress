@@ -39,6 +39,11 @@ public abstract class Thing : MonoBehaviour
         currHover = null;
     }
 
+    public Vector2Int MyPosition()
+    {
+        return new Vector2Int((int)transform.position.x, (int)transform.position.y);
+    }
+
     public Vector2Int MousePosition()
     {
         Vector2 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
