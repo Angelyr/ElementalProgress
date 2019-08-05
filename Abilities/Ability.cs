@@ -11,6 +11,7 @@ public abstract class Ability : Thing
     protected int range;
     protected int cooldown;
     protected int currCooldown = 0;
+    protected int damage;
 
     private int prevMouseX;
     private int prevMouseY;
@@ -54,6 +55,34 @@ public abstract class Ability : Thing
         }
     }
 
+    protected Vector2Int Straighten(Vector2Int target)
+    {
+        Vector2Int[] options = new Vector2Int[4];
+        Vector2Int position = MyPosition();
+
+        options[0] = new Vector2Int(position.x, target.y);
+        options[1] = new Vector2Int(target.x, position.y);
+        options[2] = new Vector2Int(target.x+position.x, target.x+position.x);
+        options[3] = new Vector2Int(target.y+position.y, target.y+position.y);
+
+        Vector2Int closest = options[0];
+        int closestDist = Mathf.Abs(options[0].x - target.x);
+        closestDist += Mathf.Abs(options[0].y - target.y);
+        foreach (Vector2Int point in options)
+        {
+            int dist = Mathf.Abs(point.x - target.x);
+            dist += Mathf.Abs(point.y - target.y);
+
+            if(dist < closestDist)
+            {
+                closest = point;
+                closestDist = dist;
+            }
+        }
+
+        return closest;
+    }
+
     protected Vector2Int MousePositionInRange()
     {
         Vector2Int mouse = MousePosition();
@@ -65,6 +94,24 @@ public abstract class Ability : Thing
         if (Mathf.Abs(mouse.y - player.y) > GetRange() && mouse.y < player.y) mouse.y = player.y - GetRange();
 
         return mouse;
+    }
+
+    protected Vector2Int MoveToward(Vector2Int start, Vector2Int end)
+    {
+        if (start.x < end.x) start.x += 1;
+        if (start.x > end.x) start.x -= 1;
+        if (start.y < end.y) start.y += 1;
+        if (start.y > end.y) start.y -= 1;
+        return start;
+    }
+
+    protected Vector2Int MoveAway(Vector2Int start, Vector2Int origin)
+    {
+        if (start.x < origin.x) start.x -= 1;
+        if (start.x > origin.x) start.x += 1;
+        if (start.y < origin.y) start.y -= 1;
+        if (start.y > origin.y) start.y += 1;
+        return start;
     }
 
     protected Vector2Int ClosestPositionInRange(Vector2Int target)

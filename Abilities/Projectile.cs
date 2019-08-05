@@ -22,16 +22,7 @@ public class Projectile : Ability
         }
 
         return WorldController.GetAll(closestTarget);
-    }
-
-    private Vector2Int MoveToward(Vector2Int start, Vector2Int end)
-    {
-        if (start.x < end.x) start.x += 1;
-        if (start.x > end.x) start.x -= 1;
-        if (start.y < end.y) start.y += 1;
-        if (start.y > end.y) start.y -= 1;
-        return start;
-    }
+    } 
 
     protected override void Init()
     {
