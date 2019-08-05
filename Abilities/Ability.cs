@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static WorldController;
 
 public abstract class Ability : Thing
 {
@@ -12,6 +11,7 @@ public abstract class Ability : Thing
     protected int cooldown;
     protected int currCooldown = 0;
     protected int damage;
+    protected List<GameObject> outlinedObjects;
 
     private int prevMouseX;
     private int prevMouseY;
@@ -20,6 +20,7 @@ public abstract class Ability : Thing
     {
         base.Awake();
         inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+        outlinedObjects = new List<GameObject>();
         Init();
     }
 
@@ -35,13 +36,40 @@ public abstract class Ability : Thing
         return name + ":\n" + description + "\nRange: " + range + "\nCooldown: " +  cooldown;
     }
 
+    public virtual void ShowRange()
+    {
+        List<Vector2Int> area = new List<Vector2Int>();
+        for(int x=-GetRange(); x <= GetRange(); x++)
+        {
+            for(int y=-GetRange(); y <= GetRange(); y++)
+            {
+                area.Add(new Vector2Int(MyPosition().x + x, MyPosition().y + y));
+            }
+        }
+        foreach(Vector2Int position in area)
+        {
+            if (WorldController.GetGround(position) == null) continue;
+            WorldController.GetGround(position).GetComponent<Entity>().Outline();
+            outlinedObjects.Add(WorldController.GetGround(position));
+        }
+    }
+
+    public virtual void HideRange()
+    {
+        foreach(GameObject tile in outlinedObjects)
+        {
+            tile.GetComponent<Entity>().RemoveOutline();
+        }
+        outlinedObjects.Clear();
+    }
+
     public virtual List<GameObject> GetArea(Vector2Int target)
     {
         Vector2Int closestTarget = ClosestPositionInRange(target);
         List<GameObject> area = new List<GameObject>();
 
-        area.Add(Get(closestTarget.x, closestTarget.y));
-        area.Add(GetGround(closestTarget.x, closestTarget.y));
+        area.Add(WorldController.Get(closestTarget.x, closestTarget.y));
+        area.Add(WorldController.GetGround(closestTarget.x, closestTarget.y));
         return area;
     }
 
@@ -57,27 +85,27 @@ public abstract class Ability : Thing
 
     protected Vector2Int Straighten(Vector2Int target)
     {
-        Vector2Int[] options = new Vector2Int[4];
-        Vector2Int position = MyPosition();
-
-        options[0] = new Vector2Int(position.x, target.y);
-        options[1] = new Vector2Int(target.x, position.y);
-        options[2] = new Vector2Int(target.x+position.x, target.x+position.x);
-        options[3] = new Vector2Int(target.y+position.y, target.y+position.y);
+        Vector2Int[] options = WorldController.GetAdjacent(MyPosition());
 
         Vector2Int closest = options[0];
-        int closestDist = Mathf.Abs(options[0].x - target.x);
-        closestDist += Mathf.Abs(options[0].y - target.y);
+        float closestDist = Vector2Int.Distance(options[0], target);
         foreach (Vector2Int point in options)
         {
-            int dist = Mathf.Abs(point.x - target.x);
-            dist += Mathf.Abs(point.y - target.y);
+            float dist = Vector2Int.Distance(point, target);
 
             if(dist < closestDist)
             {
                 closest = point;
                 closestDist = dist;
             }
+        }
+
+        int dist2 = 1;
+        while(dist2 < GetRange())
+        {
+            if (closest == target) break;
+            closest = MoveAway(closest, MyPosition());
+            dist2++;
         }
 
         return closest;

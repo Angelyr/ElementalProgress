@@ -9,13 +9,33 @@ public class Dash : Ability
         base.Awake();
     }
 
+    public override void ShowRange()
+    {
+        Vector2Int[] adjacent = WorldController.GetAdjacent(MyPosition());
+        foreach(Vector2Int adjPosition in adjacent)
+        {
+            Vector2Int position = adjPosition;
+            int dist = 1;
+            while(dist <= GetRange())
+            {
+                if (WorldController.GetGround(position) == null) break;
+                WorldController.GetGround(position).GetComponent<Entity>().Outline();
+                outlinedObjects.Add(WorldController.GetGround(position));
+                position = MoveAway(position, MyPosition());
+                dist++;
+            }
+        }
+    }
+
     public override List<GameObject> GetArea(Vector2Int target)
     {
+        target = ClosestPositionInRange(target);
+        target = Straighten(target);
 
-        if (WorldController.GetTile(ClosestPositionInRange(target)) != null) return null;
+        if (WorldController.GetTile(target) != null) return null;
 
         List<GameObject> area = new List<GameObject>();
-        area.Add(WorldController.GetGround(ClosestPositionInRange(target)));
+        area.Add(WorldController.GetGround(target));
         return area;
     }
 

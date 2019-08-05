@@ -22,6 +22,24 @@ public class Laser : Ability
         description = "Hits every enemy in a line";
     }
 
+    public override void ShowRange()
+    {
+        Vector2Int[] adjacent = WorldController.GetAdjacent(MyPosition());
+        foreach (Vector2Int adjPosition in adjacent)
+        {
+            Vector2Int position = adjPosition;
+            int dist = 1;
+            while (dist <= GetRange())
+            {
+                if (WorldController.GetGround(position) == null) break;
+                WorldController.GetGround(position).GetComponent<Entity>().Outline();
+                outlinedObjects.Add(WorldController.GetGround(position));
+                position = MoveAway(position, MyPosition());
+                dist++;
+            }
+        }
+    }
+
     public override List<GameObject> GetArea(Vector2Int target)
     {
         List<GameObject> area = new List<GameObject>();
