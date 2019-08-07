@@ -22,5 +22,6 @@ public class MeleeAOE : Ability
         range = 1;
         cooldown = 5;
         description = "Deals damage to every enemy around you";
+        targetType = "target";
     }
 }

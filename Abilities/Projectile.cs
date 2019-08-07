@@ -49,6 +49,7 @@ public class Projectile : Ability
         range = 10;
         cooldown = 3;
         description = "Fires in a line and deals damage agains the first enemy it hits";
+        targetType = "line";
     }
 
 }

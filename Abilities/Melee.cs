@@ -11,6 +11,7 @@ public class Melee : Ability
         range = 1;
         cooldown = 1;
         description = "Deals damage to any target in range";
+        targetType = "target";
     }
 
 }

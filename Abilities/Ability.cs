@@ -11,6 +11,7 @@ public abstract class Ability : Thing
     protected int cooldown;
     protected int currCooldown = 0;
     protected int damage;
+    protected string targetType;
     protected List<GameObject> outlinedObjects;
 
     private int prevMouseX;
@@ -26,14 +27,45 @@ public abstract class Ability : Thing
 
     protected abstract void Init();
 
+    public string GetTargetType()
+    {
+        return targetType;
+    }
+
     public int GetRange()
     {
         return range;
     }
 
+    public void ReduceCoolDown(int total)
+    {
+        currCooldown -= total;
+    }
+
     public override string GetDescription()
     {
         return name + ":\n" + description + "\nRange: " + range + "\nCooldown: " +  cooldown;
+    }
+
+    public virtual string TryAbility(Vector2Int target)
+    {
+        if (currCooldown != 0) return "fail";
+        if(GetTargetType() == "target")
+        {
+            if (!WithInRange(GetRange(), target)) return "outofrange";
+            Use(target);
+            return "success";
+        }
+
+        if(GetTargetType() == "line")
+        {
+            if (!WithInRange(GetRange(), target)) return "outofrange";
+            if (!Aligned(target)) return "notaligned";
+            Use(target);
+            return "success";
+        }
+
+        return "fail";
     }
 
     public virtual void ShowRange()
@@ -158,6 +190,21 @@ public abstract class Ability : Thing
     {
         if (Mathf.Abs(targetX - player.transform.position.x) <= range) return true;
         if (Mathf.Abs(targetY - player.transform.position.y) <= range) return true;
+        return false;
+    }
+
+    protected bool WithInRange(int range, Vector2Int target)
+    {
+        if (Mathf.Abs(target.x - player.transform.position.x) <= range) return true;
+        if (Mathf.Abs(target.y - player.transform.position.y) <= range) return true;
+        return false;
+    }
+
+    protected bool Aligned(Vector2Int target)
+    {
+        if (target.x == MyPosition().x) return true;
+        if (target.y == MyPosition().y) return true;
+        if (target.x - MyPosition().x == target.y - MyPosition().y) return true;
         return false;
     }
 

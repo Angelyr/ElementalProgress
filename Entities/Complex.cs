@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : Enemy
+public class Complex : Enemy
 {
-    private Ability melee;
-
-
     private void Start()
     {
         InvokeRepeating("AI", 2, 1);
         EnterTurnOrder();
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
-        name = "Slime";
+        name = "Complex";
     }
 
     private void AI()
     {
         if (!TurnOrder.MyTurn(gameObject)) return;
-
         if (Attack()) return;
         else if (PathToPlayer()) return;
         //else if (RunAway()) return;
+    }
+
+    protected override bool Attack()
+    {
+        //Try ranged attack
+        //Try melee attack
+        return false;
     }
 
 
@@ -30,6 +33,4 @@ public class Slime : Enemy
         health = 3;
         ap = 3;
     }
-
-    
 }

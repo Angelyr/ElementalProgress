@@ -15,5 +15,6 @@ public class RangedAoe : Ability
         range = 7;
         cooldown = 3;
         description = "Deals damage to any target in range";
+        targetType = "target";
     }
 }

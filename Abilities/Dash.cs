@@ -45,6 +45,7 @@ public class Dash : Ability
         range = 3;
         cooldown = 5;
         description = "Move in a straight line to any tile in range";
+        targetType = "line";
     }
 
     public override void Use(Vector2Int target)

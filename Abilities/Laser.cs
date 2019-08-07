@@ -20,6 +20,7 @@ public class Laser : Ability
         range = 5;
         cooldown = 5;
         description = "Hits every enemy in a line";
+        targetType = "line";
     }
 
     public override void ShowRange()

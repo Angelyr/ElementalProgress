@@ -36,7 +36,7 @@ public abstract class Enemy : Character
         return true;
     }
 
-    protected bool Attack()
+    protected virtual bool Attack()
     {
         if (PlayerWithInRange(1) == false) return false;
         ConsumeAP();
