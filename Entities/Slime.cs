@@ -12,6 +12,7 @@ public class Slime : Enemy
         InvokeRepeating("AI", 2, 1);
         EnterTurnOrder();
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
+        melee = Resources.Load<GameObject>("Prefab/Melee").GetComponent<Ability>();
         name = "Slime";
     }
 
@@ -19,9 +20,29 @@ public class Slime : Enemy
     {
         if (!TurnOrder.MyTurn(gameObject)) return;
 
-        if (Attack()) return;
+        string result = Attack();
+        if (result == "success")
+        {
+            return;
+        }
+        else if(result == "outofrange")
+        {
+            if (PathToPlayer()) return;
+        }
+        else if(result == "notaligned")
+        {
+            if (LineUp(FindTarget())) return;
+        }
         else if (PathToPlayer()) return;
+
+        TurnOrder.EndTurn(gameObject);
         //else if (RunAway()) return;
+    }
+
+
+    protected override string Attack()
+    {
+        return melee.TryAbility(FindTarget());
     }
 
 

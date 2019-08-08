@@ -36,12 +36,12 @@ public abstract class Enemy : Character
         return true;
     }
 
-    protected virtual bool Attack()
+    protected virtual string Attack()
     {
-        if (PlayerWithInRange(1) == false) return false;
+        if (PlayerWithInRange(1) == false) return "fail";
         ConsumeAP();
         if (PlayerWithInRange(1)) player.GetComponent<PlayerController>().Attacked();
-        return true;
+        return "success";
     }
 
     protected void MoveRandomly()
@@ -81,9 +81,23 @@ public abstract class Enemy : Character
         return true;
     }
 
-    protected bool LineUp()
+    protected bool LineUp(Vector2Int target)
     {
-        return false;
+        int distX = Mathf.Abs(MyPosition().x - target.x);
+        int distY = Mathf.Abs(MyPosition().y - target.y);
+
+        if (distX < distY/2 && MyPosition().x > target.x) Move(-1, 0);
+        else if (distX < distY/2 && MyPosition().x < target.x) Move(1, 0);
+        else if (distX/2 > distY && MyPosition().y > target.y) Move(0, -1);
+        else if (distX/2 > distY && MyPosition().y < target.y) Move(0, 1);
+        else return false;
+
+        return true;
+    }
+
+    protected Vector2Int FindTarget()
+    {
+        return PlayerPosition();
     }
 
     protected bool RunAway()

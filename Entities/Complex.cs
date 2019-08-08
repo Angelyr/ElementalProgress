@@ -12,21 +12,6 @@ public class Complex : Enemy
         name = "Complex";
     }
 
-    private void AI()
-    {
-        if (!TurnOrder.MyTurn(gameObject)) return;
-        if (Attack()) return;
-        else if (PathToPlayer()) return;
-        //else if (RunAway()) return;
-    }
-
-    protected override bool Attack()
-    {
-        //Try ranged attack
-        //Try melee attack
-        return false;
-    }
-
 
     protected override void Init()
     {
