@@ -110,6 +110,7 @@ public abstract class Ability : Thing
         if (GetArea(ClosestPositionInRange(target)) == null) return;
         foreach (GameObject affected in GetArea(ClosestPositionInRange(target)))
         {
+            if (affected == null) continue;
             if (affected.GetComponent<Character>() == null) continue;
             affected.GetComponent<Character>().Attacked();
         }
@@ -195,8 +196,7 @@ public abstract class Ability : Thing
 
     protected bool WithInRange(int range, Vector2Int target)
     {
-        if (Mathf.Abs(target.x - player.transform.position.x) <= range) return true;
-        if (Mathf.Abs(target.y - player.transform.position.y) <= range) return true;
+        if(Vector2.Distance(target, transform.position) <= GetRange()) return true;
         return false;
     }
 

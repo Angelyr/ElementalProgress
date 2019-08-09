@@ -39,7 +39,6 @@ public abstract class Enemy : Character
     protected virtual string Attack()
     {
         if (PlayerWithInRange(1) == false) return "fail";
-        ConsumeAP();
         if (PlayerWithInRange(1)) player.GetComponent<PlayerController>().Attacked();
         return "success";
     }
@@ -53,13 +52,11 @@ public abstract class Enemy : Character
 
     protected void Move(int xMove, int yMove)
     {
-        ConsumeAP();
         WorldController.MoveWorldLocation(transform, xMove, yMove);
     }
 
     protected void MoveTo(Vector2Int target)
     {
-        ConsumeAP();
         WorldController.MoveToWorldPoint(transform, target);
     }
 
@@ -93,11 +90,6 @@ public abstract class Enemy : Character
         else return false;
 
         return true;
-    }
-
-    protected Vector2Int FindTarget()
-    {
-        return PlayerPosition();
     }
 
     protected bool RunAway()

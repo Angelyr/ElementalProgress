@@ -9,10 +9,10 @@ public class Slime : Enemy
 
     private void Start()
     {
-        InvokeRepeating("AI", 2, 1);
+        InvokeRepeating("AI", 2, 1.5f);
         EnterTurnOrder();
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
-        melee = Resources.Load<GameObject>("Prefab/Melee").GetComponent<Ability>();
+        melee = Instantiate(Resources.Load<GameObject>("Prefab/Melee").GetComponent<Ability>(), transform);
         name = "Slime";
     }
 
@@ -31,18 +31,20 @@ public class Slime : Enemy
         }
         else if(result == "notaligned")
         {
-            if (LineUp(FindTarget())) return;
+            if (LineUp(PlayerPosition())) return;
         }
         else if (PathToPlayer()) return;
 
-        TurnOrder.EndTurn(gameObject);
+        ConsumeAP();
+
         //else if (RunAway()) return;
     }
 
 
     protected override string Attack()
     {
-        return melee.TryAbility(FindTarget());
+        ConsumeAP();
+        return melee.TryAbility(PlayerPosition());
     }
 
 
