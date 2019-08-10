@@ -6,6 +6,42 @@ public abstract class Enemy : Character
 {
     int enterTurnDistance = 7;
 
+    private void Start()
+    {
+        InvokeRepeating("AI", 2, 1.5f);
+        EnterTurnOrder();
+        WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
+    }
+
+    private void AI()
+    {
+        if (!TurnOrder.MyTurn(gameObject)) return;
+        if (ap == 0)
+        {
+            TurnOrder.EndTurn(gameObject);
+            return;
+        }
+
+        string result = Attack();
+        if (result == "success")
+        {
+            return;
+        }
+        else if (result == "outofrange")
+        {
+            if (PathToPlayer()) return;
+        }
+        else if (result == "notaligned")
+        {
+            if (LineUp(PlayerPosition())) return;
+        }
+        else if (PathToPlayer()) return;
+
+        TurnOrder.EndTurn(gameObject);
+
+        //else if (RunAway()) return;
+    }
+
     protected void EnterTurnOrder()
     {
         if (WorldController.GetDistanceFromPlayer(MyPosition()) < enterTurnDistance)
@@ -53,20 +89,19 @@ public abstract class Enemy : Character
     protected void Move(int xMove, int yMove)
     {
         WorldController.MoveWorldLocation(transform, xMove, yMove);
+        ConsumeAP();
     }
 
     protected void MoveTo(Vector2Int target)
     {
         WorldController.MoveToWorldPoint(transform, target);
+        ConsumeAP();
     }
 
     protected void ConsumeAP()
     {
-        if (ap < 1)
-        {
-            TurnOrder.EndTurn(gameObject);
-            return;
-        }
+        if (ap < 1) return;
+
         ap -= 1;
     }
 

@@ -12,7 +12,7 @@ public class RangedAoe : Ability
     protected override void Init()
     {
         name = "Single Target";
-        range = 7;
+        range = 4;
         cooldown = 3;
         description = "Deals damage to any target in range";
         targetType = "target";

@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class Complex : Enemy
 {
-    private void Start()
-    {
-        InvokeRepeating("AI", 2, 1);
-        EnterTurnOrder();
-        WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
-        name = "Complex";
-    }
+    private Ability rangeAoe;
 
+    protected override string Attack()
+    {
+        string result = rangeAoe.TryAbility(PlayerPosition());
+        Debug.Log(result);
+        if (result == "success") ConsumeAP();
+        return result;
+    }
 
     protected override void Init()
     {
+        rangeAoe = Instantiate(Resources.Load<GameObject>("Prefab/Single").GetComponent<Ability>(), transform);
+        name = "Complex";
         health = 3;
         ap = 3;
     }

@@ -196,7 +196,7 @@ public abstract class Ability : Thing
 
     protected bool WithInRange(int range, Vector2Int target)
     {
-        if(Vector2.Distance(target, transform.position) <= GetRange()) return true;
+        if((int)Vector2.Distance(target, transform.position) <= GetRange()) return true;
         return false;
     }
 
