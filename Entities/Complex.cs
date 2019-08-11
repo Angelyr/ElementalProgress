@@ -9,7 +9,6 @@ public class Complex : Enemy
     protected override string Attack()
     {
         string result = rangeAoe.TryAbility(PlayerPosition());
-        Debug.Log(result);
         if (result == "success") ConsumeAP();
         return result;
     }
@@ -20,5 +19,6 @@ public class Complex : Enemy
         name = "Complex";
         health = 3;
         ap = 3;
+        spawnChance = 1;
     }
 }

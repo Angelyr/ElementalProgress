@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static WorldController;
 
 public class Block : Entity
 {
@@ -27,10 +26,10 @@ public class Block : Entity
     {
         if (!background) return;
         if (WorldController.GetTile(MyPosition()) != null) return;
-        int spawnChance = 1;
+        int spawnChance = 2;
         if (Random.Range(0,100) < spawnChance)
         {
-            SpawnEnemy((int)transform.position.x, (int)transform.position.y);
+            WorldController.SpawnEnemy((int)transform.position.x, (int)transform.position.y);
         }
     }
 
@@ -77,7 +76,7 @@ public class Block : Entity
     {
         x = x + Mathf.RoundToInt(transform.position.x);
         y = y + Mathf.RoundToInt(transform.position.y);
-        return Get(x, y);
+        return WorldController.Get(x, y);
     }
 
 }

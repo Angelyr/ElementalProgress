@@ -53,6 +53,7 @@ public abstract class Ability : Thing
         if(GetTargetType() == "target")
         {
             if (!WithInRange(GetRange(), target)) return "outofrange";
+            if (!InSight(target)) return "outofsight";
             Use(target);
             return "success";
         }
@@ -61,6 +62,7 @@ public abstract class Ability : Thing
         {
             if (!WithInRange(GetRange(), target)) return "outofrange";
             if (!Aligned(target)) return "notaligned";
+            if (!InSight(target)) return "outofsight";
             Use(target);
             return "success";
         }
@@ -185,6 +187,18 @@ public abstract class Ability : Thing
         if (Mathf.Abs(target.y - position.y) > GetRange() && target.y < position.y) target.y = position.y - GetRange();
 
         return target;
+    }
+
+    protected bool InSight(Vector2Int target)
+    {
+        Vector2Int position = MyPosition();
+        position = MoveToward(position, target);
+        while (position != target)
+        {
+            if (WorldController.GetTile(position) != null) return false;
+            position = MoveToward(position, target);
+        }
+        return true;
     }
 
     protected bool WithInRange(int range, int targetX, int targetY)

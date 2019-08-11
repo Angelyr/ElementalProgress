@@ -33,24 +33,16 @@ public class WorldGen : MonoBehaviour
 
     private void Awake()
     {
-        myLevel = GameObject.Find("Level").GetComponent<Tilemap>();    
+        //myLevel = GameObject.Find("Level").GetComponent<Tilemap>();    
     }
 
     //Start
     void Start()
     {
-        if (!level)
-        {
-            chunks = new Dictionary<(int, int), string>();
-            backgrounds = new Dictionary<(int, int), GameObject>();
-            ChunkGeneration();
-            CreateBackgrounds();
-        }
-
-        if (level)
-        {
-            CreateLevel();
-        }
+        chunks = new Dictionary<(int, int), string>();
+        backgrounds = new Dictionary<(int, int), GameObject>();
+        ChunkGeneration();
+        CreateBackgrounds();
     }
 
     //Level methods

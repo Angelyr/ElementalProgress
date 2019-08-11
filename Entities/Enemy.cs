@@ -4,7 +4,13 @@ using UnityEngine;
 
 public abstract class Enemy : Character
 {
-    int enterTurnDistance = 7;
+    protected int enterTurnDistance = 7;
+    protected int spawnChance = 2;
+
+    public int SpawnChance()
+    {
+        return spawnChance;
+    }
 
     private void Start()
     {

@@ -9,7 +9,7 @@ public class WorldController : MonoBehaviour
     private static GameObject block;
     private static GameObject world;
     private static GameObject player;
-    private static GameObject slime;
+    private static List<Enemy> enemies;
     private static Dictionary<(int, int), GameObject> tiles;
     private static Dictionary<(int, int), GameObject> floorTiles;
     private static Dictionary<Vector2Int, int> distanceFromPlayer;
@@ -26,7 +26,11 @@ public class WorldController : MonoBehaviour
         player = GameObject.Find("Player");
         world = GameObject.Find("World");
         block = (GameObject)Resources.Load("Prefab/Other/Block", typeof(GameObject));
-        slime = (GameObject)Resources.Load("Prefab/Slime");
+
+        enemies = new List<Enemy>();
+        enemies.Add(Resources.Load<GameObject>("Prefab/Slime").GetComponent<Enemy>());
+        enemies.Add(Resources.Load<GameObject>("Prefab/Spirit").GetComponent<Enemy>());
+
     }
 
     public static void SetDistanceFromPlayer()
@@ -129,7 +133,8 @@ public class WorldController : MonoBehaviour
 
     public static void SpawnEnemy(int x, int y)
     {
-        Instantiate(slime, new Vector2(x, y), Quaternion.identity);
+        int index = Random.Range(0, enemies.Count);
+        Instantiate(enemies[index].gameObject, new Vector2(x, y), Quaternion.identity);
     }
 
     //Block methods
