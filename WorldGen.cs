@@ -6,11 +6,8 @@ using static WorldController;
 
 public class WorldGen : MonoBehaviour
 {
-
     //Chunks
     private Dictionary<(int, int), string> chunks;
-    public Grid caveEntrance;
-    public Grid full;
     public Grid[] topSoil;
     public Grid[] allsides;
     public Grid[] leftright;
@@ -24,25 +21,12 @@ public class WorldGen : MonoBehaviour
     private bool level = true;
     private Tilemap myLevel;
 
-    //Backgrounds
-    private Dictionary<(int, int), GameObject> backgrounds;
-    public Sprite sky;
-    public GameObject backgroundParent;
-    public Sprite stonebackground;
-    public GameObject background;
-
-    private void Awake()
-    {
-        //myLevel = GameObject.Find("Level").GetComponent<Tilemap>();    
-    }
-
     //Start
     void Start()
     {
         chunks = new Dictionary<(int, int), string>();
-        backgrounds = new Dictionary<(int, int), GameObject>();
         ChunkGeneration();
-        CreateBackgrounds();
+        //CreateBackgrounds();
     }
 
     //Level methods
@@ -85,7 +69,7 @@ public class WorldGen : MonoBehaviour
             {
                 Grid chunkGrid = PickChunk(chunkX, chunkY);
                 PlaceChunk(chunkX, chunkY, chunkGrid);
-                if (chunkGrid.name == "CaveEntrance") PlaceChunkPath(chunkX, chunkY - 1, "down");
+                if (chunkX == 1 && chunkY == 1) PlaceChunkPath(chunkX, chunkY - 1, "down");
             }
         }
     }
@@ -194,9 +178,9 @@ public class WorldGen : MonoBehaviour
     {
         int chunkType = Random.Range(0, 5);
 
-        if (chunkY == 1) return RandomRoom(topSoil);
-        if (chunkX == 1 && chunkY == 0) return caveEntrance;
-        if (chunkY == 0) return full;
+        //if (chunkY == 1) return RandomRoom(topSoil);
+        //if (chunkX == 1 && chunkY == 0) return caveEntrance;
+        //if (chunkY == 0) return full;
         if (chunkType == 0) return RandomRoom(allsides);
         if (chunkType == 1) return RandomRoom(leftrighttop);
         if (chunkType == 2) return RandomRoom(leftrightbottom);
@@ -204,50 +188,6 @@ public class WorldGen : MonoBehaviour
         if (chunkType == 4) return RandomRoom(special);
 
         return null;
-    }
-
-
-    //Background Methods 
-
-    public void NewScale(GameObject theGameObject, float newSize)
-    {
-        float size = theGameObject.GetComponent<Renderer>().bounds.size.x;
-        Vector3 rescale = theGameObject.transform.localScale;
-        rescale.x = newSize * rescale.x / size;
-        theGameObject.transform.localScale = rescale;
-    }
-
-    private void CreateBackgrounds()
-    {
-        for (int x = -numChunks * chunksize - chunksize / 2; x < (numChunks - 1) * chunksize; x++)
-        {
-            for (int y = numChunks * chunksize; y > -numChunks * chunksize; y--)
-            {
-                if (!backgrounds.ContainsKey((x, y)))
-                {
-                    int width = (int)background.GetComponent<SpriteRenderer>().bounds.size.x;
-                    int height = (int)background.GetComponent<SpriteRenderer>().bounds.size.y;
-                    Vector2 center = new Vector2(x - .5f + width / 2, y + .5f - height / 2);
-                    GameObject newBackground = Instantiate(background, center, Quaternion.identity, backgroundParent.transform);
-
-                    if (y >= 1)
-                    {
-                        newBackground.GetComponent<SpriteRenderer>().sprite = sky;
-                    }
-                    if (y < 1) newBackground.GetComponent<SpriteRenderer>().sprite = stonebackground;
-
-                    for (int i = x; i < x + width; i++)
-                    {
-                        for (int j = y; j > y - height; j--)
-                        {
-                            backgrounds[(i, j)] = newBackground;
-                        }
-                    }
-
-                }
-            }
-        }
-
     }
 
 }
