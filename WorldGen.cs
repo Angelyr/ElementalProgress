@@ -8,12 +8,12 @@ public class WorldGen : MonoBehaviour
 {
     //Chunks
     private Dictionary<(int, int), string> chunks;
-    public Grid[] topSoil;
-    public Grid[] allsides;
-    public Grid[] leftright;
-    public Grid[] leftrighttop;
-    public Grid[] leftrightbottom;
-    public Grid[] special;
+    //public Grid[] topSoil;
+    private Grid[] allsides;
+    private Grid[] leftright;
+    private Grid[] leftrighttop;
+    private Grid[] leftrightbottom;
+    private Grid[] special;
     private const int numChunks = 8;
     private const int chunksize = 16;
 
@@ -25,8 +25,25 @@ public class WorldGen : MonoBehaviour
     void Start()
     {
         chunks = new Dictionary<(int, int), string>();
+        allsides = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/AllSides"));
+        leftright = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/LeftRight"));
+        leftrighttop = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/LeftRightTop"));
+        leftrightbottom = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/RightLeftBottom"));
+        special = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/Special"));
+
         ChunkGeneration();
         //CreateBackgrounds();
+    }
+
+    private Grid[] GetGrid(GameObject[] input)
+    {
+        //Debug.Log(input.Length);
+        Grid[] output = new Grid[input.Length];
+        for(int i=0; i<input.Length; i++)
+        {
+            output[i] = input[i].GetComponent<Grid>();
+        }
+        return output;
     }
 
     //Level methods
