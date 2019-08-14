@@ -6,23 +6,19 @@ using static WorldController;
 
 public class WorldGen : MonoBehaviour
 {
-    //Chunks
     private Dictionary<(int, int), string> chunks;
-    //public Grid[] topSoil;
     private Grid[] allsides;
     private Grid[] leftright;
     private Grid[] leftrighttop;
     private Grid[] leftrightbottom;
     private Grid[] special;
-    private const int numChunks = 8;
+    private Grid filled;
+    private Grid empty;
+    private const int numChunks = 3;
     private const int chunksize = 16;
 
-    //Level
-    private bool level = true;
-    private Tilemap myLevel;
-
     //Start
-    void Start()
+    public void GenerateWorld()
     {
         chunks = new Dictionary<(int, int), string>();
         allsides = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/AllSides"));
@@ -30,8 +26,12 @@ public class WorldGen : MonoBehaviour
         leftrighttop = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/LeftRightTop"));
         leftrightbottom = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/RightLeftBottom"));
         special = GetGrid(Resources.LoadAll<GameObject>("Prefab/Dungeon/Special"));
+        filled = Resources.Load<GameObject>("Prefab/Dungeon/Filled").GetComponent<Grid>();
+        empty = Resources.Load<GameObject>("Prefab/Dungeon/Empty").GetComponent<Grid>();
+
 
         ChunkGeneration();
+        FillEdge();
         //CreateBackgrounds();
     }
 
@@ -46,37 +46,22 @@ public class WorldGen : MonoBehaviour
         return output;
     }
 
-    //Level methods
-    public void CreateLevel()
+    //Chunk methods
+    //================================================================
+
+    private void FillEdge()
     {
-        myLevel.gameObject.SetActive(false);
-        BoundsInt bounds = myLevel.cellBounds;
-
-        for (int x = -bounds.size.x; x < bounds.size.x; x++)
+        for (int chunkY = 2; chunkY >= -numChunks; chunkY--)
         {
-            for (int y = -bounds.size.y; y < bounds.size.y; y++)
+            for (int chunkX = -numChunks-1; chunkX <= numChunks; chunkX++)
             {
-                TileBase currTile = myLevel.GetTile(new Vector3Int(x, y, 0));
-                Sprite tileSprite = myLevel.GetSprite(new Vector3Int(x, y, 0));
-                Vector3 rotation = myLevel.GetTransformMatrix(new Vector3Int(x, y, 0)).rotation.eulerAngles;
-
-                if (currTile)
+                if (chunkY == 2 || chunkY == -numChunks || chunkX == -numChunks - 1 || chunkX == numChunks)
                 {
-                    if (currTile.name == "Background")
-                    {
-                        CreateBackground(x, y, tileSprite);
-                    }
-                    else
-                    {
-                        Create(x, y, tileSprite, rotation);
-                    }
+                    PlaceChunk(chunkX, chunkY, filled);
                 }
             }
         }
     }
-
-    //Chunk methods
-    //================================================================
 
     private void ChunkGeneration()
     {
@@ -101,13 +86,24 @@ public class WorldGen : MonoBehaviour
         {
             for (int y = 0; y > -chunksize; y--)
             {
-                Tile currTile = (Tile)chunk.GetTile(new Vector3Int(x, y, 0));
+                //Tile currTile = (Tile)chunk.GetTile(new Vector3Int(x, y, 0));
                 int currX = x + (chunkX * chunksize);
                 int currY = y + (chunkY * chunksize);
 
+                TileBase currTile = chunk.GetTile(new Vector3Int(x, y, 0));
+                Sprite tileSprite = chunk.GetSprite(new Vector3Int(x, y, 0));
+                Vector3 rotation = chunk.GetTransformMatrix(new Vector3Int(x, y, 0)).rotation.eulerAngles;
+
                 if (currTile)
                 {
-                    Create(currX, currY, currTile.sprite);
+                    if (currTile.name == "Background")
+                    {
+                        CreateBackground(currX, currY, tileSprite);
+                    }
+                    else
+                    {
+                        Create(currX, currY, tileSprite, rotation);
+                    }
                 }
             }
         }
@@ -194,10 +190,7 @@ public class WorldGen : MonoBehaviour
     private Grid PickChunk(int chunkX, int chunkY)
     {
         int chunkType = Random.Range(0, 5);
-
-        //if (chunkY == 1) return RandomRoom(topSoil);
-        //if (chunkX == 1 && chunkY == 0) return caveEntrance;
-        //if (chunkY == 0) return full;
+        if (chunkX == 0 && chunkY == 1) return empty;
         if (chunkType == 0) return RandomRoom(allsides);
         if (chunkType == 1) return RandomRoom(leftrighttop);
         if (chunkType == 2) return RandomRoom(leftrightbottom);

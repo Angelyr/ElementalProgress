@@ -31,6 +31,7 @@ public class WorldController : MonoBehaviour
         enemies.Add(Resources.Load<GameObject>("Prefab/Slime").GetComponent<Enemy>());
         enemies.Add(Resources.Load<GameObject>("Prefab/Spirit").GetComponent<Enemy>());
 
+        GetComponent<WorldGen>().GenerateWorld();
     }
 
     public static void SetDistanceFromPlayer()
@@ -49,6 +50,7 @@ public class WorldController : MonoBehaviour
             foreach(Vector2Int tile in adjacent)
             {
                 if (distanceFromPlayer.ContainsKey(tile)) continue;
+                if (GetTile(tile) != null && GetTile(tile).GetComponent<Block>() != null) continue;
                 //if (tiles.ContainsKey((tile.x, tile.y))) continue;
                 if (!floorTiles.ContainsKey((tile.x, tile.y))) continue;
                 distanceFromPlayer[tile] = dist + 1;

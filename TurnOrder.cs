@@ -28,7 +28,9 @@ public class TurnOrder : MonoBehaviour
 
         GameObject uiTurn = Instantiate(turnUI, myUI.transform);
         uiTurn.GetComponent<UnityEngine.UI.Image>().sprite = newTurn.GetComponent<SpriteRenderer>().sprite;
+        uiTurn.GetComponent<TurnUI>().SetCharacter(newTurn);
         newTurn.GetComponent<Character>().myTurnUI = uiTurn;
+        //uiTurn.transform.localScale = new Vector2(100, 100);
     }
 
     public static void EndTurn(GameObject currTurn)
