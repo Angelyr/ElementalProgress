@@ -7,15 +7,22 @@ public class CameraScript : MonoBehaviour
 {
     public bool culling = true;
     private GameObject player;
-    private const float scrollSpeed = 5;
+    private const float scrollSpeed = 3;
+    private const float minZoom = 2;
+    private const float maxZoom = 5;
+    private const float height = 1000;
+    private const int pixelsPerUnit = 256;
     private bool cameraLocked = true;
     private Vector3 prevPosition;
     private Transform camerafocus;
+    private Camera myCamera;
 
     private void Awake()
     {
         player = GameObject.Find("Player");
         camerafocus = player.transform;
+        myCamera = gameObject.GetComponent<Camera>();
+        //SetSize();
     }
 
     void Update()
@@ -24,6 +31,11 @@ public class CameraScript : MonoBehaviour
         CameraPan();
         CameraScroll();
         if(culling) FrustumCulling();
+    }
+
+    private void SetSize()
+    {
+        gameObject.GetComponent<Camera>().orthographicSize = height / (2 * pixelsPerUnit);
     }
 
     public void SetCameraFocus(Transform newFocus)
@@ -84,6 +96,9 @@ public class CameraScript : MonoBehaviour
     {
         if (Input.GetAxis("Mouse ScrollWheel") != 0f)
         {
+            if (myCamera.orthographicSize < minZoom && Input.GetAxis("Mouse ScrollWheel") > 0f) return;
+            if (myCamera.orthographicSize > maxZoom && Input.GetAxis("Mouse ScrollWheel") < 0f) return;
+
             gameObject.GetComponent<Camera>().orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
         }
     }

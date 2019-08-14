@@ -34,6 +34,7 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
 
     public void Use()
     {
+        if (item.GetComponent<Ability>() == null) return;
         if (cooldown.text != "") return;
         cooldown.text = "" + item.GetComponent<Ability>().CoolDown();
         item.GetComponent<Ability>().Use(MousePosition());
