@@ -10,8 +10,6 @@ public class CameraScript : MonoBehaviour
     private const float scrollSpeed = 3;
     private const float minZoom = 2;
     private const float maxZoom = 5;
-    private const float height = 1000;
-    private const int pixelsPerUnit = 256;
     private bool cameraLocked = true;
     private Vector3 prevPosition;
     private Transform camerafocus;
@@ -22,7 +20,6 @@ public class CameraScript : MonoBehaviour
         player = GameObject.Find("Player");
         camerafocus = player.transform;
         myCamera = gameObject.GetComponent<Camera>();
-        //SetSize();
     }
 
     void Update()
@@ -33,14 +30,15 @@ public class CameraScript : MonoBehaviour
         if(culling) FrustumCulling();
     }
 
-    private void SetSize()
-    {
-        gameObject.GetComponent<Camera>().orthographicSize = height / (2 * pixelsPerUnit);
-    }
-
     public void SetCameraFocus(Transform newFocus)
     {
         camerafocus = newFocus;
+        SetPosition(newFocus);
+    }
+
+    private void SetPosition(Transform newPosition)
+    {
+        transform.position = new Vector3(newPosition.position.x, newPosition.position.y, -10);
     }
 
     public IEnumerator PointCamera(Transform newFocus)
@@ -73,7 +71,7 @@ public class CameraScript : MonoBehaviour
     {
         if (cameraLocked)
         {
-            transform.position = new Vector3(camerafocus.position.x, camerafocus.position.y, -10);
+            SetPosition(camerafocus);
         }
         if (Input.GetKeyDown("left ctrl")) cameraLocked = true;
     }
