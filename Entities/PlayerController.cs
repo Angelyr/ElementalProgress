@@ -10,6 +10,10 @@ public class PlayerController : Character
     private GameObject apUI;
     private GameObject healthUI;
     public CameraScript myCamera;
+    
+    private Rigidbody2D myRigidBody;
+    private Vector2Int direction;
+    private const float moveSpeed = .1f;
 
     protected override void Awake()
     {
@@ -18,6 +22,8 @@ public class PlayerController : Character
         apUI = GameObject.Find("AP");
         healthUI = GameObject.Find("Health");
         myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
+        myRigidBody = GetComponent<Rigidbody2D>();
+        direction = Vector2Int.zero;
     }
 
     protected override void Init()
@@ -40,18 +46,34 @@ public class PlayerController : Character
         TurnOrder.AddTurn(gameObject);
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
     }
-
-    //Every frame
+ 
     private void Update()
     {
         if (!TurnOrder.MyTurn(gameObject)) return;
         if (ap < 1) return;
 
-        if (Input.GetKeyDown("w")) Move(0, 1);
-        if (Input.GetKeyDown("a")) Move(-1, 0);
-        if (Input.GetKeyDown("s")) Move(0, -1);
-        if (Input.GetKeyDown("d")) Move(1, 0);
+        if (Input.GetKeyDown("w") && direction == Vector2Int.zero)
+        {
+            direction = Vector2Int.up;
+        }
+        if (Input.GetKeyDown("a") && direction == Vector2Int.zero)
+        {
+            direction = Vector2Int.left;
+        }
+        if (Input.GetKeyDown("s") && direction == Vector2Int.zero)
+        {
+            direction = Vector2Int.down;
+        }
+        if (Input.GetKeyDown("d") && direction == Vector2Int.zero)
+        {
+            direction = Vector2Int.right;
+        }
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) inventory.UseSelected();
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
     }
 
     public int GetRange()
@@ -66,13 +88,26 @@ public class PlayerController : Character
         return true;
     }
 
-    //move character after input
-    private void Move(int xMove, int yMove)
+    private void Move()
     {
-        WorldController.MoveWorldLocation(transform, xMove, yMove);
+        if (direction == Vector2Int.zero) return;
+
+        Vector2 movement = myRigidBody.position + ((Vector2)direction * moveSpeed);
+        myRigidBody.MovePosition(movement);
+
+        if (movement == Vector2Int.RoundToInt(myRigidBody.position))
+        {
+            StopMove();
+        }
+    }
+
+    private void StopMove()
+    {
+        WorldController.MoveToWorldPoint(transform, Vector2Int.RoundToInt(myRigidBody.position));
         ChangeAP(ap - 1);
         WorldController.SetDistanceFromPlayer();
         TurnOrder.StartConcurrentTurns();
+        direction = Vector2Int.zero;
     }
 
     private void ChangeAP(int newAP)

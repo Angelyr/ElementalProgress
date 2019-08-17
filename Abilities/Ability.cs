@@ -97,6 +97,11 @@ public abstract class Ability : Thing
         outlinedObjects.Clear();
     }
 
+    public virtual void Animate(Vector2Int target)
+    {
+
+    }
+
     public virtual List<GameObject> GetArea(Vector2Int target)
     {
         Vector2Int closestTarget = ClosestPositionInRange(target);

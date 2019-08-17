@@ -147,6 +147,11 @@ public class WorldController : MonoBehaviour
         Destroy(curr);
     }
 
+    private static void MoveAnimation(Transform curr, Vector2Int position)
+    {
+
+    }
+
     public static void MoveWorldLocation(Transform curr, int xMove, int yMove)
     {
         int x = (int)curr.position.x;

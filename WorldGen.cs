@@ -14,7 +14,7 @@ public class WorldGen : MonoBehaviour
     private Grid[] special;
     private Grid filled;
     private Grid empty;
-    private const int numChunks = 3;
+    private const int numChunks = 1;
     private const int chunksize = 16;
 
     //Start
