@@ -14,7 +14,8 @@ public class CameraScript : MonoBehaviour
     private Vector3 prevPosition;
     private Transform camerafocus;
     private Camera myCamera;
-
+    private const float moveSpeed = .5f;
+    
     private void Awake()
     {
         player = GameObject.Find("Player");
@@ -30,25 +31,25 @@ public class CameraScript : MonoBehaviour
         if(culling) FrustumCulling();
     }
 
-    public void SetCameraFocus(Transform newFocus)
+    private void FixedUpdate()
     {
-        camerafocus = newFocus;
-        SetPosition(newFocus);
+        Move();
     }
 
-    private void SetPosition(Transform newPosition)
+    private void Move()
     {
-        transform.position = new Vector3(newPosition.position.x, newPosition.position.y, -10);
+        if (transform.position == camerafocus.position) return;
+        Vector3 target = camerafocus.position;
+        target.z = -10;
+        transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed);
     }
 
-    public IEnumerator PointCamera(Transform newFocus)
+    public void SetPosition(Transform target)
     {
-        Transform currFocus = camerafocus;
-        SetCameraFocus(newFocus);
-        yield return new WaitForSeconds(1);
-        SetCameraFocus(currFocus);
+        //transform.position = new Vector3(target.position.x, target.position.y, -10);
+        camerafocus = target;
     }
-
+    
     private void FrustumCulling()
     {
         int height = Mathf.RoundToInt(2f * Camera.main.orthographicSize);
@@ -80,12 +81,13 @@ public class CameraScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(2))
         {
-            prevPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            prevPosition = myCamera.ScreenToWorldPoint(Input.mousePosition);
         }
         if (Input.GetMouseButton(2))
         {
-            Vector3 direction = prevPosition - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Camera.main.transform.position += direction;
+            Vector3 direction = prevPosition - myCamera.ScreenToWorldPoint(Input.mousePosition);
+            transform.position += direction;
+            SetPosition(transform);
             cameraLocked = false;
         }
     }
@@ -97,7 +99,7 @@ public class CameraScript : MonoBehaviour
             if (myCamera.orthographicSize < minZoom && Input.GetAxis("Mouse ScrollWheel") > 0f) return;
             if (myCamera.orthographicSize > maxZoom && Input.GetAxis("Mouse ScrollWheel") < 0f) return;
 
-            gameObject.GetComponent<Camera>().orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
+            myCamera.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
         }
     }
 }

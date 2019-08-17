@@ -63,7 +63,6 @@ public abstract class Enemy : Character
         {
             TurnOrder.AddTurn(gameObject);
             player.GetComponent<PlayerUI>().SetMessage("Enemy In Range");
-            StartCoroutine(player.GetComponent<PlayerController>().myCamera.PointCamera(transform));
             return false;
         }
         PathToPlayer();

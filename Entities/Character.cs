@@ -30,7 +30,7 @@ public abstract class Character : Entity
 
     public virtual void StartTurn()
     {
-        player.GetComponent<PlayerController>().myCamera.SetCameraFocus(transform);
+        player.GetComponent<PlayerController>().myCamera.SetPosition(transform);
         ap = maxAP;
     }
     public abstract bool StartConcurrentTurn();

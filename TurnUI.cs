@@ -14,6 +14,6 @@ public class TurnUI : Thing, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        player.GetComponent<PlayerController>().myCamera.SetCameraFocus(character.transform);
+        player.GetComponent<PlayerController>().myCamera.SetPosition(character.transform);
     }
 }

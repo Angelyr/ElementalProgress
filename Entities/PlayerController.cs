@@ -34,7 +34,7 @@ public class PlayerController : Character
 
     public override void StartTurn()
     {
-        myCamera.SetCameraFocus(transform);
+        myCamera.SetPosition(transform);
         gameObject.GetComponent<PlayerUI>().SetMessage("Your Turn");
         ChangeAP(maxAP);
         inventory.DecreaseCooldowns();
