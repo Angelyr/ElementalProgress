@@ -11,7 +11,7 @@ public class PlayerController : Character
     private GameObject healthUI;
     public CameraScript myCamera;
     
-    private Rigidbody2D myRigidBody;
+    private Vector2Int targetPosition;
     private Vector2Int direction;
     private const float moveSpeed = .1f;
 
@@ -22,7 +22,7 @@ public class PlayerController : Character
         apUI = GameObject.Find("AP");
         healthUI = GameObject.Find("Health");
         myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
-        myRigidBody = GetComponent<Rigidbody2D>();
+        targetPosition = MyPosition();
         direction = Vector2Int.zero;
     }
 
@@ -52,28 +52,38 @@ public class PlayerController : Character
         if (!TurnOrder.MyTurn(gameObject)) return;
         if (ap < 1) return;
 
-        if (Input.GetKeyDown("w") && direction == Vector2Int.zero)
+        MovementInput();
+        
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) inventory.UseSelected();
+    }
+
+    private void MovementInput()
+    {
+        if (direction != Vector2Int.zero) return;
+
+        if (Input.GetKeyDown("w"))
         {
             direction = Vector2Int.up;
         }
-        if (Input.GetKeyDown("a") && direction == Vector2Int.zero)
+        if (Input.GetKeyDown("a"))
         {
             direction = Vector2Int.left;
         }
-        if (Input.GetKeyDown("s") && direction == Vector2Int.zero)
+        if (Input.GetKeyDown("s"))
         {
             direction = Vector2Int.down;
         }
-        if (Input.GetKeyDown("d") && direction == Vector2Int.zero)
+        if (Input.GetKeyDown("d"))
         {
             direction = Vector2Int.right;
         }
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) inventory.UseSelected();
+
+        targetPosition = MyPosition() + direction;
     }
 
     private void FixedUpdate()
     {
-        Move();
+        MoveAnimation();
     }
 
     public int GetRange()
@@ -88,26 +98,23 @@ public class PlayerController : Character
         return true;
     }
 
-    private void Move()
+    private void MoveAnimation()
     {
-        if (direction == Vector2Int.zero) return;
-
-        Vector2 movement = myRigidBody.position + ((Vector2)direction * moveSpeed);
-        myRigidBody.MovePosition(movement);
-
-        if (movement == Vector2Int.RoundToInt(myRigidBody.position))
+        if(direction != Vector2Int.zero && targetPosition == (Vector2)transform.position)
         {
-            StopMove();
+            Move();
+            direction = Vector2Int.zero;
         }
+
+        transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
     }
 
-    private void StopMove()
+    private void Move()
     {
-        WorldController.MoveToWorldPoint(transform, Vector2Int.RoundToInt(myRigidBody.position));
+        WorldController.MoveToWorldPoint(transform, targetPosition);
         ChangeAP(ap - 1);
         WorldController.SetDistanceFromPlayer();
         TurnOrder.StartConcurrentTurns();
-        direction = Vector2Int.zero;
     }
 
     private void ChangeAP(int newAP)
