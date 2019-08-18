@@ -93,14 +93,14 @@ public class Entity : Thing
         currHover.transform.Find("HealthBarBG").Find("HealthText").GetComponent<Text>().text = health + "/" + maxHealth;
     }
 
-    private void OnMouseEnter()
+    public void OnMouseEnter()
     {
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+        if (HoveringUI()) return;
         HighlightArea();
         CreateHover();
     }
 
-    private void OnMouseExit()
+    public void OnMouseExit()
     {
         ClearHighlightedArea();
         DestroyHover();

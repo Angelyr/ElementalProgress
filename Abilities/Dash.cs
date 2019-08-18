@@ -50,6 +50,6 @@ public class Dash : Ability
 
     public override void Use(Vector2Int target)
     {
-        WorldController.MoveToWorldPoint(WorldController.GetTile(MyPosition()).transform, ClosestPositionInRange(target));
+        WorldController.GetTile(MyPosition()).GetComponent<Character>().SetPosition(ClosestPositionInRange(target));
     }
 }

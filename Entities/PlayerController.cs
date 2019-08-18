@@ -48,7 +48,7 @@ public class PlayerController : Character
 
         MovementInput();
         
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) inventory.UseSelected();
+        if (Input.GetMouseButtonDown(0) && !HoveringUI()) inventory.UseSelected();
     }
 
     private void MovementInput()

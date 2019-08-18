@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public abstract class Thing : MonoBehaviour
 {
@@ -52,5 +53,22 @@ public abstract class Thing : MonoBehaviour
     public Vector2Int PlayerPosition()
     {
         return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
+    }
+
+    public bool HoveringUI()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current);
+
+        pointerData.position = Input.mousePosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        if (results.Count > 0)
+        {
+            if (results[0].gameObject.name == "Outline") return false;
+        }
+
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }

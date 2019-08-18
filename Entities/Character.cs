@@ -45,7 +45,7 @@ public abstract class Character : Entity
         targetPosition = MyPosition() + direction;
     }
 
-    protected void SetPosition(Vector2Int position)
+    public void SetPosition(Vector2Int position)
     {
         targetPosition = position;
     }
