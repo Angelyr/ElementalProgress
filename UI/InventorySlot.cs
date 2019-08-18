@@ -61,7 +61,7 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
         selected = false;
         transform.GetComponent<Image>().color = slotColor;
         if (item == null) return;
-        item.GetComponent<Ability>().HideRange();
+        item.GetComponent<Ability>().ClearHighlight();
     }
 
     public bool IsSelected()

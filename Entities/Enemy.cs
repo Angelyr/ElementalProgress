@@ -33,6 +33,10 @@ public abstract class Enemy : Character
         {
             return;
         }
+        else if(result == "selected")
+        {
+            return;
+        }
         else if (result == "outofrange")
         {
             if (PathToPlayer()) return;

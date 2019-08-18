@@ -47,22 +47,33 @@ public abstract class Ability : Thing
         return name + ":\n" + description + "\nRange: " + range + "\nCooldown: " +  cooldown;
     }
 
+    protected bool Selected()
+    {
+        if (outlinedObjects.Count == 0) return false;
+        return true;
+    }
+
     public virtual string TryAbility(Vector2Int target)
     {
         if (currCooldown != 0) return "fail";
-        if(GetTargetType() == "target")
+        if (!WithInRange(GetRange(), target)) return "outofrange";
+        if (!InSight(target)) return "outofsight";
+        if (!Selected())
         {
-            if (!WithInRange(GetRange(), target)) return "outofrange";
-            if (!InSight(target)) return "outofsight";
+            SelectHightlight(target);
+            return "selected";
+        }
+        else ClearHighlight();
+
+        if (GetTargetType() == "target")
+        {
             Use(target);
             return "success";
         }
 
         if(GetTargetType() == "line")
         {
-            if (!WithInRange(GetRange(), target)) return "outofrange";
             if (!Aligned(target)) return "notaligned";
-            if (!InSight(target)) return "outofsight";
             Use(target);
             return "success";
         }
@@ -88,7 +99,7 @@ public abstract class Ability : Thing
         }
     }
 
-    public virtual void HideRange()
+    public virtual void ClearHighlight()
     {
         foreach(GameObject tile in outlinedObjects)
         {
@@ -97,9 +108,13 @@ public abstract class Ability : Thing
         outlinedObjects.Clear();
     }
 
-    public virtual void Animate(Vector2Int target)
+    public void SelectHightlight(Vector2Int target)
     {
-
+        foreach(GameObject tile in GetArea(target))
+        {
+            tile.GetComponent<Entity>().Outline();
+            outlinedObjects.Add(tile);
+        }
     }
 
     public virtual List<GameObject> GetArea(Vector2Int target)
