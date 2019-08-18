@@ -10,10 +10,6 @@ public class PlayerController : Character
     private GameObject apUI;
     private GameObject healthUI;
     public CameraScript myCamera;
-    
-    private Vector2Int targetPosition;
-    private Vector2Int direction;
-    private const float moveSpeed = .1f;
 
     protected override void Awake()
     {
@@ -22,8 +18,6 @@ public class PlayerController : Character
         apUI = GameObject.Find("AP");
         healthUI = GameObject.Find("Health");
         myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
-        targetPosition = MyPosition();
-        direction = Vector2Int.zero;
     }
 
     protected override void Init()
@@ -59,31 +53,24 @@ public class PlayerController : Character
 
     private void MovementInput()
     {
-        if (direction != Vector2Int.zero) return;
+        if (moving) return;
 
         if (Input.GetKeyDown("w"))
         {
-            direction = Vector2Int.up;
+            SetDirection(Vector2Int.up);
         }
         if (Input.GetKeyDown("a"))
         {
-            direction = Vector2Int.left;
+            SetDirection(Vector2Int.left);
         }
         if (Input.GetKeyDown("s"))
         {
-            direction = Vector2Int.down;
+            SetDirection(Vector2Int.down);
         }
         if (Input.GetKeyDown("d"))
         {
-            direction = Vector2Int.right;
+            SetDirection(Vector2Int.right);
         }
-
-        targetPosition = MyPosition() + direction;
-    }
-
-    private void FixedUpdate()
-    {
-        MoveAnimation();
     }
 
     public int GetRange()
@@ -98,18 +85,7 @@ public class PlayerController : Character
         return true;
     }
 
-    private void MoveAnimation()
-    {
-        if(direction != Vector2Int.zero && targetPosition == (Vector2)transform.position)
-        {
-            Move();
-            direction = Vector2Int.zero;
-        }
-
-        transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
-    }
-
-    private void Move()
+    protected override void Move()
     {
         WorldController.MoveToWorldPoint(transform, targetPosition);
         ChangeAP(ap - 1);
@@ -117,7 +93,7 @@ public class PlayerController : Character
         TurnOrder.StartConcurrentTurns();
     }
 
-    private void ChangeAP(int newAP)
+    protected override void ChangeAP(int newAP)
     {
         if (TurnOrder.ConcurrentTurns())
         {

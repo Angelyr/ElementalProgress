@@ -9,7 +9,7 @@ public class Slime : Enemy
     protected override string Attack()
     {
         string result = melee.TryAbility(PlayerPosition());
-        if (result == "success") ConsumeAP();
+        if (result == "success") ChangeAP(ap - 1);
         return result;
     }
 

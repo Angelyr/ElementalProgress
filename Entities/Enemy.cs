@@ -73,7 +73,7 @@ public abstract class Enemy : Character
     {
         Vector2Int closest = WorldController.GetClosestTileToPlayer(MyPosition());
         if (closest == MyPosition()) return false;
-        MoveTo(closest);
+        SetPosition(closest);
         return true;
     }
 
@@ -86,28 +86,9 @@ public abstract class Enemy : Character
 
     protected void MoveRandomly()
     {
-        int xMove = Random.Range(-1, 2);
-        int yMove = Random.Range(-1, 2);
-        Move(xMove, yMove);
-    }
-
-    protected void Move(int xMove, int yMove)
-    {
-        WorldController.MoveWorldLocation(transform, xMove, yMove);
-        ConsumeAP();
-    }
-
-    protected void MoveTo(Vector2Int target)
-    {
-        WorldController.MoveToWorldPoint(transform, target);
-        ConsumeAP();
-    }
-
-    protected void ConsumeAP()
-    {
-        if (ap < 1) return;
-
-        ap -= 1;
+        int x = Random.Range(-1, 2);
+        int y = Random.Range(-1, 2);
+        SetPosition(MyPosition() + new Vector2Int(x, y));
     }
 
     protected bool PathToDistance(int distance)
@@ -123,10 +104,10 @@ public abstract class Enemy : Character
         int distX = Mathf.Abs(MyPosition().x - target.x);
         int distY = Mathf.Abs(MyPosition().y - target.y);
 
-        if (distX < distY/2 && MyPosition().x > target.x) Move(-1, 0);
-        else if (distX < distY/2 && MyPosition().x < target.x) Move(1, 0);
-        else if (distX/2 > distY && MyPosition().y > target.y) Move(0, -1);
-        else if (distX/2 > distY && MyPosition().y < target.y) Move(0, 1);
+        if (distX < distY/2 && MyPosition().x > target.x) SetPosition(MyPosition() + Vector2Int.left);
+        else if (distX < distY/2 && MyPosition().x < target.x) SetPosition(MyPosition() + Vector2Int.right);
+        else if (distX/2 > distY && MyPosition().y > target.y) SetPosition(MyPosition() + Vector2Int.down);
+        else if (distX/2 > distY && MyPosition().y < target.y) SetPosition(MyPosition() + Vector2Int.up);
         else return false;
 
         return true;
@@ -136,7 +117,7 @@ public abstract class Enemy : Character
     {
         Vector2Int farthest = WorldController.FarthestTileFromPlayer(MyPosition());
         if (farthest == MyPosition()) return false;
-        MoveTo(farthest);
+        SetPosition(farthest);
         return true;
     }
 
