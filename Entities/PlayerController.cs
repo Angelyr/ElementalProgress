@@ -88,6 +88,7 @@ public class PlayerController : Character
     protected override void Move()
     {
         WorldController.MoveToWorldPoint(transform, targetPosition);
+        inventory.ReSelect();
         ChangeAP(ap - 1);
         WorldController.SetDistanceFromPlayer();
         TurnOrder.StartConcurrentTurns();

@@ -29,6 +29,12 @@ public class Inventory : MonoBehaviour
         selected.Select();
     }
 
+    public void ReSelect()
+    {
+        selected.DeSelect();
+        selected.Select();
+    }
+
     public void AddItem(GameObject item)
     {
         foreach (InventorySlot slot in GetComponentsInChildren<InventorySlot>())
