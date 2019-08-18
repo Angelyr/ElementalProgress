@@ -27,10 +27,7 @@ public abstract class Thing : MonoBehaviour
         if (GetDescription() == "") return;
         currHover = Instantiate(hoverUI, UI.transform);
         currHover.GetComponentInChildren<Text>().text = GetDescription();
-
-        Vector3 newPosition = transform.position;
-        newPosition.y += 100;
-        currHover.transform.position = newPosition;
+        currHover.GetComponent<HoverUI>().SetTarget(transform);
     }
 
     public virtual void DestroyHover()
