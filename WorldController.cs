@@ -105,7 +105,7 @@ public class WorldController : MonoBehaviour
             }
             if (closestDist == distanceFromPlayer[tile] && closest != currTile)
             {
-                if (PlayerPosition().x == tile.x || PlayerPosition().y == tile.y) closest = tile;
+                if (currTile.x == tile.x || currTile.y == tile.y) closest = tile;
             }
         }
         return closest;

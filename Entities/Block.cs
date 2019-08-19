@@ -26,7 +26,7 @@ public class Block : Entity
     {
         if (!background) return;
         if (WorldController.GetTile(MyPosition()) != null) return;
-        int spawnChance = 0;
+        int spawnChance = 1;
         if (Random.Range(0,100) < spawnChance)
         {
             WorldController.SpawnEnemy((int)transform.position.x, (int)transform.position.y);
@@ -40,7 +40,7 @@ public class Block : Entity
         newBlock.GetComponent<Block>().top = newSprite;
         newBlock.GetComponent<Block>().bottom = newSprite;
 
-        if (newSprite.name == "Dirt") newBlock.GetComponent<Block>().top = grass;
+        if (newSprite && newSprite.name == "Dirt") newBlock.GetComponent<Block>().top = grass;
 
         return newBlock;
     }
