@@ -14,7 +14,7 @@ public class WorldGen : MonoBehaviour
     private Grid[] special;
     private Grid filled;
     private Grid empty;
-    private const int numChunks = 1;
+    private const int numChunks = 2;
     private const int chunksize = 16;
 
     //Start
@@ -79,31 +79,41 @@ public class WorldGen : MonoBehaviour
     private void PlaceChunk(int chunkX, int chunkY, Grid chunkGrid)
     {
         if (chunks.ContainsKey((chunkX, chunkY))) return;
-        Tilemap chunk = chunkGrid.transform.GetChild(0).gameObject.GetComponent<Tilemap>();
+        //Tilemap chunk = chunkGrid.transform.GetChild(0).gameObject.GetComponent<Tilemap>();
         chunks[(chunkX, chunkY)] = chunkGrid.name;
 
         for (int x = -chunksize / 2; x < chunksize / 2; x++)
         {
             for (int y = 0; y > -chunksize; y--)
             {
-                //Tile currTile = (Tile)chunk.GetTile(new Vector3Int(x, y, 0));
-                int currX = x + (chunkX * chunksize);
-                int currY = y + (chunkY * chunksize);
+                PlaceTile(x, y, chunkX, chunkY, chunkGrid);
+            }
+        }
+    }
 
-                TileBase currTile = chunk.GetTile(new Vector3Int(x, y, 0));
-                Sprite tileSprite = chunk.GetSprite(new Vector3Int(x, y, 0));
-                Vector3 rotation = chunk.GetTransformMatrix(new Vector3Int(x, y, 0)).rotation.eulerAngles;
+    private void PlaceTile(int x, int y, int chunkX, int chunkY, Grid chunkGrid)
+    {
 
-                if (currTile)
+        Tilemap[] chunkLayers = chunkGrid.GetComponentsInChildren<Tilemap>();
+
+        int currX = x + (chunkX * chunksize);
+        int currY = y + (chunkY * chunksize);
+
+        foreach(Tilemap chunk in chunkLayers)
+        {
+            TileBase currTile = chunk.GetTile(new Vector3Int(x, y, 0));
+            Sprite tileSprite = chunk.GetSprite(new Vector3Int(x, y, 0));
+            Vector3 rotation = chunk.GetTransformMatrix(new Vector3Int(x, y, 0)).rotation.eulerAngles;
+
+            if (currTile)
+            {
+                if (currTile.name == "Background" || currTile.name.Contains("Floor"))
                 {
-                    if (currTile.name == "Background")
-                    {
-                        CreateBackground(currX, currY, tileSprite);
-                    }
-                    else
-                    {
-                        Create(currX, currY, tileSprite, rotation);
-                    }
+                    CreateBackground(currX, currY, tileSprite);
+                }
+                else
+                {
+                    Create(currX, currY, tileSprite, rotation);
                 }
             }
         }

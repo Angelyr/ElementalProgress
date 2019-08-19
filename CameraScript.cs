@@ -9,7 +9,7 @@ public class CameraScript : MonoBehaviour
     private GameObject player;
     private const float scrollSpeed = 3;
     private const float minZoom = 2;
-    private const float maxZoom = 5;
+    private const float maxZoom = 10;
     private bool cameraLocked = true;
     private Vector3 prevPosition;
     private Transform camerafocus;
