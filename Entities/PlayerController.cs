@@ -55,19 +55,19 @@ public class PlayerController : Character
     {
         if (moving) return;
 
-        if (Input.GetKeyDown("w"))
+        if (Input.GetKey("w"))
         {
             SetDirection(Vector2Int.up);
         }
-        if (Input.GetKeyDown("a"))
+        if (Input.GetKey("a"))
         {
             SetDirection(Vector2Int.left);
         }
-        if (Input.GetKeyDown("s"))
+        if (Input.GetKey("s"))
         {
             SetDirection(Vector2Int.down);
         }
-        if (Input.GetKeyDown("d"))
+        if (Input.GetKey("d"))
         {
             SetDirection(Vector2Int.right);
         }
@@ -87,7 +87,8 @@ public class PlayerController : Character
 
     protected override void Move()
     {
-        WorldController.MoveToWorldPoint(transform, targetPosition);
+        WorldController.MoveToWorldPoint(transform, mapPosition, targetPosition);
+        mapPosition = targetPosition;
         inventory.ReSelect();
         ChangeAP(ap - 1);
         WorldController.SetDistanceFromPlayer();

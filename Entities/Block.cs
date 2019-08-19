@@ -26,7 +26,7 @@ public class Block : Entity
     {
         if (!background) return;
         if (WorldController.GetTile(MyPosition()) != null) return;
-        int spawnChance = 1;
+        int spawnChance = 0;
         if (Random.Range(0,100) < spawnChance)
         {
             WorldController.SpawnEnemy((int)transform.position.x, (int)transform.position.y);

@@ -17,6 +17,12 @@ public class WorldGen : MonoBehaviour
     private const int numChunks = 2;
     private const int chunksize = 16;
 
+
+    public static int GetMapLength()
+    {
+        return numChunks * chunksize;
+    }
+
     //Start
     public void GenerateWorld()
     {

@@ -165,6 +165,14 @@ public class WorldController : MonoBehaviour
         tiles[(newLocation.x, newLocation.y)] = curr.gameObject;
     }
 
+    public static void MoveToWorldPoint(Transform curr, Vector2Int prevPosition, Vector2Int newLocation)
+    {
+        if (!Empty(newLocation.x, newLocation.y)) return;
+        tiles.Remove((prevPosition.x, prevPosition.y));
+        curr.position = new Vector2(newLocation.x, newLocation.y);
+        tiles[(newLocation.x, newLocation.y)] = curr.gameObject;
+    }
+
     public static void AddToWorld(GameObject curr, int x, int y)
     {
         if (!tiles.ContainsKey((x, y)))

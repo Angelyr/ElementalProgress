@@ -29,11 +29,26 @@ public class CameraScript : MonoBehaviour
         CameraPan();
         CameraScroll();
         if(culling) FrustumCulling();
+        //MoveInBounds();
     }
 
     private void FixedUpdate()
     {
         Move();
+        //MoveInBounds();
+    }
+
+    private void MoveInBounds()
+    {
+        float height = 2f * myCamera.orthographicSize;
+        float width = height * myCamera.aspect;
+        int worldlength = WorldGen.GetMapLength();
+
+        if (transform.position.x > 23) transform.position = new Vector3(23, transform.position.y, transform.position.z);
+        if (transform.position.x < -23) transform.position = new Vector3(-23, transform.position.y, transform.position.z);
+
+        if (transform.position.y > 7) transform.position = new Vector3(transform.position.x, 7, transform.position.z);
+        if (transform.position.y < -7) transform.position = new Vector3(transform.position.x, -7, transform.position.z);
     }
 
     private void Move()

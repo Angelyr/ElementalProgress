@@ -11,6 +11,7 @@ public abstract class Character : Entity
     public GameObject myTurnUI;
 
     protected Vector2Int targetPosition;
+    protected Vector2Int mapPosition;
     protected const float moveSpeed = .1f;
     protected bool moving = false;
 
@@ -21,6 +22,7 @@ public abstract class Character : Entity
         maxAP = ap;
         maxHealth = health;
         targetPosition = MyPosition();
+        mapPosition = MyPosition();
     }
 
     private void FixedUpdate()
@@ -30,6 +32,12 @@ public abstract class Character : Entity
 
     private void MoveAnimation()
     {
+        if(WorldController.GetTile(targetPosition) != null)
+        {
+            targetPosition = MyPosition();
+            moving = false;
+            return;
+        }
         if (targetPosition != (Vector2)transform.position) moving = true;
         if (targetPosition == (Vector2)transform.position && moving)
         {
@@ -52,7 +60,8 @@ public abstract class Character : Entity
 
     protected virtual void Move()
     {
-        WorldController.MoveToWorldPoint(transform, targetPosition);
+        WorldController.MoveToWorldPoint(transform, mapPosition, targetPosition);
+        mapPosition = targetPosition;
         ChangeAP(ap - 1);
     }
 
