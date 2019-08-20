@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Block : Entity
 {
-    public Sprite top;
-    public Sprite bottom;
-    public Sprite grass;
+    private int spawnChance = 1;
+    private int variationChance = 10;
     public bool background = false;
 
     private SpriteRenderer spriteComponent;
@@ -15,18 +14,20 @@ public class Block : Entity
     {
         base.Awake();
         spriteComponent = gameObject.GetComponent<SpriteRenderer>();
+        
     }
 
     private void Start()
     {
         SpawnEnemyOnThisBlock();
+        UpdateSprite();
     }
 
     private void SpawnEnemyOnThisBlock()
     {
         if (!background) return;
         if (WorldController.GetTile(MyPosition()) != null) return;
-        int spawnChance = 1;
+        
         if (Random.Range(0,100) < spawnChance)
         {
             WorldController.SpawnEnemy((int)transform.position.x, (int)transform.position.y);
@@ -39,14 +40,11 @@ public class Block : Entity
         
         newBlock.GetComponent<SpriteRenderer>().sortingOrder = -y + sortingOrder;
         newBlock.GetComponent<SpriteRenderer>().sprite = newSprite;
-        newBlock.GetComponent<Block>().top = newSprite;
-        newBlock.GetComponent<Block>().bottom = newSprite;
 
         if (newSprite && newSprite.name == "Barrier")
         {
             newBlock.GetComponent<SpriteRenderer>().enabled = false;
         }
-        if (newSprite && newSprite.name == "Dirt") newBlock.GetComponent<Block>().top = grass;
 
         return newBlock;
     }
@@ -64,10 +62,10 @@ public class Block : Entity
 
     private void UpdateSprite()
     {
-        bool up = GetDirection(0, 1);
-
-        if (up && spriteComponent.sprite != bottom) spriteComponent.sprite = bottom;
-        if (!up && spriteComponent.sprite != top)   spriteComponent.sprite = top;
+        if (Random.Range(0, 100) < variationChance)
+        {
+            spriteComponent.sprite = Variations.GetRandomVariation(spriteComponent.sprite);
+        }
     }
 
     public override void CreateHover()

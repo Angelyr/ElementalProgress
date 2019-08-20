@@ -31,6 +31,11 @@ public class WorldController : MonoBehaviour
         enemies.Add(Resources.Load<GameObject>("Prefab/Slime").GetComponent<Enemy>());
         enemies.Add(Resources.Load<GameObject>("Prefab/Spirit").GetComponent<Enemy>());
 
+        
+    }
+
+    private void Start()
+    {
         GetComponent<WorldGen>().GenerateWorld();
     }
 
