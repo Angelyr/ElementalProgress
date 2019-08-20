@@ -7,14 +7,10 @@ public class CameraScript : MonoBehaviour
 {
     public bool culling = true;
     private GameObject player;
-    private const float scrollSpeed = 3;
-    private const float minZoom = 2;
-    private const float maxZoom = 10;
     private bool cameraLocked = true;
     private Vector3 prevPosition;
     private Transform camerafocus;
     private Camera myCamera;
-    private const float moveSpeed = .5f;
     
     private void Awake()
     {
@@ -50,7 +46,7 @@ public class CameraScript : MonoBehaviour
         if (transform.position == camerafocus.position) return;
         Vector3 target = camerafocus.position;
         target.z = -10;
-        transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed);
+        transform.position = Vector3.MoveTowards(transform.position, target, Settings.cameraSpeed);
     }
 
     public void SetPosition(Transform target)
@@ -105,10 +101,10 @@ public class CameraScript : MonoBehaviour
     {
         if (Input.GetAxis("Mouse ScrollWheel") != 0f)
         {
-            if (myCamera.orthographicSize < minZoom && Input.GetAxis("Mouse ScrollWheel") > 0f) return;
-            if (myCamera.orthographicSize > maxZoom && Input.GetAxis("Mouse ScrollWheel") < 0f) return;
+            myCamera.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * Settings.scrollSpeed;
 
-            myCamera.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
+            if (myCamera.orthographicSize < Settings.minZoom) myCamera.orthographicSize = Settings.minZoom;
+            if (myCamera.orthographicSize > Settings.maxZoom) myCamera.orthographicSize = Settings.maxZoom;
         }
     }
 }

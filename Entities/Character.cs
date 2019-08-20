@@ -12,7 +12,6 @@ public abstract class Character : Entity
 
     protected Vector2Int targetPosition;
     protected Vector2Int mapPosition;
-    protected const float moveSpeed = .1f;
     protected bool moving = false;
 
     protected override void Awake()
@@ -50,7 +49,7 @@ public abstract class Character : Entity
             moving = false;
         }
         
-        transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+        transform.position = Vector2.MoveTowards(transform.position, targetPosition, Settings.moveSpeed);
     }
 
     protected void SetDirection(Vector2Int direction)

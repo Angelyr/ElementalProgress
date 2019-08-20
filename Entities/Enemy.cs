@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class Enemy : Character
 {
-    protected int enterTurnDistance = 7;
     protected int spawnChance = 2;
 
     public int SpawnChance()
@@ -54,7 +53,7 @@ public abstract class Enemy : Character
 
     protected void EnterTurnOrder()
     {
-        if (WorldController.GetDistanceFromPlayer(MyPosition()) < enterTurnDistance)
+        if (WorldController.GetDistanceFromPlayer(MyPosition()) < Settings.enterTurnDistance)
         {
             TurnOrder.AddTurn(gameObject);
         }
@@ -63,7 +62,7 @@ public abstract class Enemy : Character
 
     public override bool StartConcurrentTurn()
     {
-        if (PlayerWithInRange(enterTurnDistance))
+        if (PlayerWithInRange(Settings.enterTurnDistance))
         {
             TurnOrder.AddTurn(gameObject);
             player.GetComponent<PlayerUI>().SetMessage("Enemy In Range");

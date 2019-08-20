@@ -28,7 +28,6 @@ public class Variations : MonoBehaviour
     {
         Sprite result = key;
         int length = 0;
-        Debug.Log(key);
 
         if (variations.ContainsKey(key))
         {

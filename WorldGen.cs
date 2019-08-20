@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static WorldController;
+using static Settings;
 
 public class WorldGen : MonoBehaviour
 {
@@ -14,8 +15,6 @@ public class WorldGen : MonoBehaviour
     private Grid[] special;
     private Grid filled;
     private Grid empty;
-    private const int numChunks = 2;
-    private const int chunksize = 16;
 
 
     public static int GetMapLength()

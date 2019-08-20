@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Block : Entity
 {
-    private int spawnChance = 1;
-    private int variationChance = 10;
     public bool background = false;
 
     private SpriteRenderer spriteComponent;
@@ -28,7 +26,7 @@ public class Block : Entity
         if (!background) return;
         if (WorldController.GetTile(MyPosition()) != null) return;
         
-        if (Random.Range(0,100) < spawnChance)
+        if (Random.Range(0,100) < Settings.spawnChance)
         {
             WorldController.SpawnEnemy((int)transform.position.x, (int)transform.position.y);
         }
@@ -62,7 +60,7 @@ public class Block : Entity
 
     private void UpdateSprite()
     {
-        if (Random.Range(0, 100) < variationChance)
+        if (Random.Range(0, 100) < Settings.variationChance)
         {
             spriteComponent.sprite = Variations.GetRandomVariation(spriteComponent.sprite);
         }
