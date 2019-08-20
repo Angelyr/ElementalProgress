@@ -29,13 +29,7 @@ public class CameraScript : MonoBehaviour
         CameraPan();
         CameraScroll();
         if(culling) FrustumCulling();
-        //MoveInBounds();
-    }
-
-    private void FixedUpdate()
-    {
         Move();
-        //MoveInBounds();
     }
 
     private void MoveInBounds()

@@ -110,16 +110,17 @@ public class WorldGen : MonoBehaviour
             TileBase currTile = chunk.GetTile(new Vector3Int(x, y, 0));
             Sprite tileSprite = chunk.GetSprite(new Vector3Int(x, y, 0));
             Vector3 rotation = chunk.GetTransformMatrix(new Vector3Int(x, y, 0)).rotation.eulerAngles;
+            int sortingOrder = chunk.gameObject.GetComponent<TilemapRenderer>().sortingOrder;
 
             if (currTile)
             {
                 if (currTile.name == "Background" || currTile.name.Contains("Floor"))
                 {
-                    CreateBackground(currX, currY, tileSprite);
+                    CreateBackground(currX, currY, tileSprite, sortingOrder);
                 }
                 else
                 {
-                    Create(currX, currY, tileSprite, rotation);
+                    Create(currX, currY, tileSprite, rotation, sortingOrder);
                 }
             }
         }

@@ -161,7 +161,7 @@ public class WorldController : MonoBehaviour
     {
         if (!Empty(newLocation.x, newLocation.y)) return;
         tiles.Remove(((int)curr.transform.position.x, (int)curr.transform.position.y));
-        curr.position = new Vector2(newLocation.x, newLocation.y);
+        curr.position = (Vector2)newLocation;
         tiles[(newLocation.x, newLocation.y)] = curr.gameObject;
     }
 
@@ -169,7 +169,7 @@ public class WorldController : MonoBehaviour
     {
         if (!Empty(newLocation.x, newLocation.y)) return;
         tiles.Remove((prevPosition.x, prevPosition.y));
-        curr.position = new Vector2(newLocation.x, newLocation.y);
+        curr.position = (Vector2)newLocation;
         tiles[(newLocation.x, newLocation.y)] = curr.gameObject;
     }
 
@@ -205,11 +205,11 @@ public class WorldController : MonoBehaviour
         }
     }
 
-    public static bool Create(int x, int y, Sprite blockSprite, Vector3? rotation = null)
+    public static bool Create(int x, int y, Sprite blockSprite, Vector3? rotation = null, int sortingOrder=0)
     {
         if (!tiles.ContainsKey((x, y)))
         {
-            tiles[(x, y)] = block.GetComponent<Block>().Create(x, y, world.transform, blockSprite);
+            tiles[(x, y)] = block.GetComponent<Block>().Create(x, y, world.transform, blockSprite, sortingOrder);
             
             if (rotation != null)
             {
@@ -223,15 +223,15 @@ public class WorldController : MonoBehaviour
         else return false;
     }
 
-    public static bool CreateBackground(int x, int y, Sprite blockSprite)
+    public static bool CreateBackground(int x, int y, Sprite blockSprite, int sortingOrder = 0)
     {
         if (!floorTiles.ContainsKey((x, y)))
         {
-            floorTiles[(x, y)] = block.GetComponent<Block>().Create(x, y, world.transform, blockSprite);
+            floorTiles[(x, y)] = block.GetComponent<Block>().Create(x, y, world.transform, blockSprite, sortingOrder);
             floorTiles[(x, y)].GetComponent<Block>().background = true;
             floorTiles[(x, y)].GetComponent<BoxCollider2D>().isTrigger = true;
             floorTiles[(x, y)].GetComponent<SpriteRenderer>().color = new Color32(120, 120, 120, 255);
-            floorTiles[(x, y)].GetComponent<SpriteRenderer>().sortingOrder = -1;
+            floorTiles[(x, y)].GetComponent<SpriteRenderer>().sortingOrder = -y - 1;
             //if (!level) backBlocks[(x, y)].SetActive(false);
             return true;
         }

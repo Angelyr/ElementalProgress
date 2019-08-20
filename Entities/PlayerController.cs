@@ -41,13 +41,14 @@ public class PlayerController : Character
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
     }
  
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if (!TurnOrder.MyTurn(gameObject)) return;
         if (ap < 1) return;
 
         MovementInput();
-        
+
         if (Input.GetMouseButtonDown(0) && !HoveringUI()) inventory.UseSelected();
     }
 

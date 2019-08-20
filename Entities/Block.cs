@@ -33,13 +33,19 @@ public class Block : Entity
         }
     }
 
-    public GameObject Create(int x, int y, Transform parent, Sprite newSprite)
+    public GameObject Create(int x, int y, Transform parent, Sprite newSprite, int sortingOrder = 0)
     {
         GameObject newBlock = Instantiate(gameObject, new Vector2(x, y), Quaternion.identity, parent);
+        
+        newBlock.GetComponent<SpriteRenderer>().sortingOrder = -y + sortingOrder;
         newBlock.GetComponent<SpriteRenderer>().sprite = newSprite;
         newBlock.GetComponent<Block>().top = newSprite;
         newBlock.GetComponent<Block>().bottom = newSprite;
 
+        if (newSprite && newSprite.name == "Barrier")
+        {
+            newBlock.GetComponent<SpriteRenderer>().enabled = false;
+        }
         if (newSprite && newSprite.name == "Dirt") newBlock.GetComponent<Block>().top = grass;
 
         return newBlock;

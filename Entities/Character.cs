@@ -30,6 +30,11 @@ public abstract class Character : Entity
         MoveAnimation();
     }
 
+    protected virtual void Update()
+    {
+        GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(-transform.position.y) + 1;
+    }
+
     private void MoveAnimation()
     {
         if(WorldController.GetTile(targetPosition) != null)
