@@ -87,4 +87,12 @@ public class Block : Entity
         return WorldController.Get(x, y);
     }
 
+
+    public void SteppedOn(GameObject target)
+    {
+        foreach (Effect effect in myEffects)
+        {
+            effect.SteppedOn(target);
+        }
+    }
 }

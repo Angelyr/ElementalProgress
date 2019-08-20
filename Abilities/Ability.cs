@@ -132,9 +132,18 @@ public abstract class Ability : Thing
         if (GetArea(ClosestPositionInRange(target)) == null) return;
         foreach (GameObject affected in GetArea(ClosestPositionInRange(target)))
         {
+            ApplyEffects(affected);
             if (affected == null) continue;
             if (affected.GetComponent<Character>() == null) continue;
             affected.GetComponent<Character>().Attacked();
+        }
+    }
+
+    private void ApplyEffects(GameObject target)
+    {
+        foreach(Effect effect in myEffects)
+        {
+            target.GetComponent<Entity>().Apply(effect);
         }
     }
 

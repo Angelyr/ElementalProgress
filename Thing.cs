@@ -10,12 +10,14 @@ public abstract class Thing : MonoBehaviour
     protected GameObject player;
     protected GameObject currHover;
     private GameObject UI;
+    protected List<Effect> myEffects;
 
     protected virtual void Awake()
     {
         hoverUI = Resources.Load<GameObject>("Prefab/HoverUI");
         player = GameObject.Find("Player");
         UI = GameObject.Find("UI");
+        myEffects = new List<Effect>();
     }
 
     public virtual string GetDescription()
@@ -70,5 +72,10 @@ public abstract class Thing : MonoBehaviour
         }
 
         return EventSystem.current.IsPointerOverGameObject();
+    }
+
+    public void Add(Effect effect)
+    {
+        myEffects.Add(effect);
     }
 }

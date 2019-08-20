@@ -167,7 +167,7 @@ public class WorldController : MonoBehaviour
         if (!Empty(newLocation.x, newLocation.y)) return;
         tiles.Remove(((int)curr.transform.position.x, (int)curr.transform.position.y));
         curr.position = (Vector2)newLocation;
-        tiles[(newLocation.x, newLocation.y)] = curr.gameObject;
+        AddTile(curr.gameObject, newLocation);
     }
 
     public static void MoveToWorldPoint(Transform curr, Vector2Int prevPosition, Vector2Int newLocation)
@@ -175,7 +175,16 @@ public class WorldController : MonoBehaviour
         if (!Empty(newLocation.x, newLocation.y)) return;
         tiles.Remove((prevPosition.x, prevPosition.y));
         curr.position = (Vector2)newLocation;
-        tiles[(newLocation.x, newLocation.y)] = curr.gameObject;
+        AddTile(curr.gameObject, newLocation);
+    }
+
+    public static void AddTile(GameObject curr, Vector2Int position)
+    {
+        if (!tiles.ContainsKey((position.x, position.y)))
+        {
+            tiles[(position.x, position.y)] = curr;
+            Step(position, curr);
+        }
     }
 
     public static void AddToWorld(GameObject curr, int x, int y)
@@ -183,6 +192,14 @@ public class WorldController : MonoBehaviour
         if (!tiles.ContainsKey((x, y)))
         {
             tiles[(x, y)] = curr;
+        }
+    }
+
+    public static void Step(Vector2Int position, GameObject target)
+    {
+        if (floorTiles.ContainsKey((position.x, position.y)))
+        {
+            floorTiles[(position.x, position.y)].GetComponent<Block>().SteppedOn(target);
         }
     }
 

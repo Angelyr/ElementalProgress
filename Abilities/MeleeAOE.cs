@@ -8,7 +8,6 @@ public class MeleeAOE : Ability
     {
         Vector2Int[] adjacent = WorldController.GetAdjacent(MyPosition());
         List<GameObject> area = new List<GameObject>();
-        area.AddRange(WorldController.GetAll(MyPosition()));
         foreach(Vector2Int position in adjacent)
         {
             area.AddRange(WorldController.GetAll(position));
@@ -23,5 +22,6 @@ public class MeleeAOE : Ability
         cooldown = 5;
         description = "Deals damage to every enemy around you";
         targetType = "target";
+        Add(new Effect());
     }
 }

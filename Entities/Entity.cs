@@ -110,4 +110,9 @@ public class Entity : Thing
     {
     }
 
+    public void Apply(Effect effect)
+    {
+        effect.Apply(gameObject);
+    }
+
 }
