@@ -35,8 +35,8 @@ public class Block : Entity
     public GameObject Create(int x, int y, Transform parent, Sprite newSprite, int sortingOrder = 0)
     {
         GameObject newBlock = Instantiate(gameObject, new Vector2(x, y), Quaternion.identity, parent);
-        
-        newBlock.GetComponent<SpriteRenderer>().sortingOrder = -y + sortingOrder;
+
+        newBlock.GetComponent<Block>().SetSortingOrder(sortingOrder);
         newBlock.GetComponent<SpriteRenderer>().sprite = newSprite;
 
         if (newSprite && newSprite.name == "Barrier")
@@ -45,6 +45,12 @@ public class Block : Entity
         }
 
         return newBlock;
+    }
+
+    private void SetSortingOrder(int sortingOrder)
+    {
+        spriteComponent.sortingOrder = (int)-transform.position.y + sortingOrder;
+        transform.GetChild(1).GetComponent<Canvas>().sortingOrder = spriteComponent.sortingOrder;
     }
 
     public GameObject Place(int x, int y)
