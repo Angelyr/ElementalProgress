@@ -22,6 +22,6 @@ public class MeleeAOE : Ability
         cooldown = 5;
         description = "Deals damage to every enemy around you";
         targetType = "target";
-        Add(new Effect());
+        Add(new Fire());
     }
 }

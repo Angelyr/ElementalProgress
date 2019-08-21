@@ -9,7 +9,7 @@ public class Complex : Enemy
     protected override string Attack()
     {
         string result = rangeAoe.TryAbility(PlayerPosition());
-        if (result == "success") ChangeAP(ap-1);
+        if (result == "success") ChangeAP(-1);
         return result;
     }
 

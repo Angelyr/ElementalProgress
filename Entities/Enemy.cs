@@ -21,7 +21,7 @@ public abstract class Enemy : Character
     private void AI()
     {
         if (!TurnOrder.MyTurn(gameObject)) return;
-        if (ap == 0)
+        if (ap <= 0)
         {
             TurnOrder.EndTurn(gameObject);
             return;

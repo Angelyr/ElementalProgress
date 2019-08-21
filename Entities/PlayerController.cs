@@ -22,8 +22,8 @@ public class PlayerController : Character
 
     protected override void Init()
     {
-        health = 5;
-        ap = 5;
+        health = 10;
+        ap = 10;
     }
 
     public override void StartTurn()
@@ -91,20 +91,20 @@ public class PlayerController : Character
         WorldController.MoveToWorldPoint(transform, mapPosition, targetPosition);
         mapPosition = targetPosition;
         inventory.ReSelect();
-        ChangeAP(ap - 1);
+        ChangeAP(-1);
         WorldController.SetDistanceFromPlayer();
         TurnOrder.StartConcurrentTurns();
     }
 
-    protected override void ChangeAP(int newAP)
+    public override void ChangeAP(int change)
     {
         if (TurnOrder.ConcurrentTurns())
         {
-            newAP = maxAP;
+            change = maxAP;
             inventory.DecreaseCooldowns();
         }
-        ap = newAP;
-        apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + newAP + "/" + maxAP;
+        ap += change;
+        apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + ap + "/" + maxAP;
     }
 
     private void ChangeHealth(int newHealth)

@@ -66,15 +66,12 @@ public abstract class Character : Entity
     {
         WorldController.MoveToWorldPoint(transform, mapPosition, targetPosition);
         mapPosition = targetPosition;
-        ChangeAP(ap - 1);
+        ChangeAP(-1);
     }
 
-
-    protected virtual void ChangeAP(int newAP)
+    public virtual void ChangeAP(int change)
     {
-        if (ap < 1) return;
-
-        ap = newAP;
+        ap += change;
     }
 
     public int Health()

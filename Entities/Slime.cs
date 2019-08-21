@@ -5,14 +5,20 @@ using UnityEngine;
 public class Slime : Enemy
 {
     private Ability melee;
+    private Effect oil = new Oil();
 
     protected override string Attack()
     {
         string result = melee.TryAbility(PlayerPosition());
-        if (result == "success") ChangeAP(ap - 1);
+        if (result == "success") ChangeAP(-1);
         return result;
     }
 
+    protected override void Move()
+    {
+        base.Move();
+        oil.Apply(WorldController.GetGround(MyPosition()));
+    }
 
     protected override void Init()
     {
@@ -21,6 +27,4 @@ public class Slime : Enemy
         health = 3;
         ap = 3;
     }
-
-    
 }

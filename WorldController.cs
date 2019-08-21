@@ -141,6 +141,7 @@ public class WorldController : MonoBehaviour
     public static void SpawnEnemy(int x, int y)
     {
         int index = Random.Range(0, enemies.Count);
+        index = 0;
         Instantiate(enemies[index].gameObject, new Vector2(x, y), Quaternion.identity);
     }
 
