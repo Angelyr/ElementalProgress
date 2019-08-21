@@ -18,6 +18,7 @@ public class PlayerController : Character
         apUI = GameObject.Find("AP");
         healthUI = GameObject.Find("Health");
         myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
+        ChangeHealth(maxHealth);
     }
 
     protected override void Init()

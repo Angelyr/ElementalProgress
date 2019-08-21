@@ -97,6 +97,7 @@ public class WorldController : MonoBehaviour
     {
         Vector2Int[] adjacent = GetAdjacent(currTile);
         Vector2Int closest = currTile;
+        if (!distanceFromPlayer.ContainsKey(currTile)) return currTile;
         int closestDist = distanceFromPlayer[currTile];
         foreach(Vector2Int tile in adjacent)
         {
@@ -110,7 +111,7 @@ public class WorldController : MonoBehaviour
             }
             if (closestDist == distanceFromPlayer[tile] && closest != currTile)
             {
-                if (currTile.x == tile.x || currTile.y == tile.y) closest = tile;
+                if (Vector2.Distance(tile, PlayerPosition()) < Vector2.Distance(closest, PlayerPosition())) closest = tile;
             }
         }
         return closest;

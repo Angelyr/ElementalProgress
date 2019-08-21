@@ -6,41 +6,36 @@ public class Projectile : Ability
 {
     public override List<GameObject> GetArea(Vector2Int target)
     {
-        target = ClosestPositionInRange(target);
-        target = Straighten(target);
+        List<GameObject> area = new List<GameObject>();
+        HashSet<GameObject> line = new HashSet<GameObject>();
+        Vector2 start = MyPosition();
 
-        Vector2Int projectile = MyPosition();
-
-        projectile = MoveToward(projectile, target);
-        while(projectile.x != target.x || projectile.y != target.y)
+        while (start != target)
         {
-            if (WorldController.GetTile(projectile) != null)
-            {
-                return WorldController.GetAll(projectile);
-            }
+            start = Vector2.MoveTowards(start, target, .05f);
+            Vector2Int tile = Vector2Int.RoundToInt(start);
 
-            projectile = MoveToward(projectile, target);
+            if (tile == MyPosition()) continue;
+            line.Add(WorldController.GetGround(tile));
+            line.Add(WorldController.GetTile(tile));
+            if (WorldController.GetTile(tile) != null) break;
         }
-
-        return WorldController.GetAll(target);
+        foreach (GameObject tile in line)
+        {
+            area.Add(tile);
+        }
+        return area;
     }
 
-    public override void ShowRange()
+    public override void Use(Vector2Int target)
     {
-        Vector2Int[] adjacent = WorldController.GetAdjacent(MyPosition());
-        foreach (Vector2Int adjPosition in adjacent)
-        {
-            Vector2Int position = adjPosition;
-            int dist = 1;
-            while (dist <= GetRange())
-            {
-                if (WorldController.GetGround(position) == null) break;
-                WorldController.GetGround(position).GetComponent<Entity>().Outline();
-                outlinedObjects.Add(WorldController.GetGround(position));
-                position = MoveAway(position, MyPosition());
-                dist++;
-            }
-        }
+        if (!WithInRange(target)) return;
+        GameObject affected = WorldController.GetTile(target);
+
+        ApplyEffects(affected);
+        if (affected == null) return;
+        if (affected.GetComponent<Character>() == null) return;
+        affected.GetComponent<Character>().Attacked();
     }
 
     protected override void Init()

@@ -56,7 +56,7 @@ public abstract class Ability : Thing
     public virtual string TryAbility(Vector2Int target)
     {
         if (currCooldown != 0) return "fail";
-        if (!WithInRange(GetRange(), target)) return "outofrange";
+        if (!WithInRange(target)) return "outofrange";
         if (!InSight(target)) return "outofsight";
         if (!Selected())
         {
@@ -81,19 +81,28 @@ public abstract class Ability : Thing
         return "fail";
     }
 
-    public virtual void ShowRange()
+    protected virtual List<Vector2Int> GetAllBlocksInRange()
     {
         List<Vector2Int> area = new List<Vector2Int>();
-        for(int x=-GetRange(); x <= GetRange(); x++)
+        for (int x = -GetRange(); x <= GetRange(); x++)
         {
-            for(int y=-GetRange(); y <= GetRange(); y++)
+            for (int y = -GetRange(); y <= GetRange(); y++)
             {
-                area.Add(new Vector2Int(MyPosition().x + x, MyPosition().y + y));
+                Vector2Int target = MyPosition() + new Vector2Int(x, y);
+                if (!WithInRange(target)) continue;
+                area.Add(target);
             }
         }
+        return area;
+    }
+
+    public virtual void ShowRange()
+    {
+        List<Vector2Int> area = GetAllBlocksInRange();
+        
         foreach(Vector2Int position in area)
         {
-            if (WorldController.GetGround(position) == null) continue;
+            if (WorldController.GetTile(position) != null) continue;
             WorldController.GetGround(position).GetComponent<Entity>().Outline();
             outlinedObjects.Add(WorldController.GetGround(position));
         }
@@ -119,11 +128,36 @@ public abstract class Ability : Thing
 
     public virtual List<GameObject> GetArea(Vector2Int target)
     {
-        Vector2Int closestTarget = ClosestPositionInRange(target);
         List<GameObject> area = new List<GameObject>();
+        if (!WithInRange(target)) return area;
 
-        area.Add(WorldController.Get(closestTarget.x, closestTarget.y));
-        area.Add(WorldController.GetGround(closestTarget.x, closestTarget.y));
+        if (GetTargetType() == "target")
+        {
+            Vector2Int closestTarget = ClosestPositionInRange(target);
+          
+            area.Add(WorldController.Get(closestTarget.x, closestTarget.y));
+            area.Add(WorldController.GetGround(closestTarget.x, closestTarget.y));
+        }
+        else
+        {
+            HashSet<GameObject> line = new HashSet<GameObject>();
+            Vector2 start = MyPosition();
+            while (start != target)
+            {
+                start = Vector2.MoveTowards(start, target, .05f);
+                Vector2Int tile = Vector2Int.RoundToInt(start);
+
+                if (tile == MyPosition()) continue;
+                line.Add(WorldController.GetGround(tile));
+                line.Add(WorldController.GetTile(tile));   
+            }
+
+            foreach(GameObject tile in line)
+            {
+                area.Add(tile);
+            }
+        }
+        
         return area;
     }
 
@@ -139,7 +173,7 @@ public abstract class Ability : Thing
         }
     }
 
-    private void ApplyEffects(GameObject target)
+    protected void ApplyEffects(GameObject target)
     {
         foreach(Effect effect in myEffects)
         {
@@ -217,7 +251,7 @@ public abstract class Ability : Thing
 
         return target;
     }
-
+    
     protected bool InSight(Vector2Int target)
     {
         Vector2Int position = MyPosition();
@@ -237,9 +271,9 @@ public abstract class Ability : Thing
         return false;
     }
 
-    protected bool WithInRange(int range, Vector2Int target)
+    protected bool WithInRange(Vector2Int target)
     {
-        if((int)Vector2.Distance(target, transform.position) <= GetRange()) return true;
+        if(Vector2.Distance(target, MyPosition()) <= GetRange() + .6) return true;
         return false;
     }
 
