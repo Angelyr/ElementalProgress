@@ -51,6 +51,15 @@ public abstract class Enemy : Character
         //else if (RunAway()) return;
     }
 
+    protected bool OutOfSight()
+    {
+        if (WorldController.GetDistanceFromPlayer(MyPosition()) > Settings.sightDistance)
+        {
+            return true;
+        }
+        return false;
+    }
+
     protected void EnterTurnOrder()
     {
         if (WorldController.GetDistanceFromPlayer(MyPosition()) < Settings.enterTurnDistance)
@@ -68,7 +77,14 @@ public abstract class Enemy : Character
             player.GetComponent<PlayerUI>().SetMessage("Enemy In Range");
             return false;
         }
-        PathToPlayer();
+        if (OutOfSight())
+        {
+            MoveRandomly();
+        }
+        else
+        {
+            PathToPlayer();
+        }
         return true;
     }
 

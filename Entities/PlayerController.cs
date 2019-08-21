@@ -30,7 +30,7 @@ public class PlayerController : Character
     {
         myCamera.SetPosition(transform);
         gameObject.GetComponent<PlayerUI>().SetMessage("Your Turn");
-        ChangeAP(maxAP);
+        SetAP(maxAP);
         inventory.DecreaseCooldowns();
     }
 
@@ -104,6 +104,17 @@ public class PlayerController : Character
             inventory.DecreaseCooldowns();
         }
         ap += change;
+        apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + ap + "/" + maxAP;
+    }
+
+    public override void SetAP(int newAP)
+    {
+        if (TurnOrder.ConcurrentTurns())
+        {
+            newAP = maxAP;
+            inventory.DecreaseCooldowns();
+        }
+        ap = newAP;
         apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + ap + "/" + maxAP;
     }
 

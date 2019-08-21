@@ -74,6 +74,11 @@ public abstract class Character : Entity
         ap += change;
     }
 
+    public virtual void SetAP(int newAP)
+    {
+        ap = newAP;
+    }
+
     public int Health()
     {
         return health;
