@@ -102,7 +102,7 @@ public abstract class Ability : Thing
         
         foreach(Vector2Int position in area)
         {
-            if (WorldController.GetTile(position) != null) continue;
+            if (WorldController.GetTile(position) != null && WorldController.GetTile(position).GetComponent<Block>() != null) continue;
             WorldController.GetGround(position).GetComponent<Entity>().Outline();
             outlinedObjects.Add(WorldController.GetGround(position));
         }

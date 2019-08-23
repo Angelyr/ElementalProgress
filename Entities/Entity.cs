@@ -5,14 +5,14 @@ using UnityEngine.UI;
 public class Entity : Thing
 {
     private GameObject myHighlight;
-    private GameObject outline;
+    protected GameObject outline;
     private List<GameObject> highlightedObjects;
 
     protected override void Awake()
     {
         base.Awake();
         myHighlight = transform.Find("Highlight").gameObject;
-        outline = transform.Find("Outline").gameObject;
+        if(transform.Find("Outline") != null) outline = transform.Find("Outline").gameObject;
         player = GameObject.Find("Player");
         highlightedObjects = new List<GameObject>();
         hoverUI = Resources.Load<GameObject>("Prefab/CharacterHover");

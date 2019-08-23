@@ -12,7 +12,7 @@ public class Block : Entity
     {
         base.Awake();
         spriteComponent = gameObject.GetComponent<SpriteRenderer>();
-        
+        outline = transform.Find("OutlineCanvas").Find("Outline").gameObject;
     }
 
     private void Start()

@@ -101,7 +101,7 @@ public class PlayerController : Character
     {
         if (TurnOrder.ConcurrentTurns())
         {
-            change = maxAP;
+            change = 0;
             inventory.DecreaseCooldowns();
         }
         ap += change;
