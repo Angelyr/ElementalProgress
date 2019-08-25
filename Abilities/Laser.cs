@@ -21,5 +21,6 @@ public class Laser : Ability
         cooldown = 5;
         description = "Hits every enemy in a line";
         targetType = "line";
+        Add(new Fire());
     }
 }

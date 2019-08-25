@@ -78,4 +78,14 @@ public abstract class Thing : MonoBehaviour
     {
         myEffects.Add(effect);
     }
+
+    public List<Effect> GetEffects()
+    {
+        return new List<Effect>(myEffects);
+    }
+
+    public void Remove(Effect effect)
+    {
+        myEffects.Remove(effect);
+    }
 }
