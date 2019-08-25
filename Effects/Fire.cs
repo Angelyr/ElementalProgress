@@ -20,6 +20,12 @@ public class Fire : Effect
         return null;
     }
 
+    protected override bool NegatesWith(Effect effect)
+    {
+        if (effect is OilFire) return true;
+        return false;
+    }
+
     public override void SteppedOn(GameObject target)
     {
         target.GetComponent<Entity>().Attacked();

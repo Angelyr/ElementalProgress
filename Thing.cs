@@ -29,7 +29,8 @@ public abstract class Thing : MonoBehaviour
     {
         if (GetDescription() == "") return;
         currHover = Instantiate(hoverUI, UI.transform);
-        currHover.GetComponentInChildren<Text>().text = GetDescription();
+        currHover.transform.Find("Border").Find("Text").GetComponent<Text>().text = GetDescription();
+        //currHover.GetComponentInChildren<Text>().text = GetDescription();
         currHover.GetComponent<HoverUI>().SetTarget(transform);
     }
 

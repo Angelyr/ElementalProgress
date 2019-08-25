@@ -44,14 +44,19 @@ public abstract class Effect
         }
     }
 
-    private bool StacksOn(GameObject target)
+    private bool Stacks(GameObject target)
     {
+        foreach(Effect effect in target.GetComponent<Thing>().GetEffects())
+        {
+            if (effect.GetType() == this.GetType()) return false;
+            if (NegatesWith(effect)) return false;
+        }
         return true;
     }
 
     public void Apply(GameObject target)
     {
-        if (target.GetComponent<Thing>() != null)
+        if (target.GetComponent<Thing>() != null && Stacks(target))
         {
             Spread(target);
             Combine(target);
@@ -78,5 +83,10 @@ public abstract class Effect
     protected virtual Effect SpreadOn(Effect effect)
     {
         return null;
+    }
+
+    protected virtual bool NegatesWith(Effect effect)
+    {
+        return false;
     }
 }
