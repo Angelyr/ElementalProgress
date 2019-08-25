@@ -13,4 +13,10 @@ public class Oil : Effect
     {
         target.GetComponent<Character>().ChangeAP(-1);
     }
+
+    protected override Effect Combinations(Effect effect)
+    {
+        if (effect is Fire) return new OilFire();
+        return null;
+    }
 }

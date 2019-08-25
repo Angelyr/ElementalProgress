@@ -15,42 +15,38 @@ public abstract class Effect
 
         foreach(Effect tileEffect in tileEffects)
         {
-            if ((tileEffect is Fire && this is Oil) || (tileEffect is Oil && this is Fire))
-            {
-                target.GetComponent<Thing>().Remove(tileEffect);
-                Effect combination = new OilFire();
-                combination.Apply(target);
-                return true;
-            }
+            Effect combination = Combinations(tileEffect);
+            if (combination == null) continue;
+            target.GetComponent<Thing>().Remove(tileEffect);    
+            combination.Apply(target);
+            return true;
+            
         }
         
         return false;
     }
 
-    private bool Spread(GameObject target)
+    private void Spread(GameObject target)
     {
-
-        if(this is OilFire)
+        Vector2Int[] adjacent = WorldController.GetAdjacent(target.GetComponent<Thing>().MyPosition());
+        foreach(Vector2Int position in adjacent)
         {
-            Vector2Int[] adjacent = WorldController.GetAdjacent(target.GetComponent<Thing>().MyPosition());
-
-            foreach(Vector2Int position in adjacent)
+            foreach(GameObject tile in WorldController.GetAll(position))
             {
-                foreach(GameObject tile in WorldController.GetAll(position))
+                foreach(Effect effect in tile.GetComponent<Thing>().GetEffects())
                 {
-                    foreach(Effect effect in tile.GetComponent<Thing>().GetEffects())
-                    {
-                        if(effect is Oil)
-                        {
-                            tile.GetComponent<Thing>().Remove(effect);
-                            Effect combination = new OilFire();
-                            combination.Apply(tile);
-                        }
-                    }
+                    Effect combination = SpreadOn(effect);
+                    if (combination == null) continue;
+                    tile.GetComponent<Thing>().Remove(effect);
+                    combination.Apply(tile);
                 }
             }
         }
-        return false;
+    }
+
+    private bool StacksOn(GameObject target)
+    {
+        return true;
     }
 
     public void Apply(GameObject target)
@@ -58,7 +54,7 @@ public abstract class Effect
         if (target.GetComponent<Thing>() != null)
         {
             Spread(target);
-            if (Combine(target)) return;
+            Combine(target);
             
             SetColor(target);
             target.GetComponent<Thing>().Add(this);
@@ -73,4 +69,14 @@ public abstract class Effect
     public virtual void SteppedOn(GameObject target) { }
 
     public virtual void StepTaken(GameObject target) { }
+
+    protected virtual Effect Combinations(Effect effect)
+    {
+        return null;
+    }
+
+    protected virtual Effect SpreadOn(Effect effect)
+    {
+        return null;
+    }
 }
