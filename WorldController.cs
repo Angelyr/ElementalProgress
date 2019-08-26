@@ -15,7 +15,8 @@ public class WorldController : MonoBehaviour
     private static Dictionary<Vector2Int, int> distanceFromPlayer;
     private static Queue<Vector2Int> nextTile;
     
-    //Initialize
+    //Monobehavior
+
     private void Awake()
     {
         tiles = new Dictionary<(int, int), GameObject>();
@@ -38,6 +39,8 @@ public class WorldController : MonoBehaviour
     {
         GetComponent<WorldGen>().GenerateWorld();
     }
+
+    //Distance From Player
 
     public static void SetDistanceFromPlayer()
     {
@@ -139,6 +142,8 @@ public class WorldController : MonoBehaviour
         return adjacent;
     }
 
+    //Enemy Spawn
+
     public static void SpawnEnemy(int x, int y)
     {
         int index = Random.Range(0, enemies.Count);
@@ -147,6 +152,7 @@ public class WorldController : MonoBehaviour
     }
 
     //Block methods
+
     public static void Kill(GameObject curr)
     {
         RemoveFromTurn(curr);

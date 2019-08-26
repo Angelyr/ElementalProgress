@@ -7,6 +7,14 @@ public class Variations : MonoBehaviour
     public static Dictionary<Sprite, Sprite[]> variations;
 
     public Sprite[] grass;
+    
+    //MonoBehavior
+
+    private void Awake()
+    {
+        variations = new Dictionary<Sprite, Sprite[]>();
+        variations.Add(grass[0], GetRest(grass));
+    }
 
     private static Sprite[] GetRest(Sprite[] sprites)
     {
@@ -16,12 +24,6 @@ public class Variations : MonoBehaviour
             result[i - 1] = sprites[i];
         }
         return result;
-    }
-
-    private void Awake()
-    {
-        variations = new Dictionary<Sprite, Sprite[]>();
-        variations.Add(grass[0], GetRest(grass));
     }
 
     public static Sprite GetRandomVariation(Sprite key)

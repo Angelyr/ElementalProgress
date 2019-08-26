@@ -17,6 +17,7 @@ public abstract class Ability : Thing
     private int prevMouseX;
     private int prevMouseY;
     
+    //MonoBehavoir
     protected override void Awake()
     {
         base.Awake();
@@ -25,60 +26,16 @@ public abstract class Ability : Thing
         Init();
     }
 
+    //Abstract
+
     protected abstract void Init();
 
-    public string GetTargetType()
-    {
-        return targetType;
-    }
-
-    public int GetRange()
-    {
-        return range;
-    }
-
-    public void ReduceCoolDown(int total)
-    {
-        currCooldown -= total;
-    }
-
-    public override string GetDescription()
-    {
-        return name + ":\n" + description + "\nRange: " + range + "\nCooldown: " +  cooldown;
-    }
+    //Private
 
     protected bool Selected()
     {
         if (outlinedObjects.Count == 0) return false;
         return true;
-    }
-
-    public virtual string TryAbility(Vector2Int target)
-    {
-        if (currCooldown != 0) return "fail";
-        if (!WithInRange(target)) return "outofrange";
-        if (!InSight(target)) return "outofsight";
-        if (!Selected())
-        {
-            SelectHightlight(target);
-            return "selected";
-        }
-        else ClearHighlight();
-
-        if (GetTargetType() == "target")
-        {
-            Use(target);
-            return "success";
-        }
-
-        if(GetTargetType() == "line")
-        {
-            if (!Aligned(target)) return "notaligned";
-            Use(target);
-            return "success";
-        }
-
-        return "fail";
     }
 
     protected virtual List<Vector2Int> GetAllBlocksInRange()
@@ -94,83 +51,6 @@ public abstract class Ability : Thing
             }
         }
         return area;
-    }
-
-    public virtual void ShowRange()
-    {
-        List<Vector2Int> area = GetAllBlocksInRange();
-        
-        foreach(Vector2Int position in area)
-        {
-            if (WorldController.GetTile(position) != null && WorldController.GetTile(position).GetComponent<Block>() != null) continue;
-            WorldController.GetGround(position).GetComponent<Entity>().Outline();
-            outlinedObjects.Add(WorldController.GetGround(position));
-        }
-    }
-
-    public virtual void ClearHighlight()
-    {
-        foreach(GameObject tile in outlinedObjects)
-        {
-            tile.GetComponent<Entity>().RemoveOutline();
-        }
-        outlinedObjects.Clear();
-    }
-
-    public void SelectHightlight(Vector2Int target)
-    {
-        foreach(GameObject tile in GetArea(target))
-        {
-            tile.GetComponent<Entity>().Outline();
-            outlinedObjects.Add(tile);
-        }
-    }
-
-    public virtual List<GameObject> GetArea(Vector2Int target)
-    {
-        List<GameObject> area = new List<GameObject>();
-        if (!WithInRange(target)) return area;
-
-        if (GetTargetType() == "target")
-        {
-            Vector2Int closestTarget = ClosestPositionInRange(target);
-          
-            area.Add(WorldController.Get(closestTarget.x, closestTarget.y));
-            area.Add(WorldController.GetGround(closestTarget.x, closestTarget.y));
-        }
-        else
-        {
-            HashSet<GameObject> line = new HashSet<GameObject>();
-            Vector2 start = MyPosition();
-            while (start != target)
-            {
-                start = Vector2.MoveTowards(start, target, .05f);
-                Vector2Int tile = Vector2Int.RoundToInt(start);
-
-                if (tile == MyPosition()) continue;
-                line.Add(WorldController.GetGround(tile));
-                line.Add(WorldController.GetTile(tile));   
-            }
-
-            foreach(GameObject tile in line)
-            {
-                area.Add(tile);
-            }
-        }
-        
-        return area;
-    }
-
-    public virtual void Use(Vector2Int target)
-    {
-        if (GetArea(ClosestPositionInRange(target)) == null) return;
-        foreach (GameObject affected in GetArea(ClosestPositionInRange(target)))
-        {
-            ApplyEffects(affected);
-            if (affected == null) continue;
-            if (affected.GetComponent<Character>() == null) continue;
-            affected.GetComponent<Character>().Attacked();
-        }
     }
 
     protected void ApplyEffects(GameObject target)
@@ -286,9 +166,139 @@ public abstract class Ability : Thing
         return false;
     }
 
+    //Public
+
+    public virtual string TryAbility(Vector2Int target)
+    {
+        if (currCooldown != 0) return "fail";
+        if (!WithInRange(target)) return "outofrange";
+        if (!InSight(target)) return "outofsight";
+        if (!Selected())
+        {
+            SelectHightlight(target);
+            return "selected";
+        }
+        else ClearHighlight();
+
+        if (GetTargetType() == "target")
+        {
+            Use(target);
+            return "success";
+        }
+
+        if (GetTargetType() == "line")
+        {
+            if (!Aligned(target)) return "notaligned";
+            Use(target);
+            return "success";
+        }
+
+        return "fail";
+    }
+
     public int CoolDown()
     {
         return cooldown;
     }
+
+    public string GetTargetType()
+    {
+        return targetType;
+    }
+
+    public int GetRange()
+    {
+        return range;
+    }
+
+    public void ReduceCoolDown(int total)
+    {
+        currCooldown -= total;
+    }
+
+    public override string GetDescription()
+    {
+        return name + ":\n" + description + "\nRange: " + range + "\nCooldown: " + cooldown;
+    }
+
+    public virtual void Use(Vector2Int target)
+    {
+        if (GetArea(ClosestPositionInRange(target)) == null) return;
+        foreach (GameObject affected in GetArea(ClosestPositionInRange(target)))
+        {
+            ApplyEffects(affected);
+            if (affected == null) continue;
+            if (affected.GetComponent<Character>() == null) continue;
+            affected.GetComponent<Character>().Attacked();
+        }
+    }
+
+
+    public virtual void ShowRange()
+    {
+        List<Vector2Int> area = GetAllBlocksInRange();
+
+        foreach (Vector2Int position in area)
+        {
+            if (WorldController.GetTile(position) != null && WorldController.GetTile(position).GetComponent<Block>() != null) continue;
+            WorldController.GetGround(position).GetComponent<Entity>().Outline();
+            outlinedObjects.Add(WorldController.GetGround(position));
+        }
+    }
+
+    public virtual void ClearHighlight()
+    {
+        foreach (GameObject tile in outlinedObjects)
+        {
+            tile.GetComponent<Entity>().RemoveOutline();
+        }
+        outlinedObjects.Clear();
+    }
+
+    public void SelectHightlight(Vector2Int target)
+    {
+        foreach (GameObject tile in GetArea(target))
+        {
+            tile.GetComponent<Entity>().Outline();
+            outlinedObjects.Add(tile);
+        }
+    }
+
+    public virtual List<GameObject> GetArea(Vector2Int target)
+    {
+        List<GameObject> area = new List<GameObject>();
+        if (!WithInRange(target)) return area;
+
+        if (GetTargetType() == "target")
+        {
+            Vector2Int closestTarget = ClosestPositionInRange(target);
+
+            area.Add(WorldController.Get(closestTarget.x, closestTarget.y));
+            area.Add(WorldController.GetGround(closestTarget.x, closestTarget.y));
+        }
+        else
+        {
+            HashSet<GameObject> line = new HashSet<GameObject>();
+            Vector2 start = MyPosition();
+            while (start != target)
+            {
+                start = Vector2.MoveTowards(start, target, .05f);
+                Vector2Int tile = Vector2Int.RoundToInt(start);
+
+                if (tile == MyPosition()) continue;
+                line.Add(WorldController.GetGround(tile));
+                line.Add(WorldController.GetTile(tile));
+            }
+
+            foreach (GameObject tile in line)
+            {
+                area.Add(tile);
+            }
+        }
+
+        return area;
+    }
+
+
 }
 

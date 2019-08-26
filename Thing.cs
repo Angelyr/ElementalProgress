@@ -12,6 +12,9 @@ public abstract class Thing : MonoBehaviour
     private GameObject UI;
     protected List<Effect> myEffects;
 
+
+    //MonoBehavior
+
     protected virtual void Awake()
     {
         hoverUI = Resources.Load<GameObject>("Prefab/HoverUI");
@@ -20,25 +23,7 @@ public abstract class Thing : MonoBehaviour
         myEffects = new List<Effect>();
     }
 
-    public virtual string GetDescription()
-    {
-        return name;
-    }
-
-    public virtual void CreateHover()
-    {
-        if (GetDescription() == "") return;
-        currHover = Instantiate(hoverUI, UI.transform);
-        currHover.transform.Find("Border").Find("Text").GetComponent<Text>().text = GetDescription();
-        //currHover.GetComponentInChildren<Text>().text = GetDescription();
-        currHover.GetComponent<HoverUI>().SetTarget(transform);
-    }
-
-    public virtual void DestroyHover()
-    {
-        Destroy(currHover);
-        currHover = null;
-    }
+    //Vector2Int
 
     public Vector2Int MyPosition()
     {
@@ -58,6 +43,22 @@ public abstract class Thing : MonoBehaviour
         return new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y);
     }
 
+    //UI
+
+    public virtual void CreateHover()
+    {
+        if (GetDescription() == "") return;
+        currHover = Instantiate(hoverUI, UI.transform);
+        currHover.transform.Find("Border/Text").GetComponent<Text>().text = GetDescription();
+        currHover.GetComponent<HoverUI>().SetTarget(transform);
+    }
+
+    public virtual void DestroyHover()
+    {
+        Destroy(currHover);
+        currHover = null;
+    }
+
     public bool HoveringUI()
     {
         PointerEventData pointerData = new PointerEventData(EventSystem.current);
@@ -75,6 +76,8 @@ public abstract class Thing : MonoBehaviour
         return EventSystem.current.IsPointerOverGameObject();
     }
 
+    //Effects
+
     public void Add(Effect effect)
     {
         myEffects.Add(effect);
@@ -88,5 +91,12 @@ public abstract class Thing : MonoBehaviour
     public void Remove(Effect effect)
     {
         myEffects.Remove(effect);
+    }
+
+    //Getters and Setters
+
+    public virtual string GetDescription()
+    {
+        return name;
     }
 }

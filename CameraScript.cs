@@ -12,6 +12,9 @@ public class CameraScript : MonoBehaviour
     private Transform camerafocus;
     private Camera myCamera;
     
+
+    //MonoBehavior
+
     private void Awake()
     {
         player = GameObject.Find("Player");
@@ -27,6 +30,8 @@ public class CameraScript : MonoBehaviour
         if(culling) FrustumCulling();
         Move();
     }
+
+    //Camera
 
     private void MoveInBounds()
     {
@@ -49,11 +54,7 @@ public class CameraScript : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, target, Settings.cameraSpeed);
     }
 
-    public void SetPosition(Transform target)
-    {
-        //transform.position = new Vector3(target.position.x, target.position.y, -10);
-        camerafocus = target;
-    }
+    
     
     private void FrustumCulling()
     {
@@ -106,5 +107,13 @@ public class CameraScript : MonoBehaviour
             if (myCamera.orthographicSize < Settings.minZoom) myCamera.orthographicSize = Settings.minZoom;
             if (myCamera.orthographicSize > Settings.maxZoom) myCamera.orthographicSize = Settings.maxZoom;
         }
+    }
+
+    //Public
+
+    public void SetPosition(Transform target)
+    {
+        //transform.position = new Vector3(target.position.x, target.position.y, -10);
+        camerafocus = target;
     }
 }

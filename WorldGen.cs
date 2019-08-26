@@ -17,11 +17,7 @@ public class WorldGen : MonoBehaviour
     private Grid empty;
 
 
-    public static int GetMapLength()
-    {
-        return numChunks * chunksize;
-    }
-
+    
     //Start
     public void GenerateWorld()
     {
@@ -40,19 +36,7 @@ public class WorldGen : MonoBehaviour
         //CreateBackgrounds();
     }
 
-    private Grid[] GetGrid(GameObject[] input)
-    {
-        //Debug.Log(input.Length);
-        Grid[] output = new Grid[input.Length];
-        for(int i=0; i<input.Length; i++)
-        {
-            output[i] = input[i].GetComponent<Grid>();
-        }
-        return output;
-    }
-
-    //Chunk methods
-    //================================================================
+    //Chunk Generation
 
     private void FillEdge()
     {
@@ -214,6 +198,24 @@ public class WorldGen : MonoBehaviour
         if (chunkType == 4) return RandomRoom(special);
 
         return null;
+    }
+
+    private Grid[] GetGrid(GameObject[] input)
+    {
+        //Debug.Log(input.Length);
+        Grid[] output = new Grid[input.Length];
+        for (int i = 0; i < input.Length; i++)
+        {
+            output[i] = input[i].GetComponent<Grid>();
+        }
+        return output;
+    }
+
+    //Getters and Setters
+
+    public static int GetMapLength()
+    {
+        return numChunks * chunksize;
     }
 
 }

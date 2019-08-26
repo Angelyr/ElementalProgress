@@ -14,6 +14,8 @@ public abstract class Character : Entity
     protected Vector2Int mapPosition;
     protected bool moving = false;
 
+    //MonoBehavoir
+
     protected override void Awake()
     {
         base.Awake();
@@ -33,6 +35,8 @@ public abstract class Character : Entity
     {
         GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(-transform.position.y) + 1;
     }
+
+    //Private
 
     private void MoveAnimation()
     {
@@ -57,16 +61,20 @@ public abstract class Character : Entity
         targetPosition = MyPosition() + direction;
     }
 
-    public void SetPosition(Vector2Int position)
-    {
-        targetPosition = position;
-    }
+    
 
     protected virtual void Move()
     {
         WorldController.MoveToWorldPoint(transform, mapPosition, targetPosition);
         mapPosition = targetPosition;
         ChangeAP(-1);
+    }
+
+    //Public
+
+    public void SetPosition(Vector2Int position)
+    {
+        targetPosition = position;
     }
 
     public virtual void ChangeAP(int change)
@@ -94,7 +102,8 @@ public abstract class Character : Entity
         player.GetComponent<PlayerController>().myCamera.SetPosition(transform);
         ap = maxAP;
     }
-    public abstract bool StartConcurrentTurn();
 
+    //Abstact
+    public abstract bool StartConcurrentTurn();
     protected abstract void Init();
 }

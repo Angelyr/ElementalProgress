@@ -6,7 +6,8 @@ public class Hover : MonoBehaviour
 {
     private Transform target;
     private const float bottomPadding = 20;
-    private const float middlePadding = .5f;
+    private const float middlePadding = .1f;
+    private float height = 0;
 
     private void Start()
     {
@@ -15,7 +16,6 @@ public class Hover : MonoBehaviour
 
     private void Update()
     {
-
         AlignChildren();
     }
 
@@ -32,19 +32,16 @@ public class Hover : MonoBehaviour
             child.anchoredPosition = new Vector3(0, height - child.rect.height/2, child.position.z);
             height -= (child.rect.height + middlePadding);
         }
+        this.height = height;
     }
 
     private void SetPosition()
     {
-        float targetHeight = target.GetComponent<RectTransform>().rect.height / 2;
-        float myHeight = GetComponent<RectTransform>().rect.height / 2;
+        float targetHeight = target.GetComponent<Renderer>().bounds.size.y / 2;
+        float myHeight = height;
         Vector2 targetPosition = target.position;
         targetPosition.y += targetHeight + myHeight + bottomPadding;
         transform.position = targetPosition;
     }
-
-    private int GetHeight()
-    {
-        return 0;
-    }
+    
 }

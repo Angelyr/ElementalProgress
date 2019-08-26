@@ -8,6 +8,8 @@ public class Block : Entity
 
     private SpriteRenderer spriteComponent;
 
+    //MonoBehavoir
+
     protected override void Awake()
     {
         base.Awake();
@@ -15,10 +17,19 @@ public class Block : Entity
         outline = transform.Find("OutlineCanvas").Find("Outline").gameObject;
     }
 
+    //Private
+
     private void Start()
     {
         SpawnEnemyOnThisBlock();
         UpdateSprite();
+    }
+
+    private GameObject GetDirection(int x, int y)
+    {
+        x = x + Mathf.RoundToInt(transform.position.x);
+        y = y + Mathf.RoundToInt(transform.position.y);
+        return WorldController.Get(x, y);
     }
 
     private void SpawnEnemyOnThisBlock()
@@ -31,6 +42,23 @@ public class Block : Entity
             WorldController.SpawnEnemy((int)transform.position.x, (int)transform.position.y);
         }
     }
+
+    private void UpdateSprite()
+    {
+        if (Random.Range(0, 100) < Settings.variationChance)
+        {
+            spriteComponent.sprite = Variations.GetRandomVariation(spriteComponent.sprite);
+        }
+    }
+
+
+    private void SetSortingOrder(int sortingOrder)
+    {
+        spriteComponent.sortingOrder = (int)-transform.position.y + sortingOrder;
+        transform.GetChild(1).GetComponent<Canvas>().sortingOrder = spriteComponent.sortingOrder;
+    }
+
+    //Public
 
     public GameObject Create(int x, int y, Transform parent, Sprite newSprite, int sortingOrder = 0)
     {
@@ -47,12 +75,6 @@ public class Block : Entity
         return newBlock;
     }
 
-    private void SetSortingOrder(int sortingOrder)
-    {
-        spriteComponent.sortingOrder = (int)-transform.position.y + sortingOrder;
-        transform.GetChild(1).GetComponent<Canvas>().sortingOrder = spriteComponent.sortingOrder;
-    }
-
     public GameObject Place(int x, int y)
     {
         transform.position = new Vector2(x, y);
@@ -64,14 +86,7 @@ public class Block : Entity
         gameObject.SetActive(false);
     }
 
-    private void UpdateSprite()
-    {
-        if (Random.Range(0, 100) < Settings.variationChance)
-        {
-            spriteComponent.sprite = Variations.GetRandomVariation(spriteComponent.sprite);
-        }
-    }
-
+    
     public override void CreateHover()
     {
     }
@@ -80,12 +95,7 @@ public class Block : Entity
     {
     }
 
-    private GameObject GetDirection(int x, int y)
-    {
-        x = x + Mathf.RoundToInt(transform.position.x);
-        y = y + Mathf.RoundToInt(transform.position.y);
-        return WorldController.Get(x, y);
-    }
+    
 
 
     public void SteppedOn(GameObject target)

@@ -54,22 +54,12 @@ public abstract class Effect
         return true;
     }
 
-    public void Apply(GameObject target)
-    {
-        if (target.GetComponent<Thing>() != null && Stacks(target))
-        {
-            Spread(target);
-            Combine(target);
-            
-            SetColor(target);
-            target.GetComponent<Thing>().Add(this);
-        }
-    }
-
     private void SetColor(GameObject target)
     {
         target.GetComponent<SpriteRenderer>().color = color;
     }
+
+    //Virtual
 
     public virtual void SteppedOn(GameObject target) { }
 
@@ -88,5 +78,19 @@ public abstract class Effect
     protected virtual bool NegatesWith(Effect effect)
     {
         return false;
+    }
+
+    //Public
+
+    public void Apply(GameObject target)
+    {
+        if (target.GetComponent<Thing>() != null && Stacks(target))
+        {
+            Spread(target);
+            Combine(target);
+
+            SetColor(target);
+            target.GetComponent<Thing>().Add(this);
+        }
     }
 }
