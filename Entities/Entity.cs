@@ -90,7 +90,7 @@ public class Entity : Thing
         if (currHover == null) return;
         int health = GetComponent<Character>().Health();
         int maxHealth = GetComponent<Character>().MaxHealth();
-        currHover.transform.Find("HealthBarBG").Find("HealthText").GetComponent<Text>().text = health + "/" + maxHealth;
+        currHover.transform.Find("HealthBar/Bar/Text").GetComponent<Text>().text = health + "/" + maxHealth;
     }
 
     public void OnMouseEnter()
