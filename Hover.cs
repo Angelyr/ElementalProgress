@@ -6,16 +6,17 @@ public class Hover : MonoBehaviour
 {
     private Transform target;
     private const float bottomPadding = 20;
-    private const float middlePadding = 1;
+    private const float middlePadding = .5f;
 
     private void Start()
     {
+        
     }
 
     private void Update()
     {
-        AlignChildren();
 
+        AlignChildren();
     }
 
     public void SetTarget(Transform newTarget)
@@ -28,9 +29,8 @@ public class Hover : MonoBehaviour
         float height = 0;
         foreach(RectTransform child in transform)
         {
-            child.position = new Vector3(0, height - child.rect.height / 2, child.position.z);
-            height -= child.rect.height + middlePadding;
-            //Debug.Log(child.rect.height);
+            child.anchoredPosition = new Vector3(0, height - child.rect.height/2, child.position.z);
+            height -= (child.rect.height + middlePadding);
         }
     }
 
