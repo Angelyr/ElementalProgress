@@ -8,6 +8,8 @@ public class Entity : Thing
     protected GameObject outline;
     private List<GameObject> highlightedObjects;
 
+    //MonoBehavoir
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,25 +20,7 @@ public class Entity : Thing
         hoverUI = Resources.Load<GameObject>("Prefab/CharacterHover");
     }
 
-    public void Highlight()
-    {
-        myHighlight.SetActive(true);
-    }
-    
-    public void Outline()
-    {
-        outline.SetActive(true);
-    }
-
-    public void RemoveOutline()
-    {
-        outline.SetActive(false);
-    }
-
-    public void removeHighlight()
-    {
-        myHighlight.SetActive(false);
-    }
+    //Private
 
     protected bool PlayerWithInRange(int range)
     {
@@ -73,6 +57,36 @@ public class Entity : Thing
         highlightedObjects.Clear();
     }
 
+    protected void SetHealthUI()
+    {
+        if (currHover == null) return;
+        int health = GetComponent<Character>().Health();
+        int maxHealth = GetComponent<Character>().MaxHealth();
+        currHover.transform.Find("HealthBar/Bar/Text").GetComponent<Text>().text = health + "/" + maxHealth;
+    }
+
+    //Public
+
+    public void Highlight()
+    {
+        myHighlight.SetActive(true);
+    }
+    
+    public void Outline()
+    {
+        outline.SetActive(true);
+    }
+
+    public void RemoveOutline()
+    {
+        outline.SetActive(false);
+    }
+
+    public void removeHighlight()
+    {
+        myHighlight.SetActive(false);
+    }
+
     public override void CreateHover()
     {
         if (GetDescription() == "") return;
@@ -83,14 +97,6 @@ public class Entity : Thing
         currHover.transform.position = newPosition;
 
         SetHealthUI();
-    }
-
-    protected void SetHealthUI()
-    {
-        if (currHover == null) return;
-        int health = GetComponent<Character>().Health();
-        int maxHealth = GetComponent<Character>().MaxHealth();
-        currHover.transform.Find("HealthBar/Bar/Text").GetComponent<Text>().text = health + "/" + maxHealth;
     }
 
     public void OnMouseEnter()

@@ -11,6 +11,8 @@ public class PlayerController : Character
     private GameObject healthUI;
     public CameraScript myCamera;
 
+    //MonoBehavoir
+
     protected override void Awake()
     {
         base.Awake();
@@ -20,6 +22,28 @@ public class PlayerController : Character
         myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
         ChangeHealth(maxHealth);
     }
+
+    private void Start()
+    {
+        WorldController.SetDistanceFromPlayer();
+        TurnOrder.AddTurn(gameObject);
+        WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if (!TurnOrder.MyTurn(gameObject)) return;
+        if (ap < 1) return;
+
+        MovementInput();
+
+        if (Input.GetMouseButtonDown(0) && !HoveringUI()) inventory.UseSelected();
+    }
+
+    //Private
+
+    //Public
 
     protected override void Init()
     {
@@ -35,23 +59,7 @@ public class PlayerController : Character
         inventory.DecreaseCooldowns();
     }
 
-    private void Start()
-    {
-        WorldController.SetDistanceFromPlayer();
-        TurnOrder.AddTurn(gameObject);
-        WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
-    }
- 
-    protected override void Update()
-    {
-        base.Update();
-        if (!TurnOrder.MyTurn(gameObject)) return;
-        if (ap < 1) return;
-
-        MovementInput();
-
-        if (Input.GetMouseButtonDown(0) && !HoveringUI()) inventory.UseSelected();
-    }
+    
 
     private void MovementInput()
     {

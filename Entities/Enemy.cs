@@ -11,12 +11,16 @@ public abstract class Enemy : Character
         return spawnChance;
     }
 
+    //Mono Behavior
+
     private void Start()
     {
         InvokeRepeating("AI", 2, 1.5f);
         EnterTurnOrder();
         WorldController.AddToWorld(gameObject, (int)transform.position.x, (int)transform.position.y);
     }
+
+    //Private
 
     private void AI()
     {
@@ -67,25 +71,6 @@ public abstract class Enemy : Character
             TurnOrder.AddTurn(gameObject);
         }
         else TurnOrder.AddConcurrentTurn(gameObject);
-    }
-
-    public override bool StartConcurrentTurn()
-    {
-        if (PlayerWithInRange(Settings.enterTurnDistance))
-        {
-            TurnOrder.AddTurn(gameObject);
-            player.GetComponent<PlayerUI>().SetMessage("Enemy In Range");
-            return false;
-        }
-        if (OutOfSight())
-        {
-            MoveRandomly();
-        }
-        else
-        {
-            PathToPlayer();
-        }
-        return true;
     }
 
     protected bool PathToPlayer()
@@ -140,12 +125,35 @@ public abstract class Enemy : Character
         return true;
     }
 
+    //Public
+
+    public override bool StartConcurrentTurn()
+    {
+        if (PlayerWithInRange(Settings.enterTurnDistance))
+        {
+            TurnOrder.AddTurn(gameObject);
+            player.GetComponent<PlayerUI>().SetMessage("Enemy In Range");
+            return false;
+        }
+        if (OutOfSight())
+        {
+            MoveRandomly();
+        }
+        else
+        {
+            PathToPlayer();
+        }
+        return true;
+    }
+
     public override void Attacked()
     {
         health -= 1;
         SetHealthUI();
         if(health == 0) WorldController.Kill(gameObject);
     }
+
+    //Abstact
 
     protected abstract override void Init();
 }

@@ -9,6 +9,8 @@ public class Hover : MonoBehaviour
     private const float middlePadding = .1f;
     private float height = 0;
 
+    //MonoBehavior
+
     private void Start()
     {
         
@@ -19,10 +21,7 @@ public class Hover : MonoBehaviour
         AlignChildren();
     }
 
-    public void SetTarget(Transform newTarget)
-    {
-        target = newTarget;
-    }
+    //Private
 
     private void AlignChildren()
     {
@@ -43,5 +42,17 @@ public class Hover : MonoBehaviour
         targetPosition.y += targetHeight + myHeight + bottomPadding;
         transform.position = targetPosition;
     }
-    
+
+    //Public
+
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
+    public void SetText()
+    {
+
+    }
+
 }

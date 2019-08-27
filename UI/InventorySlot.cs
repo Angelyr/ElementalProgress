@@ -14,6 +14,8 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
     private Image itemImage;
     private Text cooldown;
 
+    //MonoBehavoir
+
     protected override void Awake()
     {
         base.Awake();
@@ -22,6 +24,8 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
         item = null;
         selected = false;
     }
+
+    //Public
 
     public void DecreaseCooldown()
     {
