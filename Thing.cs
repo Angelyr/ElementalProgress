@@ -17,7 +17,7 @@ public abstract class Thing : MonoBehaviour
 
     protected virtual void Awake()
     {
-        hoverUI = Resources.Load<GameObject>("Prefab/HoverUI");
+        hoverUI = Resources.Load<GameObject>("Prefab/Hover");
         player = GameObject.Find("Player");
         UI = GameObject.Find("UI");
         myEffects = new List<Effect>();
@@ -48,9 +48,8 @@ public abstract class Thing : MonoBehaviour
     public virtual void CreateHover()
     {
         if (GetDescription() == "") return;
-        currHover = Instantiate(hoverUI, UI.transform);
-        currHover.transform.Find("Border/Text").GetComponent<Text>().text = GetDescription();
-        currHover.GetComponent<HoverUI>().SetTarget(transform);
+        currHover = Instantiate(hoverUI);
+        currHover.GetComponent<Hover>().Init(transform, null, GetDescription(), null);
     }
 
     public virtual void DestroyHover()
