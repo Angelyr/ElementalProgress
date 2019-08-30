@@ -149,7 +149,6 @@ public abstract class Enemy : Character
     public override void Attacked()
     {
         health -= 1;
-        SetHealthUI();
         if(health == 0) WorldController.Kill(gameObject);
     }
 

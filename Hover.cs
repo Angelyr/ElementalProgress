@@ -6,7 +6,7 @@ using TMPro;
 public class Hover : MonoBehaviour
 {
     private Transform target;
-    private const float bottomPadding = 20;
+    private const float bottomPadding = .1f;
     private const float middlePadding = .1f;
     private float height = 0;
 
@@ -25,6 +25,12 @@ public class Hover : MonoBehaviour
 
     //Private
 
+    private void SetPadding()
+    {
+        //Set Padding based on if it is on world or ai
+    }
+
+
     private void AlignChildren()
     {
         float height = 0;
@@ -41,10 +47,9 @@ public class Hover : MonoBehaviour
         float targetHeight = 0;
         if(target.GetComponent<Renderer>() != null) targetHeight = target.GetComponent<Renderer>().bounds.size.y / 2;
         else targetHeight = target.GetComponent<RectTransform>().rect.height / 2; 
-        float myHeight = height;
         Vector2 targetPosition = target.position;
-        targetPosition.y += targetHeight + myHeight + bottomPadding;
-        transform.position = targetPosition;
+        targetPosition.y += targetHeight + Mathf.Abs(height) + bottomPadding;
+        GetComponent<RectTransform>().position = targetPosition;
     }
 
     //Initialization

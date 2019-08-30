@@ -17,7 +17,6 @@ public class Entity : Thing
         if(transform.Find("Outline") != null) outline = transform.Find("Outline").gameObject;
         player = GameObject.Find("Player");
         highlightedObjects = new List<GameObject>();
-        hoverUI = Resources.Load<GameObject>("Prefab/CharacterHover");
     }
 
     //Private
@@ -57,12 +56,11 @@ public class Entity : Thing
         highlightedObjects.Clear();
     }
 
-    protected void SetHealthUI()
+    protected string HealthUI()
     {
-        if (currHover == null) return;
         int health = GetComponent<Character>().Health();
         int maxHealth = GetComponent<Character>().MaxHealth();
-        currHover.transform.Find("HealthBar/Bar/Text").GetComponent<Text>().text = health + "/" + maxHealth;
+        return health + "/" + maxHealth;
     }
 
     //Public
@@ -90,13 +88,13 @@ public class Entity : Thing
     public override void CreateHover()
     {
         if (GetDescription() == "") return;
-        currHover = Instantiate(hoverUI, transform);
-        currHover.transform.Find("Description").GetComponent<Text>().text = GetDescription();
-        Vector3 newPosition = transform.position;
-        newPosition.y += 1;
-        currHover.transform.position = newPosition;
+        currHover = Instantiate(hoverUI);
+        currHover.GetComponent<Hover>().Init(transform, GetDescription(), null, HealthUI());
+    }
 
-        SetHealthUI();
+    public void UpdateHover()
+    {
+        currHover.GetComponent<Hover>().Init(transform, GetDescription(), null, HealthUI());
     }
 
     public void OnMouseEnter()
