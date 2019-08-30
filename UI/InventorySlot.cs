@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
 
-public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
+public class InventorySlot : UI
 {
     private GameObject item;
     private bool selected;
@@ -85,13 +85,4 @@ public class InventorySlot : Thing, IPointerEnterHandler, IPointerExitHandler
         return item.GetComponent<Thing>().GetDescription();
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        CreateHover();
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        DestroyHover();
-    }
 }

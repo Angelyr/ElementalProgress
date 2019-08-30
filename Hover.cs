@@ -9,6 +9,7 @@ public class Hover : MonoBehaviour
     private const float bottomPadding = .1f;
     private const float middlePadding = .1f;
     private float height = 0;
+    private int scale = 1;
 
     //MonoBehavior
 
@@ -36,7 +37,8 @@ public class Hover : MonoBehaviour
         float height = 0;
         foreach(RectTransform child in transform)
         {
-            child.anchoredPosition = new Vector3(0, height - child.rect.height/2, child.position.z);
+            if (child.gameObject.activeSelf == false) continue;
+            if(scale == 1) child.anchoredPosition = new Vector3(0, height - child.rect.height/2, child.position.z);
             height -= (child.rect.height + middlePadding);
         }
         this.height = height;
@@ -45,10 +47,21 @@ public class Hover : MonoBehaviour
     private void SetPosition()
     {
         float targetHeight = 0;
-        if(target.GetComponent<Renderer>() != null) targetHeight = target.GetComponent<Renderer>().bounds.size.y / 2;
-        else targetHeight = target.GetComponent<RectTransform>().rect.height / 2; 
+        float myHeight = Mathf.Abs(height);
+
+        if (target.GetComponent<Renderer>() != null)
+        {
+            targetHeight = target.GetComponent<Renderer>().bounds.size.y / 2;
+        }
+        else
+        {
+            targetHeight = target.GetComponent<RectTransform>().rect.height / 2;
+            myHeight /= 2;
+        }
+
         Vector2 targetPosition = target.position;
-        targetPosition.y += targetHeight + Mathf.Abs(height) + bottomPadding;
+        
+        targetPosition.y += targetHeight + myHeight + (bottomPadding);
         GetComponent<RectTransform>().position = targetPosition;
     }
 
@@ -57,10 +70,17 @@ public class Hover : MonoBehaviour
     private void SetTarget(Transform newTarget)
     {
         target = newTarget;
+       
+        if (target.GetComponent<RectTransform>() != null)
+        {
+            scale = 30;
+        }
+
     }
 
     private void SetName(string name)
     {
+        if (transform.Find("Name") == null) return;
         if (name == null)
         {
             transform.Find("Name").gameObject.SetActive(false);
@@ -81,6 +101,7 @@ public class Hover : MonoBehaviour
 
     private void SetHealth(string health)
     {
+        if (transform.Find("HealthBar") == null) return;
         if (health == null)
         {
             transform.Find("HealthBar").gameObject.SetActive(false);

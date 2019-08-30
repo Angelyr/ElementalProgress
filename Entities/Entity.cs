@@ -88,7 +88,7 @@ public class Entity : Thing
     public override void CreateHover()
     {
         if (GetDescription() == "") return;
-        currHover = Instantiate(hoverUI);
+        currHover = Instantiate(hoverUI, transform);
         currHover.GetComponent<Hover>().Init(transform, GetDescription(), null, HealthUI());
     }
 
