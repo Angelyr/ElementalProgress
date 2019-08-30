@@ -79,10 +79,10 @@ public class InventorySlot : UI
         return item;
     }
 
-    public override string GetDescription()
+    public override string Description()
     {
         if (item == null) return "";
-        return item.GetComponent<Thing>().GetDescription();
+        return item.GetComponent<Thing>().Description();
     }
 
 }

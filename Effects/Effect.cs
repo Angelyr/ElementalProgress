@@ -65,6 +65,11 @@ public abstract class Effect
 
     public virtual void StepTaken(GameObject target) { }
 
+    public virtual string Description()
+    {
+        return "";
+    }
+
     protected virtual Effect Combinations(Effect effect)
     {
         return null;

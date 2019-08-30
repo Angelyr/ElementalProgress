@@ -19,4 +19,15 @@ public class Oil : Effect
         if (effect is Fire) return new OilFire();
         return null;
     }
+
+    protected override bool NegatesWith(Effect effect)
+    {
+        if (effect is OilFire) return true;
+        return false;
+    }
+
+    public override string Description()
+    {
+        return "Oil:" + "\n" + "Steals 1 AP";
+    }
 }

@@ -18,4 +18,9 @@ public class OilFire : Effect
     {
         target.GetComponent<Entity>().Attacked();
     }
+
+    public override string Description()
+    {
+        return "OilFire:" + "\n" + "Deals 2 damage";
+    }
 }

@@ -30,4 +30,9 @@ public class Fire : Effect
     {
         target.GetComponent<Entity>().Attacked();
     }
+
+    public override string Description()
+    {
+        return "Fire:" + "\n" + "Deals 1 damage";
+    }
 }

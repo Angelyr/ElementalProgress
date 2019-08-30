@@ -23,6 +23,7 @@ public class Block : Entity
     {
         SpawnEnemyOnThisBlock();
         UpdateSprite();
+        name = "";
     }
 
     private GameObject GetDirection(int x, int y)
@@ -85,18 +86,6 @@ public class Block : Entity
     {
         gameObject.SetActive(false);
     }
-
-    
-    public override void CreateHover()
-    {
-    }
-
-    public override void DestroyHover()
-    {
-    }
-
-    
-
 
     public void SteppedOn(GameObject target)
     {

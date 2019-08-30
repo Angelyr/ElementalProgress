@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 public abstract class Ability : Thing
 {
     protected Inventory inventory;
-    protected string description;
     protected int range;
     protected int cooldown;
     protected int currCooldown = 0;
@@ -216,7 +215,7 @@ public abstract class Ability : Thing
         currCooldown -= total;
     }
 
-    public override string GetDescription()
+    public override string Description()
     {
         return name + ":\n" + description + "\nRange: " + range + "\nCooldown: " + cooldown;
     }

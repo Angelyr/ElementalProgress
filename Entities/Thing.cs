@@ -11,7 +11,7 @@ public abstract class Thing : MonoBehaviour
     protected GameObject currHover;
     private GameObject UI;
     protected List<Effect> myEffects;
-
+    protected string description;
 
     //MonoBehavior
 
@@ -47,15 +47,20 @@ public abstract class Thing : MonoBehaviour
 
     public virtual void CreateHover()
     {
-        if (GetDescription() == "") return;
+        if (Description() == "") return;
         currHover = Instantiate(hoverUI, transform);
-        currHover.GetComponent<Hover>().Init(transform, null, GetDescription(), null);
+        currHover.GetComponent<Hover>().Init(transform, Name(), Description(), HealthUI());
     }
 
     public virtual void DestroyHover()
     {
         Destroy(currHover);
         currHover = null;
+    }
+
+    protected virtual string HealthUI()
+    {
+        return null;
     }
 
     public bool HoveringUI()
@@ -92,10 +97,26 @@ public abstract class Thing : MonoBehaviour
         myEffects.Remove(effect);
     }
 
+    private string EffectDescriptions()
+    {
+        string result = "";
+        foreach(Effect effect in myEffects)
+        {
+            result += effect.Description();
+        }
+        return result;
+    }
+
     //Getters and Setters
 
-    public virtual string GetDescription()
+    public string Name()
     {
         return name;
     }
+
+    public virtual string Description()
+    {
+        return description + EffectDescriptions();
+    }
+
 }

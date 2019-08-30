@@ -56,8 +56,9 @@ public class Entity : Thing
         highlightedObjects.Clear();
     }
 
-    protected string HealthUI()
+    protected override string HealthUI()
     {
+        if (GetComponent<Character>() == null) return null;
         int health = GetComponent<Character>().Health();
         int maxHealth = GetComponent<Character>().MaxHealth();
         return health + "/" + maxHealth;
@@ -85,16 +86,9 @@ public class Entity : Thing
         myHighlight.SetActive(false);
     }
 
-    public override void CreateHover()
-    {
-        if (GetDescription() == "") return;
-        currHover = Instantiate(hoverUI, transform);
-        currHover.GetComponent<Hover>().Init(transform, GetDescription(), null, HealthUI());
-    }
-
     public void UpdateHover()
     {
-        currHover.GetComponent<Hover>().Init(transform, GetDescription(), null, HealthUI());
+        currHover.GetComponent<Hover>().Init(transform, Name(), Description(), HealthUI());
     }
 
     public void OnMouseEnter()
