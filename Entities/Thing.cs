@@ -47,7 +47,7 @@ public abstract class Thing : MonoBehaviour
 
     public virtual void CreateHover()
     {
-        if (Description() == "") return;
+        if (Name() == "") return;
         currHover = Instantiate(hoverUI, transform);
         currHover.GetComponent<Hover>().Init(transform, Name(), Description(), HealthUI());
     }
@@ -75,6 +75,7 @@ public abstract class Thing : MonoBehaviour
         if (results.Count > 0)
         {
             if (results[0].gameObject.name == "Outline") return false;
+            //if (results[0].gameObject.name == "Hover") return false;
         }
 
         return EventSystem.current.IsPointerOverGameObject();

@@ -26,6 +26,13 @@ public class Oil : Effect
         return false;
     }
 
+    protected override Effect SpreadOn(Effect effect)
+    {
+        if (effect is OilFire) return new OilFire();
+
+        return null;
+    }
+
     public override string Description()
     {
         return "Oil:" + "\n" + "Steals 1 AP";

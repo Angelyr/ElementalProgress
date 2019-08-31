@@ -89,10 +89,12 @@ public abstract class Effect
 
     public void Apply(GameObject target)
     {
-        if (target.GetComponent<Thing>() != null && Stacks(target))
+        if (target.GetComponent<Thing>() != null)
         {
             Spread(target);
             Combine(target);
+
+            if (!Stacks(target)) return;
 
             SetColor(target);
             target.GetComponent<Thing>().Add(this);
