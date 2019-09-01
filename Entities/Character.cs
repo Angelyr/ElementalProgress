@@ -103,6 +103,11 @@ public abstract class Character : Entity
         ap = maxAP;
     }
 
+    public override void ChangeHealth(int change)
+    {
+        health += change;
+    }
+
     //Abstact
     public abstract bool StartConcurrentTurn();
     protected abstract void Init();

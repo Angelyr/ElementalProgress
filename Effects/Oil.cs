@@ -7,6 +7,7 @@ public class Oil : Effect
     public Oil()
     {
         color = Color.black;
+        duration = 3;
     }
 
     public override void SteppedOn(GameObject target)
@@ -35,6 +36,6 @@ public class Oil : Effect
 
     public override string Description()
     {
-        return "Oil:" + "\n" + "Steals 1 AP";
+        return "Oil:" + "\n" + "Steals 1 AP" + "\n" + "Duration: " + duration;
     }
 }

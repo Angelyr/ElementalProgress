@@ -104,9 +104,9 @@ public class Entity : Thing
         DestroyHover();
     }
 
-    public virtual void Attacked()
-    {
-    }
+    public virtual void Attacked() { }
+
+    public virtual void ChangeHealth(int change) { }
 
     public void Apply(Effect effect)
     {

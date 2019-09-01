@@ -5,8 +5,12 @@ using UnityEngine;
 public abstract class Effect
 {
     protected int damage;
-    protected int duration;
+    protected int duration = 3;
     protected Color color;
+    protected GameObject target;
+    protected Color targetColor;
+
+    //Private 
 
     private bool Combine(GameObject target)
     {
@@ -17,7 +21,7 @@ public abstract class Effect
         {
             Effect combination = Combinations(tileEffect);
             if (combination == null) continue;
-            target.GetComponent<Thing>().Remove(tileEffect);    
+            tileEffect.Remove(target);
             combination.Apply(target);
             return true;
             
@@ -37,7 +41,7 @@ public abstract class Effect
                 {
                     Effect combination = SpreadOn(effect);
                     if (combination == null) continue;
-                    tile.GetComponent<Thing>().Remove(effect);
+                    effect.Remove(tile);
                     combination.Apply(tile);
                 }
             }
@@ -89,6 +93,9 @@ public abstract class Effect
 
     public void Apply(GameObject target)
     {
+        this.target = target;
+        targetColor = target.GetComponent<SpriteRenderer>().color;
+        WorldController.Add(this);
         if (target.GetComponent<Thing>() != null)
         {
             Spread(target);
@@ -99,5 +106,31 @@ public abstract class Effect
             SetColor(target);
             target.GetComponent<Thing>().Add(this);
         }
+    }
+
+    public void Remove(GameObject target)
+    {
+        if (target && target.GetComponent<SpriteRenderer>().color == color)
+        {
+            target.GetComponent<SpriteRenderer>().color = targetColor;
+        }
+        if(target) target.GetComponent<Thing>().Remove(this);
+        WorldController.Remove(this);
+    }
+
+    public void Turn()
+    {
+        duration -= 1;
+        if (duration < 1) Remove(target);
+    }
+
+    public Color TargetColor()
+    {
+        return targetColor;
+    }
+
+    public Effect Clone()
+    {
+        return (Effect) MemberwiseClone();
     }
 }

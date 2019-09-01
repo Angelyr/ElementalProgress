@@ -20,7 +20,7 @@ public class PlayerController : Character
         apUI = GameObject.Find("AP");
         healthUI = GameObject.Find("Health");
         myCamera = GameObject.Find("Main Camera").GetComponent<CameraScript>();
-        ChangeHealth(maxHealth);
+        SetHealth(maxHealth);
     }
 
     private void Start()
@@ -53,10 +53,12 @@ public class PlayerController : Character
 
     public override void StartTurn()
     {
+
         myCamera.SetPosition(transform);
         gameObject.GetComponent<PlayerUI>().SetMessage("Your Turn");
         SetAP(maxAP);
         inventory.DecreaseCooldowns();
+        WorldController.EffectTurn();
     }
 
     
@@ -127,7 +129,7 @@ public class PlayerController : Character
         apUI.GetComponent<UnityEngine.UI.Text>().text = "AP: " + ap + "/" + maxAP;
     }
 
-    private void ChangeHealth(int newHealth)
+    private void SetHealth(int newHealth)
     {
         health = newHealth;
         healthUI.GetComponent<UnityEngine.UI.Text>().text = "Health: " + newHealth + "/" + maxHealth;
@@ -135,8 +137,13 @@ public class PlayerController : Character
         if(health == 0) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public override void ChangeHealth(int change)
+    {
+        SetHealth(health + change);
+    }
+
     public override void Attacked()
     {
-        ChangeHealth(health - 1);
+        SetHealth(health - 1);
     }
 }

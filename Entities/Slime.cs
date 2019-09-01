@@ -17,7 +17,7 @@ public class Slime : Enemy
     protected override void Move()
     {
         base.Move();
-        oil.Apply(WorldController.GetGround(MyPosition()));
+        oil.Clone().Apply(WorldController.GetGround(MyPosition()));
     }
 
     protected override void Init()

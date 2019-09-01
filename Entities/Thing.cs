@@ -47,7 +47,6 @@ public abstract class Thing : MonoBehaviour
 
     public virtual void CreateHover()
     {
-        if (Name() == "") return;
         currHover = Instantiate(hoverUI, transform);
         currHover.GetComponent<Hover>().Init(transform, Name(), Description(), HealthUI());
     }

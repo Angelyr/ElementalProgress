@@ -14,6 +14,7 @@ public class WorldController : MonoBehaviour
     private static Dictionary<(int, int), GameObject> floorTiles;
     private static Dictionary<Vector2Int, int> distanceFromPlayer;
     private static Queue<Vector2Int> nextTile;
+    private static List<Effect> effects;
     
     //Monobehavior
 
@@ -29,6 +30,7 @@ public class WorldController : MonoBehaviour
         block = (GameObject)Resources.Load("Prefab/Other/Block", typeof(GameObject));
 
         enemies = new List<Enemy>();
+        effects = new List<Effect>();
         enemies.Add(Resources.Load<GameObject>("Prefab/Slime").GetComponent<Enemy>());
         enemies.Add(Resources.Load<GameObject>("Prefab/Spirit").GetComponent<Enemy>());
 
@@ -38,6 +40,26 @@ public class WorldController : MonoBehaviour
     private void Start()
     {
         GetComponent<WorldGen>().GenerateWorld();
+    }
+
+    //Effects
+
+    public static void Add(Effect effect)
+    {
+        effects.Add(effect);
+    }
+
+    public static void Remove(Effect effect)
+    {
+        effects.Remove(effect);
+    }
+
+    public static void EffectTurn()
+    {
+        foreach(Effect effect in new List<Effect>(effects))
+        {
+            effect.Turn();
+        }
     }
 
     //Distance From Player

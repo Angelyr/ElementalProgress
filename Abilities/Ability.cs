@@ -57,7 +57,7 @@ public abstract class Ability : Thing
         foreach(Effect effect in myEffects)
         {
             if (target == null || target.GetComponent<Entity>() == null) break;
-            target.GetComponent<Entity>().Apply(effect);
+            target.GetComponent<Entity>().Apply(effect.Clone());
         }
     }
 

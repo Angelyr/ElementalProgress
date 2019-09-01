@@ -6,6 +6,7 @@ public class Fire : Effect
     public Fire()
     {
         color = Color.red;
+        duration = 3;
     }
 
     protected override Effect Combinations(Effect effect)
@@ -33,6 +34,6 @@ public class Fire : Effect
 
     public override string Description()
     {
-        return "Fire:" + "\n" + "Deals 1 damage";
+        return "Fire:" + "\n" + "Deals 1 damage" + "\n" + "Duration: " + duration;
     }
 }
