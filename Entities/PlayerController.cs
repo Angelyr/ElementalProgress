@@ -67,19 +67,35 @@ public class PlayerController : Character
     {
         if (moving) return;
 
-        if (Input.GetKey("w"))
+        if (Input.GetKey("w") && Input.GetKey("d"))
+        {
+            SetDirection(new Vector2Int(1,1));
+        }
+        else if (Input.GetKey("w") && Input.GetKey("a"))
+        {
+            SetDirection(new Vector2Int(-1, 1));
+        }
+        else if (Input.GetKey("s") && Input.GetKey("a"))
+        {
+            SetDirection(new Vector2Int(-1, -1));
+        }
+        else if (Input.GetKey("s") && Input.GetKey("d"))
+        {
+            SetDirection(new Vector2Int(1, -1));
+        }
+        else if (Input.GetKey("w"))
         {
             SetDirection(Vector2Int.up);
         }
-        if (Input.GetKey("a"))
+        else if (Input.GetKey("a"))
         {
             SetDirection(Vector2Int.left);
         }
-        if (Input.GetKey("s"))
+        else if (Input.GetKey("s"))
         {
             SetDirection(Vector2Int.down);
         }
-        if (Input.GetKey("d"))
+        else if (Input.GetKey("d"))
         {
             SetDirection(Vector2Int.right);
         }
